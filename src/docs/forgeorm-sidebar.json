@@ -1,94 +1,202 @@
 [
   {
-    "title": "Introduction",
+    "title": "1. Introduction",
     "slug": "1-introduction"
   },
   {
-    "title": "Supported Databases",
-    "slug": "2-supported-databases"
+    "title": "2. Installation",
+    "slug": "2-installation"
   },
   {
-    "title": "Installation",
-    "slug": "3-installation"
+    "title": "3. Architecture Overview",
+    "slug": "3-architecture-overview"
   },
   {
-    "title": "Basic Setup",
-    "slug": "4-basic-setup"
+    "title": "4. ForgeDbContext",
+    "slug": "4-forgedbcontext"
   },
   {
-    "title": "Core ORM",
-    "slug": "5-core-orm"
+    "title": "5. Query APIs",
+    "slug": "5-query-apis"
   },
   {
-    "title": "Query Builder",
-    "slug": "6-query-builder"
+    "title": "6. CRUD Operations",
+    "slug": "6-crud-operations"
   },
   {
-    "title": "LINQ Provider",
-    "slug": "7-linq-provider"
+    "title": "7. Record Mapping",
+    "slug": "7-record-mapping"
   },
   {
-    "title": "Bulk Operations",
-    "slug": "10-bulk-operations"
+    "title": "8. Enum Mapping",
+    "slug": "8-enum-mapping"
   },
   {
-    "title": "Multi-Tenancy",
-    "slug": "11-multi-tenancy"
+    "title": "9. Dynamic Queries",
+    "slug": "9-dynamic-queries"
   },
   {
-    "title": "Auditing",
-    "slug": "12-auditing"
+    "title": "10. Search APIs",
+    "slug": "10-search-apis"
   },
   {
-    "title": "Outbox Pattern",
-    "slug": "13-outbox-pattern"
+    "title": "11. Split Queries",
+    "slug": "11-split-queries"
   },
   {
-    "title": "Reporting Engine",
-    "slug": "14-reporting-engine"
+    "title": "12. Graph Insert",
+    "slug": "12-graph-insert"
   },
   {
-    "title": "Telemetry",
-    "slug": "15-telemetry"
+    "title": "13. Table-Valued Parameters (TVP)",
+    "slug": "13-table-valued-parameters-tvp"
   },
   {
-    "title": "Redis Caching",
-    "slug": "16-redis-caching"
+    "title": "14. Window Functions",
+    "slug": "14-window-functions"
   },
   {
-    "title": "Security",
-    "slug": "17-security"
+    "title": "15. Analytics Engine",
+    "slug": "15-analytics-engine"
   },
   {
-    "title": "Vector Search",
-    "slug": "18-vector-search"
+    "title": "16. Pivot Tables",
+    "slug": "16-pivot-tables"
   },
   {
-    "title": "AI Provider Strategy",
-    "slug": "19-ai-provider-strategy"
+    "title": "17. DataFrame APIs",
+    "slug": "17-dataframe-apis"
   },
   {
-    "title": "AI Querying",
-    "slug": "24-ai-querying"
+    "title": "18. CSV Import",
+    "slug": "18-csv-import"
   },
   {
-    "title": "RAG Engine",
-    "slug": "29-rag-engine"
+    "title": "19. JSON Import",
+    "slug": "19-json-import"
   },
   {
-    "title": "Workflow Engine",
-    "slug": "30-workflow-engine"
+    "title": "20. Save DataFrame To Database",
+    "slug": "20-save-dataframe-to-database"
   },
   {
-    "title": "Event Sourcing",
-    "slug": "32-event-sourcing"
+    "title": "21. Query DataFrames",
+    "slug": "21-query-dataframes"
   },
   {
-    "title": "React Studio",
-    "slug": "50-react-studio"
+    "title": "22. Vertical Slice Architecture",
+    "slug": "22-vertical-slice-architecture"
   },
   {
-    "title": "Roadmap",
-    "slug": "69-v1--v4-roadmap"
+    "title": "23. Onion Architecture",
+    "slug": "23-onion-architecture"
+  },
+  {
+    "title": "24. CQRS",
+    "slug": "24-cqrs"
+  },
+  {
+    "title": "25. Minimal APIs",
+    "slug": "25-minimal-apis"
+  },
+  {
+    "title": "26. Transactions",
+    "slug": "26-transactions"
+  },
+  {
+    "title": "27. Bulk Operations",
+    "slug": "27-bulk-operations"
+  },
+  {
+    "title": "28. Performance Optimization",
+    "slug": "28-performance-optimization"
+  },
+  {
+    "title": "29. Caching",
+    "slug": "29-caching"
+  },
+  {
+    "title": "30. Redis",
+    "slug": "30-redis"
+  },
+  {
+    "title": "31. Workflow Engine",
+    "slug": "31-workflow-engine"
+  },
+  {
+    "title": "32. AI Features",
+    "slug": "32-ai-features"
+  },
+  {
+    "title": "33. Vector Search",
+    "slug": "33-vector-search"
+  },
+  {
+    "title": "34. Telemetry & Logging",
+    "slug": "34-telemetry-logging"
+  },
+  {
+    "title": "35. Multi Database Support",
+    "slug": "35-multi-database-support"
+  },
+  {
+    "title": "36. Best Practices",
+    "slug": "36-best-practices"
+  },
+  {
+    "title": "37. Advanced Enterprise Scenarios",
+    "slug": "37-advanced-enterprise-scenarios"
+  },
+  {
+    "title": "38. Complete Example Project",
+    "slug": "38-complete-example-project"
+  },
+  {
+    "title": "39. Troubleshooting",
+    "slug": "39-troubleshooting"
+  },
+  {
+    "title": "40. Roadmap",
+    "slug": "40-roadmap"
+  },
+  {
+    "title": "41. Stream-Based CSV and JSON Imports",
+    "slug": "41-stream-based-csv-and-json-imports"
+  },
+  {
+    "title": "42. Dirty Data Handling",
+    "slug": "42-dirty-data-handling"
+  },
+  {
+    "title": "43. Safe SQL Identifier Validation",
+    "slug": "43-safe-sql-identifier-validation"
+  },
+  {
+    "title": "44. DataFrame Persistence to SQL Tables",
+    "slug": "44-dataframe-persistence-to-sql-tables"
+  },
+  {
+    "title": "45. Analytics Execution Pipeline",
+    "slug": "45-analytics-execution-pipeline"
+  },
+  {
+    "title": "46. ForgeORM.AspNetCore Integration",
+    "slug": "46-forgeormaspnetcore-integration"
+  },
+  {
+    "title": "47. QueryAst Architecture",
+    "slug": "47-queryast-architecture"
+  },
+  {
+    "title": "48. Regression Testing Strategy",
+    "slug": "48-regression-testing-strategy"
+  },
+  {
+    "title": "49. ForgeCommerce Demo",
+    "slug": "49-forgecommerce-demo"
+  },
+  {
+    "title": "50. Enterprise Security Best Practices",
+    "slug": "50-enterprise-security-best-practices"
   }
 ]

@@ -1,1654 +1,1187 @@
-# ForgeORM Complete Enterprise Wiki
+# ForgeORM Bible — Complete Enterprise Guide
 
-> AI-first enterprise ORM, data platform, vector search, RAG, workflow, reporting, and low-code platform for modern .NET applications.
+# ForgeORM
+## The Modern Enterprise ORM + Analytics + DataFrame Platform for .NET 8 & .NET 10
 
 ---
 
-## 1. Introduction
+# Table of Contents
 
-ForgeORM is designed for enterprise-grade .NET systems where developers need more than a traditional ORM.
+1. Introduction
+2. Installation
+3. Architecture Overview
+4. ForgeDbContext
+5. Query APIs
+6. CRUD Operations
+7. Record Mapping
+8. Enum Mapping
+9. Dynamic Queries
+10. Search APIs
+11. Split Queries
+12. Graph Insert
+13. Table-Valued Parameters (TVP)
+14. Window Functions
+15. Analytics Engine
+16. Pivot Tables
+17. DataFrame APIs
+18. CSV Import
+19. JSON Import
+20. Save DataFrame to Database
+21. Query DataFrames
+22. Vertical Slice Architecture
+23. Onion Architecture
+24. CQRS
+25. Minimal APIs
+26. Transactions
+27. Bulk Operations
+28. Performance Optimization
+29. Caching
+30. Redis
+31. Workflow Engine
+32. AI Features
+33. Vector Search
+34. Telemetry & Logging
+35. Multi Database Support
+36. Best Practices
+37. Advanced Enterprise Scenarios
+38. Complete Example Project
+39. Troubleshooting
+40. Roadmap
+
+---
+
+# 1. Introduction
+
+ForgeORM is a modern enterprise ORM and analytics framework for .NET.
 
 It combines:
 
-- ORM
-- Micro ORM
-- LINQ provider
-- Query builder
-- Multi-database providers
-- Bulk operations
-- Redis caching
-- Multi-tenancy
-- Auditing
-- Outbox
-- Reporting
-- Telemetry
-- Security
-- Vector search
-- AI querying
-- AI diagnostics
-- AI optimization
-- AI code generation
-- AI migrations
-- RAG engine
-- Workflow engine
-- Event sourcing
-- Realtime engine
-- AI agents
-- Low-code ERP generator
-- React Studio
-- SaaS platform
-- Marketplace
+- EF-style developer experience
+- Dapper-like performance philosophy
+- Full SQL control
+- Analytics engine
+- Pandas-like DataFrame support
+- Enterprise architecture support
+- AI-ready extensibility
+
+ForgeORM is designed for:
+
+- Enterprise APIs
+- CQRS systems
+- Minimal APIs
+- Distributed systems
+- Analytics platforms
+- High-performance services
+- AI-first applications
+- Financial systems
+- Healthcare systems
+- Government systems
 
 ---
 
-## 2. Supported Databases
+# 2. Installation
 
-| Database | Support |
-|---|---|
-| SQL Server | Supported |
-| PostgreSQL | Supported |
-| MySQL | Supported |
-| MariaDB | Supported |
-| SQLite | Supported |
-| Oracle | Supported |
-| MongoDB | Planned/Provider |
-| CosmosDB | Planned/Provider |
-| Redis | Cache / Vector / PubSub |
-| PostgreSQL pgvector | Vector Search |
-| Qdrant | Vector Store |
-| Pinecone | Vector Store |
-| Weaviate | Vector Store |
-
----
-
-## 3. Installation
-
-### SQL Server
+## NuGet Packages
 
 ```bash
-dotnet add package ForgeORM.SqlServer
+ dotnet add package ForgeORM.Core
+ dotnet add package ForgeORM.Analytics
+ dotnet add package ForgeORM.Workflow
 ```
 
-### PostgreSQL
+## SQL Server Provider
 
 ```bash
-dotnet add package ForgeORM.PostgreSql
+ dotnet add package Microsoft.Data.SqlClient
 ```
 
-### MySQL
+## Analytics Support
 
 ```bash
-dotnet add package ForgeORM.MySql
-```
-
-### Oracle
-
-```bash
-dotnet add package ForgeORM.Oracle
-```
-
-### Redis Cache
-
-```bash
-dotnet add package ForgeORM.Caching.Redis
-```
-
-### AI
-
-```bash
-dotnet add package ForgeORM.AI
-```
-
-### Vector Search
-
-```bash
-dotnet add package ForgeORM.Vector
+ dotnet add package Microsoft.Data.Analysis
 ```
 
 ---
 
-## 4. Basic Setup
+# 3. Architecture Overview
 
-### SQL Server
+ForgeORM Architecture:
+
+```text
+Application
+    ↓
+ForgeDbContext
+    ↓
+Forge Query APIs
+    ↓
+ForgeAdo
+    ↓
+ADO.NET Provider
+    ↓
+Database
+```
+
+Modules:
+
+```text
+ForgeORM.Core
+ForgeORM.Analytics
+ForgeORM.Workflow
+ForgeORM.VectorSearch
+ForgeORM.AI
+ForgeORM.DataFrame
+```
+
+---
+
+# 4. ForgeDbContext
+
+## Registration
 
 ```csharp
 builder.Services.AddForgeOrm(options =>
 {
-    options.UseSqlServer(configuration.GetConnectionString("Default"));
+    options.UseSqlServer(connectionString);
 });
 ```
 
-### PostgreSQL
+## Injection
 
 ```csharp
-builder.Services.AddForgeOrm(options =>
+app.MapGet("/products", async (ForgeDbContext db) =>
 {
-    options.UsePostgreSql(configuration.GetConnectionString("Default"));
-});
-```
-
-### MySQL
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMySql(configuration.GetConnectionString("Default"));
-});
-```
-
-### Oracle
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseOracle(configuration.GetConnectionString("Default"));
+    return await db.QueryAsync<Product>("SELECT * FROM Products");
 });
 ```
 
 ---
 
-## 5. Core ORM
+# 5. Query APIs
 
-### Query Entity
+## QueryAsync
 
 ```csharp
-var customers = await db.Query<Customer>()
-    .Where(x => x.IsActive)
+var products = await db.QueryAsync<Product>(
+    "SELECT * FROM Products WHERE Price > @price",
+    new { price = 100 });
+```
+
+## QuerySingleAsync
+
+```csharp
+var product = await db.QuerySingleOrDefaultAsync<Product>(
+    "SELECT * FROM Products WHERE Id=@id",
+    new { id });
+```
+
+## ExecuteAsync
+
+```csharp
+await db.ExecuteAsync(
+    "UPDATE Products SET Price=@price WHERE Id=@id",
+    new { id = 1, price = 500 });
+```
+
+## ExecuteScalarAsync
+
+```csharp
+var count = await db.ExecuteScalarAsync<int>(
+    "SELECT COUNT(*) FROM Products");
+```
+
+---
+
+# 6. CRUD Operations
+
+## Insert
+
+```csharp
+await db.InsertAsync(product);
+```
+
+## Update
+
+```csharp
+await db.UpdateAsync(product);
+```
+
+## Delete
+
+```csharp
+await db.DeleteAsync<Product>(id);
+```
+
+## Find
+
+```csharp
+var product = await db.FindAsync<Product>(id);
+```
+
+---
+
+# 7. Record Mapping
+
+ForgeORM supports C# records automatically.
+
+```csharp
+public sealed record ProductSummary(
+    int Id,
+    string Name,
+    decimal Price);
+```
+
+Usage:
+
+```csharp
+var result = await db.QueryAsync<ProductSummary>(
+    "SELECT Id, Name, Price FROM Products");
+```
+
+---
+
+# 8. Enum Mapping
+
+## Enum
+
+```csharp
+public enum OrderStatus
+{
+    Draft = 1,
+    Paid = 2,
+    Cancelled = 3
+}
+```
+
+## Entity
+
+```csharp
+public sealed class Order
+{
+    public int Id { get; set; }
+    public OrderStatus Status { get; set; }
+}
+```
+
+ForgeORM automatically converts:
+
+- int → enum
+- string → enum
+- enum → database value
+
+---
+
+# 9. Dynamic Queries
+
+```csharp
+var result = await db.QueryDynamicAsync(
+    "SELECT * FROM Orders");
+```
+
+Result:
+
+```json
+[
+  {
+    "Id": 1,
+    "OrderNo": "ORD-1001"
+  }
+]
+```
+
+---
+
+# 10. Search APIs
+
+## Search
+
+```csharp
+var result = await db.Search<Product>()
+    .OptionalLike(x => x.Name, request.Name)
+    .OptionalBetween(x => x.Price, request.MinPrice, request.MaxPrice)
+    .Page(1, 20)
+    .ToPagedAsync();
+```
+
+## When To Use
+
+Use Search APIs when:
+
+- Dynamic filtering required
+- Paging required
+- Admin grids
+- Search screens
+- APIs with many optional filters
+
+---
+
+# 11. Split Queries
+
+## One To One
+
+```csharp
+var orders = await db.Split<Order>()
+    .IncludeOne<Customer>(x => x.CustomerId)
     .ToListAsync();
 ```
 
-### Insert Entity
+## One To Many
 
 ```csharp
-await db.InsertAsync(customer);
-```
-
-### Update Entity
-
-```csharp
-await db.UpdateAsync(customer);
-```
-
-### Delete Entity
-
-```csharp
-await db.DeleteAsync(customer);
-```
-
-### SQL Server Output
-
-```sql
-SELECT *
-FROM [Customers]
-WHERE [IsActive] = 1;
-```
-
-### PostgreSQL Output
-
-```sql
-SELECT *
-FROM "Customers"
-WHERE "IsActive" = true;
-```
-
-### MySQL Output
-
-```sql
-SELECT *
-FROM `Customers`
-WHERE `IsActive` = 1;
-```
-
-### Oracle Output
-
-```sql
-SELECT *
-FROM Customers
-WHERE IsActive = 1;
-```
-
----
-
-## 6. Query Builder
-
-```csharp
-var query = db.Query<Product>()
-    .Where(x => x.Price > 100)
-    .OrderByDescending(x => x.CreatedAt)
-    .Take(10);
-```
-
-### Dynamic Filters
-
-```csharp
-var query = db.Query<Customer>()
-    .When(!string.IsNullOrWhiteSpace(filter.Name),
-        q => q.Where(x => x.Name.Contains(filter.Name)))
-    .When(filter.Country is not null,
-        q => q.Where(x => x.Country == filter.Country));
-```
-
----
-
-## 7. LINQ Provider
-
-### Includes
-
-```csharp
-var orders = await db.Query<Order>()
-    .Include(x => x.Items)
-    .ThenInclude(x => x.Product)
+var orders = await db.Split<Order>()
+    .IncludeMany<OrderItem>(x => x.Items)
     .ToListAsync();
 ```
 
-### Aggregates
+## When To Use
+
+Use split queries when:
+
+- Large graph loading
+- Avoid cartesian explosion
+- Better performance
+- Enterprise reporting
+
+---
+
+# 12. Graph Insert
+
+## Parent Child Insert
 
 ```csharp
-var total = await db.Query<Order>()
-    .SumAsync(x => x.Total);
+await db.InsertGraphAsync<Order, CreateOrderDto>(dto);
 ```
 
-### Group By
+Automatically:
+
+- inserts parent
+- inserts children
+- manages foreign keys
+- wraps transaction
+
+---
+
+# 13. Table-Valued Parameters (TVP)
+
+## High Performance Bulk Insert
 
 ```csharp
-var report = await db.Query<Order>()
-    .GroupBy(x => x.Country)
-    .Select(x => new
+await db.InsertGraphAsync<Order, CreateOrderDto>(
+    dto,
+    graph =>
     {
-        Country = x.Key,
-        Total = x.Sum(y => y.Total)
-    })
-    .ToListAsync();
+        graph.Children<OrderItem>(x => x.Items)
+            .UseSqlServerTvp(
+                tableType: "dbo.OrderItemTvp",
+                procedure: "dbo.InsertOrderItemsTvp");
+    });
 ```
+
+## When To Use
+
+Use TVP when:
+
+- Large child collections
+- Bulk insert
+- Enterprise batch systems
+- Financial imports
+- ERP systems
 
 ---
 
-## 8. Raw SQL
+# 14. Window Functions
+
+## Row Number
 
 ```csharp
-var products = await db.SqlAsync<Product>(
-    "SELECT * FROM Products WHERE Price > @Price",
-    new { Price = 100 });
+.RowNumber()
+    .PartitionBy(x => x.CustomerId)
+    .OrderByDescending(x => x.CreatedAt)
+    .As("RowNo")
 ```
 
----
-
-## 9. Stored Procedures
+## Rank
 
 ```csharp
-var products = await db.StoredProcedureAsync<Product>(
-    "sp_GetProducts",
-    new { CategoryId = 10 });
+.Rank()
+    .PartitionBy(x => x.CustomerId)
+    .OrderByDescending(x => x.GrandTotal)
+    .As("RankNo")
+```
+
+## Running Total
+
+```csharp
+.Sum(x => x.GrandTotal)
+    .PartitionBy(x => x.CustomerId)
+    .OrderBy(x => x.CreatedAt)
+    .RowsBetweenUnboundedPrecedingAndCurrentRow()
+    .As("RunningSales")
 ```
 
 ---
 
-## 10. Bulk Operations
+# 15. Analytics Engine
 
-### Bulk Insert
+## Analytics Query
+
+```csharp
+var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .ToDynamicListAsync();
+```
+
+## Supported Functions
+
+- RowNumber
+- Rank
+- DenseRank
+- Ntile
+- Lag
+- Lead
+- FirstValue
+- LastValue
+- PercentileCont
+- PercentileDisc
+- Avg
+- Sum
+- Min
+- Max
+- Count
+
+---
+
+# 16. Pivot Tables
+
+## Pivot Query
+
+```csharp
+var sql = db.Pivot<Order>()
+    .From("Orders")
+    .Rows(x => x.CustomerId)
+    .Columns(x => x.Status)
+    .Values(x => x.GrandTotal)
+    .Aggregate("SUM")
+    .Render("Draft", "Paid", "Cancelled");
+```
+
+---
+
+# 17. DataFrame APIs
+
+ForgeORM supports pandas-like DataFrames.
+
+## Create Frame
+
+```csharp
+var frame = await db.Frame<Order>()
+    .ToFrameAsync();
+```
+
+## GroupBy
+
+```csharp
+var grouped = frame.GroupBy("CustomerId");
+```
+
+## Aggregation
+
+```csharp
+var result = grouped.Agg(new
+{
+    Total = ForgeAgg.Sum("GrandTotal"),
+    Avg = ForgeAgg.Avg("GrandTotal")
+});
+```
+
+---
+
+# 18. CSV Import
+
+## Import CSV
+
+```csharp
+var frame = ForgeDataFrame.ReadCsv("orders.csv");
+```
+
+## Query CSV
+
+```csharp
+var result = frame
+    .Where("GrandTotal > 1000")
+    .OrderByDescending("GrandTotal");
+```
+
+---
+
+# 19. JSON Import
+
+## Import JSON
+
+```csharp
+var frame = ForgeDataFrame.ReadJson("orders.json");
+```
+
+---
+
+# 20. Save DataFrame To Database
+
+```csharp
+await frame.ToTableAsync(
+    db,
+    "ImportedOrders");
+```
+
+---
+
+# 21. Query DataFrames
+
+```csharp
+var result = frame
+    .Filter(x => x["GrandTotal"] > 1000)
+    .Select("OrderNo", "GrandTotal")
+    .Take(20);
+```
+
+---
+
+# 22. Vertical Slice Architecture
+
+## Recommended Structure
+
+```text
+Features/
+ ├── Orders/
+ │    ├── Create/
+ │    ├── Update/
+ │    ├── Search/
+ │    └── Analytics/
+```
+
+---
+
+# 23. Onion Architecture
+
+## Layers
+
+```text
+Domain
+Application
+Infrastructure
+API
+```
+
+ForgeORM belongs inside Infrastructure.
+
+---
+
+# 24. CQRS
+
+## Query Handler
+
+```csharp
+public sealed class GetOrdersHandler
+{
+    private readonly ForgeDbContext _db;
+
+    public async Task<IReadOnlyList<OrderDto>> Handle()
+    {
+        return await _db.QueryAsync<OrderDto>(
+            "SELECT * FROM Orders");
+    }
+}
+```
+
+---
+
+# 25. Minimal APIs
+
+```csharp
+app.MapGet("/orders", async (ForgeDbContext db) =>
+{
+    return await db.QueryAsync<Order>(
+        "SELECT * FROM Orders");
+});
+```
+
+---
+
+# 26. Transactions
+
+```csharp
+await using var tx = await db.BeginTransactionAsync();
+
+await db.InsertAsync(order);
+await db.InsertAsync(items);
+
+await tx.CommitAsync();
+```
+
+---
+
+# 27. Bulk Operations
+
+## Bulk Insert
 
 ```csharp
 await db.BulkInsertAsync(products);
 ```
 
-### Bulk Update
+## Bulk Update
 
 ```csharp
 await db.BulkUpdateAsync(products);
 ```
 
-### Bulk Delete
+---
+
+# 28. Performance Optimization
+
+ForgeORM optimizations:
+
+- Pure ADO.NET
+- Fast materialization
+- Constructor mapping
+- Minimal allocations
+- Split queries
+- TVP batching
+- Dynamic SQL rendering
+- Query reuse
+
+---
+
+# 29. Caching
 
 ```csharp
-await db.BulkDeleteAsync(products);
-```
-
-### Bulk Merge / Upsert
-
-```csharp
-await db.BulkMergeAsync(products);
-```
-
-### SQL Server Strategy
-
-Uses SQL Server bulk copy.
-
-```sql
-BULK INSERT Products
-FROM 'products.csv';
-```
-
-### PostgreSQL Strategy
-
-Uses COPY.
-
-```sql
-COPY Products FROM STDIN;
-```
-
-### MySQL Strategy
-
-Uses batched INSERT.
-
-```sql
-INSERT INTO Products(Name, Price)
-VALUES (...), (...), (...);
+await db.Cacheable(TimeSpan.FromMinutes(5))
+    .QueryAsync<Product>(sql);
 ```
 
 ---
 
-## 11. Multi-Tenancy
-
-### Enable
+# 30. Redis
 
 ```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableMultiTenancy();
-});
-```
-
-### Tenant Provider
-
-```csharp
-public sealed class HeaderTenantProvider : ITenantProvider
-{
-    private readonly IHttpContextAccessor _http;
-
-    public HeaderTenantProvider(IHttpContextAccessor http)
-    {
-        _http = http;
-    }
-
-    public string TenantId =>
-        _http.HttpContext?.Request.Headers["X-Tenant-Id"].FirstOrDefault()
-        ?? "default";
-}
-```
-
-### Tenant Query
-
-```csharp
-var customers = await db.Query<Customer>()
-    .WhereTenant()
-    .ToListAsync();
-```
-
-### Supported Tenancy Models
-
-| Model | Description |
-|---|---|
-| Shared Database | TenantId column |
-| Shared Schema | Same tables, tenant filters |
-| Dedicated Database | One DB per tenant |
-| Sharded Tenancy | Tenant routing |
-
----
-
-## 12. Auditing
-
-### Enable
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableAuditing();
-});
-```
-
-### Auditable Entity
-
-```csharp
-public abstract class AuditableEntity
-{
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
-    public string? UpdatedBy { get; set; }
-}
-```
-
-### Soft Delete
-
-```csharp
-public interface ISoftDelete
-{
-    bool IsDeleted { get; set; }
-}
+builder.Services.AddStackExchangeRedisCache(...);
 ```
 
 ---
 
-## 13. Outbox Pattern
+# 31. Workflow Engine
 
-### Save Event
+Features:
 
-```csharp
-await outbox.SaveAsync(new OrderCreatedEvent(order.Id));
-```
-
-### Publish Events
-
-```csharp
-await outboxPublisher.PublishPendingAsync();
-```
-
-### Outbox Table
-
-```sql
-CREATE TABLE OutboxMessages
-(
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Type NVARCHAR(500) NOT NULL,
-    Payload NVARCHAR(MAX) NOT NULL,
-    CreatedAt DATETIME2 NOT NULL,
-    ProcessedAt DATETIME2 NULL
-);
-```
+- Saga orchestration
+- Compensation
+- Retry handling
+- Workflow persistence
+- Distributed workflows
 
 ---
 
-## 14. Reporting Engine
+# 32. AI Features
 
-### Dynamic Report
+Features:
 
-```csharp
-var report = await db.Reporting<Order>()
-    .GroupBy(x => x.Country)
-    .Sum(x => x.Total)
-    .ToListAsync();
-```
-
-### Pivot Report
-
-```csharp
-var pivot = await db.Reporting<Sale>()
-    .Pivot(row: x => x.Country, column: x => x.Year)
-    .Sum(x => x.Amount)
-    .ToListAsync();
-```
-
-### Export
-
-```csharp
-await report.ExportExcelAsync();
-await report.ExportCsvAsync();
-await report.ExportPdfAsync();
-```
-
----
-
-## 15. Telemetry
-
-### Enable
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableTelemetry();
-});
-```
-
-### OpenTelemetry
-
-```csharp
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing.AddAspNetCoreInstrumentation();
-        tracing.AddHttpClientInstrumentation();
-        tracing.AddSource("ForgeORM");
-    });
-```
-
-### Captured Metrics
-
-- Query duration
-- Query count
-- Slow queries
-- Cache hit ratio
-- Cache miss ratio
-- Bulk operation duration
-- Failed commands
-- Tenant usage
-- AI token usage
-
----
-
-## 16. Redis Caching
-
-ForgeORM does not host Redis. The application owner provides Redis.
-
-### Enable Redis Cache
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddRedisCache(options =>
-    {
-        options.ConnectionString = configuration["Redis:ConnectionString"];
-        options.InstanceName = "ForgeORM";
-    });
-```
-
-### Query Cache
-
-```csharp
-var products = await db.Query<Product>()
-    .Cache(TimeSpan.FromMinutes(5))
-    .ToListAsync();
-```
-
-### Cache Tags
-
-```csharp
-var products = await db.Query<Product>()
-    .Cache(TimeSpan.FromMinutes(5))
-    .CacheTag("products")
-    .ToListAsync();
-```
-
-### Tenant-Aware Cache Key
-
-```text
-tenant:{tenantId}:entity:{entityName}:query:{hash}
-```
-
----
-
-## 17. Security
-
-### SQL Injection Protection
-
-ForgeORM uses parameterized queries.
-
-```csharp
-await db.SqlAsync<Product>(
-    "SELECT * FROM Products WHERE Name = @Name",
-    new { Name = input });
-```
-
-### Masking
-
-```csharp
-var masked = masking.MaskEmail("user@example.com");
-```
-
-### Encryption
-
-```csharp
-var encrypted = encryption.Encrypt("sensitive-value");
-var plain = encryption.Decrypt(encrypted);
-```
-
-### Row-Level Security
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableRowLevelSecurity();
-});
-```
-
----
-
-## 18. Vector Search
-
-### Insert Vector
-
-```csharp
-await vectorStore.UpsertAsync(
-    id: "doc-1",
-    vector: embedding,
-    metadata: new { Title = "Customer Policy" });
-```
-
-### Search Vector
-
-```csharp
-var results = await vectorStore.SearchAsync(
-    vector: queryEmbedding,
-    topK: 5);
-```
-
-### PostgreSQL pgvector
-
-```sql
-CREATE EXTENSION IF NOT EXISTS vector;
-
-CREATE TABLE Documents
-(
-    Id TEXT PRIMARY KEY,
-    Content TEXT NOT NULL,
-    Embedding VECTOR(1536)
-);
-```
-
-### SQL Server Vector Search
-
-```sql
-CREATE TABLE Documents
-(
-    Id NVARCHAR(100) PRIMARY KEY,
-    Content NVARCHAR(MAX),
-    Embedding VECTOR(1536)
-);
-```
-
-### Redis Vector
-
-```text
-FT.CREATE idx:documents ON HASH PREFIX 1 doc:
-SCHEMA content TEXT embedding VECTOR FLAT 6 TYPE FLOAT32 DIM 1536 DISTANCE_METRIC COSINE
-```
-
----
-
-## 19. AI Provider Strategy
-
-ForgeORM should not force one AI provider.
-
-Users can bring:
-
-- OpenAI
-- Azure OpenAI
-- Gemini
-- Claude
-- Ollama
-- OpenRouter
-- DeepSeek
-- Groq
-- Mistral
-- Local LLMs
-
-### AI Provider Abstraction
-
-```csharp
-public interface IForgeAiProvider
-{
-    Task<string> CompleteAsync(string prompt, CancellationToken cancellationToken = default);
-
-    Task<float[]> EmbeddingAsync(string text, CancellationToken cancellationToken = default);
-}
-```
-
----
-
-## 20. OpenAI Setup
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddOpenAI(options =>
-    {
-        options.ApiKey = configuration["AI:OpenAI:ApiKey"];
-        options.Model = "gpt-4.1";
-    });
-```
-
----
-
-## 21. Gemini Setup
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddGemini(options =>
-    {
-        options.ApiKey = configuration["AI:Gemini:ApiKey"];
-        options.Model = "gemini-2.5-pro";
-    });
-```
-
----
-
-## 22. Claude Setup
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddClaude(options =>
-    {
-        options.ApiKey = configuration["AI:Claude:ApiKey"];
-        options.Model = "claude-sonnet-4";
-    });
-```
-
----
-
-## 23. Ollama Setup
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddOllama(options =>
-    {
-        options.Endpoint = "http://localhost:11434";
-        options.Model = "llama3";
-    });
-```
-
----
-
-## 24. AI Querying
-
-```csharp
-var customers = await ai.QueryAsync<Customer>(
-    "Get top 10 active customers from Dubai who purchased in last 30 days");
-```
-
-### Pipeline
-
-```text
-Natural language
-  -> intent analysis
-  -> schema context
-  -> query generation
-  -> SQL safety validation
-  -> execution
-  -> result shaping
-```
-
----
-
-## 25. AI Diagnostics
-
-```csharp
-var analysis = await aiDiagnostics.AnalyzeQueryAsync(sql);
-```
-
-### Example Output
-
-```text
-Potential missing index on Orders.CustomerId.
-Query scans a large table.
-Consider adding pagination.
-```
-
----
-
-## 26. AI Optimization
-
-```csharp
-var optimized = await aiOptimizer.OptimizeAsync(sql);
-```
-
-### Example Suggestion
-
-```sql
-CREATE INDEX IX_Orders_CustomerId_CreatedAt
-ON Orders(CustomerId, CreatedAt);
-```
-
----
-
-## 27. AI Code Generation
-
-### Generate Repository
-
-```csharp
-var code = await aiCodeGenerator.GenerateRepositoryAsync<Customer>();
-```
-
-### Generate Minimal API
-
-```csharp
-var api = await aiCodeGenerator.GenerateMinimalApiAsync<Product>();
-```
-
-### Generate DTOs
-
-```csharp
-var dto = await aiCodeGenerator.GenerateDtoAsync<Customer>();
-```
-
----
-
-## 28. AI Migrations
-
-```csharp
-var migration = await aiMigrationPlanner.GenerateMigrationPlanAsync(
-    oldSchema,
-    newSchema);
-```
-
----
-
-## 29. RAG Engine
-
-### Upload Document
-
-```csharp
-await rag.UploadAsync(fileStream, "policy.pdf");
-```
-
-### Chunk
-
-```csharp
-var chunks = await rag.ChunkAsync(document);
-```
-
-### Embed
-
-```csharp
-await rag.GenerateEmbeddingsAsync(chunks);
-```
-
-### Ask
-
-```csharp
-var answer = await rag.AskAsync(
-    "What is the refund policy?");
-```
-
-### Architecture
-
-```text
-Document
-  -> chunking
-  -> embeddings
-  -> vector store
-  -> semantic retrieval
-  -> LLM response
-```
-
----
-
-## 30. Workflow Engine
-
-### Start Workflow
-
-```csharp
-await workflow.StartAsync("OrderApproval", new
-{
-    OrderId = order.Id
-});
-```
-
-### Workflow Definition
-
-```csharp
-var workflow = WorkflowDefinition.Create("OrderApproval")
-    .Step("ValidateOrder")
-    .Step("ReserveInventory")
-    .Step("RequestApproval")
-    .Step("CompleteOrder");
-```
-
-### Compensation
-
-```csharp
-await workflow.CompensateAsync(instanceId);
-```
-
----
-
-## 31. Visual Workflow Designer
-
-The React Studio can display workflow nodes.
-
-```json
-{
-  "nodes": [
-    { "id": "start", "type": "start" },
-    { "id": "validate", "type": "action", "label": "Validate Order" },
-    { "id": "approve", "type": "approval", "label": "Manager Approval" }
-  ],
-  "edges": [
-    { "from": "start", "to": "validate" },
-    { "from": "validate", "to": "approve" }
-  ]
-}
-```
-
----
-
-## 32. Event Sourcing
-
-### Append Event
-
-```csharp
-await eventStore.AppendAsync(
-    streamId: order.Id.ToString(),
-    @event: new OrderCreated(order.Id));
-```
-
-### Read Stream
-
-```csharp
-var events = await eventStore.ReadStreamAsync(order.Id.ToString());
-```
-
-### Replay Projection
-
-```csharp
-await projection.ReplayAsync("orders");
-```
-
----
-
-## 33. Realtime Engine
-
-### SignalR Setup
-
-```csharp
-builder.Services.AddSignalR();
-
-app.MapHub<ForgeRealtimeHub>("/forgeorm/realtime");
-```
-
-### Subscribe to Entity Changes
-
-```csharp
-await realtime.SubscribeAsync<Order>();
-```
-
----
-
-## 34. AI Agents
-
-### Query Agent
-
-```csharp
-await aiAgents.RunAsync("query-agent", new
-{
-    Task = "Find slow reporting queries"
-});
-```
-
-### Optimization Agent
-
-```csharp
-await aiAgents.RunAsync("optimization-agent", new
-{
-    Task = "Recommend indexes"
-});
-```
-
-### Reporting Agent
-
-```csharp
-await aiAgents.RunAsync("reporting-agent", new
-{
-    Task = "Generate sales report"
-});
-```
-
----
-
-## 35. Semantic Schema Understanding
-
-```csharp
-var model = await schemaAnalyzer.AnalyzeAsync();
-```
-
-### Output
-
-```json
-{
-  "entities": ["Customer", "Order", "Product"],
-  "relationships": ["Customer has many Orders", "Order has many Products"],
-  "aggregates": ["CustomerAggregate", "OrderAggregate"]
-}
-```
-
----
-
-## 36. Low-Code ERP Generator
-
-### Prompt
-
-```text
-Generate ERP for manufacturing company with inventory, sales, procurement, HR, finance, approvals, reports.
-```
-
-### Generated Modules
-
-- Inventory
-- Sales
-- Procurement
-- Finance
-- HR
-- CRM
-- Workflow approvals
-- Dashboards
-- Reports
-- APIs
-- Permissions
-
----
-
-## 37. API Gateway and Service Mesh
-
-### Gateway Features
-
-- Rate limiting
-- Authentication
-- Authorization
-- Retries
-- Circuit breaker
-- API aggregation
-- Distributed tracing
-
-### YARP Example
-
-```json
-{
-  "ReverseProxy": {
-    "Routes": {
-      "forgeorm-api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{**catch-all}"
-        }
-      }
-    }
-  }
-}
-```
-
----
-
-## 38. Distributed Query Engine
-
-```csharp
-var result = await distributedQuery.QueryAsync(new DistributedQueryRequest
-{
-    Sources = ["sqlserver", "postgresql", "mongodb"],
-    Query = "Get customer sales summary"
-});
-```
-
----
-
-## 39. Data Virtualization
-
-```csharp
-var result = await virtualization.QueryAsync("customers")
-    .From("sqlserver")
-    .Join("crm-api")
-    .ExecuteAsync();
-```
-
----
-
-## 40. Cloud Deployment Generator
-
-### Docker
-
-```bash
-forgeorm generate docker
-```
-
-### Kubernetes
-
-```bash
-forgeorm generate k8s
-```
-
-### Terraform
-
-```bash
-forgeorm generate terraform --provider azure
-```
-
----
-
-## 41. Infrastructure as Code
-
-### Terraform Azure SQL Example
-
-```hcl
-resource "azurerm_mssql_server" "forgeorm" {
-  name                         = "forgeorm-sql"
-  resource_group_name          = azurerm_resource_group.main.name
-  location                     = azurerm_resource_group.main.location
-  administrator_login          = "sqladmin"
-  administrator_login_password = var.sql_password
-}
-```
-
----
-
-## 42. Distributed Cache Cluster
-
-### Redis Cluster
-
-```csharp
-builder.Services.AddForgeOrm()
-    .AddRedisCache(options =>
-    {
-        options.ConnectionString = configuration["Redis:ClusterConnectionString"];
-        options.UseCluster = true;
-    });
-```
-
----
-
-## 43. AI Security Analyzer
-
-```csharp
-var result = await securityAnalyzer.AnalyzeAsync(sql);
-```
-
-### Detects
-
-- Unsafe raw SQL
-- Tenant filter missing
-- SQL injection risk
-- Sensitive columns exposed
-- Missing authorization policy
-
----
-
-## 44. AI Observability
-
-```csharp
-var recommendation = await observabilityAi.AnalyzeAsync(metrics);
-```
-
-### Example Output
-
-```text
-Orders report query latency increased 45%.
-Cache hit ratio dropped below 40%.
-Recommended action: add index on Orders.CreatedAt.
-```
-
----
-
-## 45. Time Travel Queries
-
-```csharp
-var orders = await db.Query<Order>()
-    .AsOf(DateTime.UtcNow.AddDays(-30))
-    .ToListAsync();
-```
-
-### SQL Server Temporal Table
-
-```sql
-SELECT *
-FROM Orders
-FOR SYSTEM_TIME AS OF '2026-01-01T00:00:00';
-```
-
-### PostgreSQL History Table
-
-```sql
-SELECT *
-FROM OrdersHistory
-WHERE ValidFrom <= @AsOf AND ValidTo > @AsOf;
-```
-
----
-
-## 46. Offline Sync
-
-### Initialize Local Store
-
-```csharp
-await sync.InitializeOfflineStoreAsync();
-```
-
-### Sync Changes
-
-```csharp
-await sync.SynchronizeAsync();
-```
-
-### Conflict Resolution
-
-```csharp
-await sync.ResolveConflictsAsync(ConflictStrategy.ServerWins);
-```
-
----
-
-## 47. Marketplace
-
-### Install Template
-
-```bash
-forgeorm marketplace install erp-inventory-module
-```
-
-### Marketplace Items
-
-- Providers
-- Templates
-- AI agents
-- Reports
-- Workflows
-- ERP modules
-- CRM modules
-- Dashboard packs
-
----
-
-## 48. Enterprise Identity Platform
-
-### RBAC
-
-```csharp
-policy.RequireRole("Admin");
-```
-
-### ABAC
-
-```csharp
-policy.RequireClaim("department", "Finance");
-```
-
-### Policy Engine
-
-```csharp
-await policyEngine.AuthorizeAsync(user, "orders.approve");
-```
-
----
-
-## 49. AI Memory System
-
-```csharp
-await aiMemory.SaveAsync("schema-summary", schemaDescription);
-
-var memory = await aiMemory.GetAsync("schema-summary");
-```
-
-### Memory Types
-
-- Schema memory
-- Query history
-- Optimization history
-- User preference memory
-- Tenant-specific memory
-- Project memory
-
----
-
-## 50. React Studio
-
-### Studio Sections
-
-- Dashboard
-- Database Explorer
-- ERD Designer
-- Query Visualizer
-- API Tester
-- AI Chat
-- RAG Documents
-- Workflow Designer
-- Reports
-- Monitoring
-- Marketplace
-- Tenants
-- Security
-- Migrations
-
-### Example Route Config
-
-```tsx
-export const routes = [
-  { path: "/dashboard", label: "Dashboard" },
-  { path: "/database", label: "Database Explorer" },
-  { path: "/erd", label: "ERD Designer" },
-  { path: "/query", label: "Query Visualizer" },
-  { path: "/api-tester", label: "API Tester" },
-  { path: "/ai", label: "AI Assistant" },
-  { path: "/rag", label: "RAG Documents" },
-  { path: "/workflow", label: "Workflow Designer" },
-  { path: "/reports", label: "Reports" },
-  { path: "/monitoring", label: "Monitoring" }
-];
-```
-
----
-
-## 51. API Testing
-
-```csharp
-var response = await apiTester.SendAsync(new ApiTestRequest
-{
-    Method = "GET",
-    Url = "/api/products"
-});
-```
-
----
-
-## 52. Monitoring Dashboard
-
-### Metrics Endpoint
-
-```http
-GET /api/studio/monitoring/metrics
-```
-
-### Response
-
-```json
-{
-  "queriesPerMinute": 120,
-  "averageQueryMs": 18,
-  "cacheHitRatio": 0.82,
-  "slowQueries": 3,
-  "activeTenants": 12
-}
-```
-
----
-
-## 53. SaaS Platform
-
-### Tenant Endpoint
-
-```http
-GET /api/studio/tenants
-```
-
-### Tenant Model
-
-```csharp
-public sealed record TenantDto(
-    string Id,
-    string Name,
-    string Plan,
-    bool IsActive);
-```
-
----
-
-## 54. GraphQL
-
-```csharp
-builder.Services.AddForgeGraphQL();
-
-app.MapGraphQL("/graphql");
-```
-
----
-
-## 55. OData
-
-```csharp
-builder.Services.AddForgeOData();
-
-app.MapODataRoute("odata", "odata");
-```
-
----
-
-## 56. CQRS
-
-### Command
-
-```csharp
-public sealed record CreateProductCommand(
-    string Name,
-    decimal Price);
-```
-
-### Handler
-
-```csharp
-public sealed class CreateProductHandler
-{
-    public Task Handle(CreateProductCommand command)
-    {
-        return Task.CompletedTask;
-    }
-}
-```
-
-### Query
-
-```csharp
-public sealed record GetProductsQuery;
-```
-
----
-
-## 57. SQL Server Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
-    options.EnableCaching();
-    options.EnableAuditing();
-    options.EnableTelemetry();
-    options.EnableMultiTenancy();
-    options.EnableOutbox();
-});
-```
-
----
-
-## 58. PostgreSQL Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UsePostgreSql(configuration.GetConnectionString("PostgreSql"));
-    options.EnableVectorSearch();
-    options.EnableCaching();
-    options.EnableTelemetry();
-});
-```
-
----
-
-## 59. MySQL Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMySql(configuration.GetConnectionString("MySql"));
-    options.EnableCaching();
-});
-```
-
----
-
-## 60. Oracle Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseOracle(configuration.GetConnectionString("Oracle"));
-    options.EnableAuditing();
-});
-```
-
----
-
-## 61. MongoDB Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMongoDb(configuration.GetConnectionString("MongoDb"));
-});
-```
-
----
-
-## 62. CosmosDB Full Example
-
-```csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseCosmos(configuration["Cosmos:ConnectionString"]);
-});
-```
-
----
-
-## 63. Docker Deployment
-
-```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
-WORKDIR /app
-COPY ./publish .
-ENTRYPOINT ["dotnet", "ForgeORM.SampleApi.dll"]
-```
-
----
-
-## 64. Kubernetes Deployment
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: forgeorm-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: forgeorm-api
-  template:
-    metadata:
-      labels:
-        app: forgeorm-api
-    spec:
-      containers:
-        - name: forgeorm-api
-          image: forgeorm/api:latest
-          ports:
-            - containerPort: 8080
-```
-
----
-
-## 65. GitHub Actions
-
-```yaml
-name: Build ForgeORM
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-      - name: Restore
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --configuration Release --no-build
-```
-
----
-
-## 66. Best Practices
-
-Use ForgeORM with:
-
-- Clean Architecture
-- Vertical Slice Architecture
-- CQRS
-- Outbox Pattern
-- Event Sourcing
-- OpenTelemetry
-- Redis caching
-- Tenant-aware security
+- AI query optimization
 - AI diagnostics
-- Central package management
-- Docker
-- Kubernetes
-- CI/CD
+- AI CRUD generation
+- AI analytics
+- AI recommendations
 
 ---
 
-## 67. Recommended Production Stack
+# 33. Vector Search
 
-| Area | Recommended |
-|---|---|
-| Primary DB | PostgreSQL or SQL Server |
-| Cache | Redis |
-| Messaging | Kafka or RabbitMQ |
-| Vector | pgvector or Qdrant |
-| AI | BYO OpenAI/Gemini/Claude/Ollama |
-| Telemetry | OpenTelemetry |
-| Logs | Serilog + Seq |
-| Deployment | Kubernetes |
-| Gateway | YARP |
-| Auth | Keycloak / OpenIddict |
+```csharp
+var result = await vectorStore.SearchAsync(vector);
+```
 
 ---
 
-## 68. Product Positioning
+# 34. Telemetry & Logging
 
-ForgeORM should be positioned as:
+Supports:
 
-> AI-first enterprise data platform for modern .NET applications.
-
-Not only:
-
-> Another ORM.
+- OpenTelemetry
+- Serilog
+- Seq
+- Structured logging
+- Query tracing
 
 ---
 
-## 69. V1 → V4 Roadmap
+# 35. Multi Database Support
 
-### V1
+Supported:
 
-- Core ORM
-- LINQ provider
-- Query builder
-- SQL generation
 - SQL Server
 - PostgreSQL
-
-### V2
-
-- Bulk operations
-- Redis caching
-- Multi-tenancy
-- Auditing
-- Outbox
-- Reporting
-- Telemetry
-- Security
-
-### V3
-
-- AI querying
-- AI diagnostics
-- AI optimization
-- AI code generation
-- AI migrations
-- Vector search
-- RAG
-
-### V4
-
-- React Studio
-- Workflow designer
-- ERD designer
-- API tester
-- SaaS platform
-- AI agents
-- Marketplace
-- Low-code ERP generator
-- Monitoring dashboards
+- MySQL
+- Oracle
+- SQLite
 
 ---
 
-## 70. Final Vision
+# 36. Best Practices
 
-ForgeORM evolves into:
+## Recommended
+
+- Use split queries for large graphs
+- Use TVP for large inserts
+- Use search APIs for admin grids
+- Use analytics engine for reports
+- Use DataFrames for CSV/JSON analytics
+- Keep raw SQL for advanced scenarios
+
+## Avoid
+
+- N+1 queries
+- huge joins
+- loading unnecessary columns
+- over-fetching data
+
+---
+
+# 37. Advanced Enterprise Scenarios
+
+## ERP Systems
+
+Use:
+
+- TVP
+- Graph insert
+- Analytics
+- Pivot tables
+- CQRS
+
+## Financial Systems
+
+Use:
+
+- Window functions
+- Percentiles
+- Running totals
+- Split queries
+
+## Healthcare
+
+Use:
+
+- Search APIs
+- Analytics
+- DataFrames
+
+---
+
+# 38. Complete Example Project
+
+```text
+src/
+ ├── API
+ ├── Application
+ ├── Domain
+ ├── Infrastructure
+ └── Features
+```
+
+Features:
+
+- Orders
+- Products
+- Customers
+- Payments
+- Shipments
+- Analytics
+
+---
+
+# 39. Troubleshooting
+
+## Enum Issues
+
+Add:
+
+```csharp
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter());
+});
+```
+
+## IN Query Issues
+
+Use:
+
+```sql
+WHERE Id IN @Ids
+```
+
+ForgeORM automatically expands parameters.
+
+## Record Mapping Issues
+
+Ensure SQL column names match constructor names.
+
+---
+
+# 40. Roadmap
+
+Upcoming:
+
+- Source generators
+- LINQ provider
+- Query compilation cache
+- Distributed DataFrames
+- DuckDB integration
+- Parquet support
+- GPU acceleration
+- AI query planning
+- Visual analytics
+- Dashboard engine
+
+---
+
+# Conclusion
+
+ForgeORM is designed to become:
+
+```text
+ORM + Analytics + DataFrame + AI + Enterprise Platform
+```
+
+It combines:
 
 - ORM
-- Enterprise data platform
-- AI backend platform
-- RAG engine
-- Workflow system
-- Low-code ERP/CRM generator
-- SaaS platform
-- AI enterprise operating system for .NET
+- Query builder
+- Analytics engine
+- Pivot engine
+- DataFrame processing
+- AI tooling
+- Enterprise architecture support
+
+inside one modern .NET ecosystem.
+
+
+
+---
+
+# 41. Stream-Based CSV and JSON Imports
+
+ForgeORM DataFrame APIs should support both path-based imports and stream-based imports. Stream support is important for ASP.NET Core uploads, Azure Blob Storage, S3, message pipelines, and enterprise ETL scenarios where writing temporary files is not ideal.
+
+## CSV Upload Example
+
+```csharp
+app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+        return Results.BadRequest("Invalid tableName.");
+
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new
+    {
+        tableName,
+        file.FileName,
+        rows = frame.RowCount,
+        columns = frame.Columns
+    });
+});
+```
+
+## JSON Upload Example
+
+```csharp
+app.MapPost("/dataframes/import/json-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+        return Results.BadRequest("Invalid tableName.");
+
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromJsonAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new
+    {
+        tableName,
+        file.FileName,
+        rows = frame.RowCount,
+        columns = frame.Columns
+    });
+});
+```
+
+---
+
+# 42. Dirty Data Handling
+
+CSV and JSON imports often contain placeholder values. ForgeORM should treat these values as null-like values during import and table persistence.
+
+```text
+?, -, --, NA, N/A, NULL, null, nan, none
+```
+
+These values should become:
+
+```sql
+NULL
+```
+
+This behavior is similar to pandas and prevents errors such as:
+
+```text
+Error converting data type nvarchar to numeric
+```
+
+## Example CSV
+
+```csv
+Country,Sales
+USA,100
+Canada,?
+UK,N/A
+```
+
+Expected database result:
+
+```text
+USA     100
+Canada  NULL
+UK      NULL
+```
+
+---
+
+# 43. Safe SQL Identifier Validation
+
+When users provide dynamic table names for CSV or JSON imports, the name must be validated.
+
+```csharp
+if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+    return Results.BadRequest("Invalid tableName.");
+```
+
+ForgeORM should escape identifiers internally:
+
+```sql
+[Country], [Continent], [1980], [1981]
+```
+
+This fixes numeric CSV column names and prevents invalid SQL.
+
+---
+
+# 44. DataFrame Persistence to SQL Tables
+
+ForgeORM DataFrame can create a SQL table from CSV or JSON data and insert rows safely.
+
+```csharp
+await frame.ToTableAsync(
+    db,
+    tableName: "ImportedOrders",
+    cancellationToken: ct);
+```
+
+DataFrame persistence should include:
+
+- schema inference
+- null-like value conversion
+- numeric column support
+- identifier escaping
+- parameterized inserts
+- safe table names
+
+---
+
+# 45. Analytics Execution Pipeline
+
+Analytics queries can render SQL or execute directly.
+
+## Render SQL
+
+```csharp
+var sql = db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .Render()
+    .Sql;
+```
+
+## Execute Analytics
+
+```csharp
+var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .Select(x => x.CustomerId)
+    .Select(x => x.GrandTotal)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .ToDynamicListAsync(ct);
+```
+
+Use named arguments internally so `CancellationToken` is never passed as SQL parameters.
+
+---
+
+# 46. ForgeORM.AspNetCore Integration
+
+ASP.NET Core applications should reference the integration package so setup is simple.
+
+```bash
+dotnet add package ForgeORM.AspNetCore
+```
+
+Recommended setup:
+
+```csharp
+builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableCaching();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();
+```
+
+The integration package should wire:
+
+- ForgeDbContext
+- QueryAst services
+- Analytics services
+- DataFrame services
+- JSON enum options
+- health checks
+- middleware
+- telemetry
+
+---
+
+# 47. QueryAst Architecture
+
+Advanced query features belong in QueryAst, not low-level Core.
+
+```text
+ForgeORM.Core       -> ADO.NET engine, materializer, CRUD, transactions
+ForgeORM.QueryAst   -> query builders, search, SplitGraph, SQL rendering
+ForgeORM.Analytics  -> DataFrames, analytics, pivot, pandas-like APIs
+ForgeORM.AspNetCore -> DI, middleware, web integration
+```
+
+This keeps the core stable and allows advanced modules to evolve without breaking existing users.
+
+---
+
+# 48. Regression Testing Strategy
+
+ForgeORM should include regression tests for every bug fixed.
+
+Recommended test areas:
+
+```text
+ForgeORM.Core.Tests
+ForgeORM.QueryAst.Tests
+ForgeORM.Analytics.Tests
+ForgeORM.DataFrame.Tests
+ForgeORM.AspNetCore.Tests
+```
+
+Test cases should cover:
+
+- record constructor mapping
+- enum mapping
+- `IN @Ids` expansion
+- CancellationToken not bound as parameter
+- CSV dirty-data import
+- JSON dirty-data import
+- numeric CSV headers
+- safe table-name validation
+- analytics SQL rendering
+- analytics dynamic execution
+- SplitGraph one-to-one and one-to-many
+
+---
+
+# 49. ForgeCommerce Demo
+
+ForgeCommerce is the official demo repository for ForgeORM.
+
+```text
+https://github.com/ahmedRaheel/ForgeCommerce
+```
+
+It demonstrates:
+
+- Minimal APIs
+- ForgeDbContext
+- Search APIs
+- SplitGraph
+- record mapping
+- enum mapping
+- analytics window functions
+- DataFrame CSV/JSON import
+- table creation from uploaded files
+- TVP graph insert
+- Swagger
+
+---
+
+# 50. Enterprise Security Best Practices
+
+Always validate dynamic identifiers. Always parameterize values. Never concatenate user values into SQL.
+
+Safe:
+
+```csharp
+await db.QueryAsync<Order>(
+    "SELECT * FROM Orders WHERE CustomerId = @customerId",
+    new { customerId });
+```
+
+Unsafe:
+
+```csharp
+await db.QueryAsync<Order>(
+    $"SELECT * FROM Orders WHERE CustomerId = {customerId}");
+```
+
+ForgeORM should provide secure defaults for:
+
+- dynamic table names
+- CSV/JSON imports
+- DataFrame persistence
+- query builders
+- analytics execution
+- stored procedure parameters

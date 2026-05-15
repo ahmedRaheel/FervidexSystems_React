@@ -34,1664 +34,1198 @@ Error generating stack: `+e.message+`
 `))+1))}let o=`#`.repeat(i),s=n.enter(`headingAtx`),c=n.enter(`phrasing`);a.move(o+` `);let l=n.containerPhrasing(e,{before:`# `,after:`
 `,...a.current()});return/^[\t ]/.test(l)&&(l=Fv(l.charCodeAt(0))+l.slice(1)),l=l?o+` `+l:o,n.options.closeAtx&&(l+=` `+o),c(),s(),l}Vv.peek=Hv;function Vv(e){return e.value||``}function Hv(){return`<`}Uv.peek=Wv;function Uv(e,t,n,r){let i=Mv(n),a=i===`"`?`Quote`:`Apostrophe`,o=n.enter(`image`),s=n.enter(`label`),c=n.createTracker(r),l=c.move(`![`);return l+=c.move(n.safe(e.alt,{before:l,after:`]`,...c.current()})),l+=c.move(`](`),s(),!e.url&&e.title||/[\0- \u007F]/.test(e.url)?(s=n.enter(`destinationLiteral`),l+=c.move(`<`),l+=c.move(n.safe(e.url,{before:l,after:`>`,...c.current()})),l+=c.move(`>`)):(s=n.enter(`destinationRaw`),l+=c.move(n.safe(e.url,{before:l,after:e.title?` `:`)`,...c.current()}))),s(),e.title&&(s=n.enter(`title${a}`),l+=c.move(` `+i),l+=c.move(n.safe(e.title,{before:l,after:i,...c.current()})),l+=c.move(i),s()),l+=c.move(`)`),o(),l}function Wv(){return`!`}Gv.peek=Kv;function Gv(e,t,n,r){let i=e.referenceType,a=n.enter(`imageReference`),o=n.enter(`label`),s=n.createTracker(r),c=s.move(`![`),l=n.safe(e.alt,{before:c,after:`]`,...s.current()});c+=s.move(l+`][`),o();let u=n.stack;n.stack=[],o=n.enter(`reference`);let d=n.safe(n.associationId(e),{before:c,after:`]`,...s.current()});return o(),n.stack=u,a(),i===`full`||!l||l!==d?c+=s.move(d+`]`):i===`shortcut`?c=c.slice(0,-1):c+=s.move(`]`),c}function Kv(){return`!`}qv.peek=Jv;function qv(e,t,n){let r=e.value||``,i="`",a=-1;for(;RegExp("(^|[^`])"+i+"([^`]|$)").test(r);)i+="`";for(/[^ \r\n]/.test(r)&&(/^[ \r\n]/.test(r)&&/[ \r\n]$/.test(r)||/^`|`$/.test(r))&&(r=` `+r+` `);++a<n.unsafe.length;){let e=n.unsafe[a],t=n.compilePattern(e),i;if(e.atBreak)for(;i=t.exec(r);){let e=i.index;r.charCodeAt(e)===10&&r.charCodeAt(e-1)===13&&e--,r=r.slice(0,e)+` `+r.slice(i.index+1)}}return i+r+i}function Jv(){return"`"}function Yv(e,t){let n=wf(e);return!!(!t.options.resourceLink&&e.url&&!e.title&&e.children&&e.children.length===1&&e.children[0].type===`text`&&(n===e.url||`mailto:`+n===e.url)&&/^[a-z][a-z+.-]+:/i.test(e.url)&&!/[\0- <>\u007F]/.test(e.url))}Xv.peek=Zv;function Xv(e,t,n,r){let i=Mv(n),a=i===`"`?`Quote`:`Apostrophe`,o=n.createTracker(r),s,c;if(Yv(e,n)){let t=n.stack;n.stack=[],s=n.enter(`autolink`);let r=o.move(`<`);return r+=o.move(n.containerPhrasing(e,{before:r,after:`>`,...o.current()})),r+=o.move(`>`),s(),n.stack=t,r}s=n.enter(`link`),c=n.enter(`label`);let l=o.move(`[`);return l+=o.move(n.containerPhrasing(e,{before:l,after:`](`,...o.current()})),l+=o.move(`](`),c(),!e.url&&e.title||/[\0- \u007F]/.test(e.url)?(c=n.enter(`destinationLiteral`),l+=o.move(`<`),l+=o.move(n.safe(e.url,{before:l,after:`>`,...o.current()})),l+=o.move(`>`)):(c=n.enter(`destinationRaw`),l+=o.move(n.safe(e.url,{before:l,after:e.title?` `:`)`,...o.current()}))),c(),e.title&&(c=n.enter(`title${a}`),l+=o.move(` `+i),l+=o.move(n.safe(e.title,{before:l,after:i,...o.current()})),l+=o.move(i),c()),l+=o.move(`)`),s(),l}function Zv(e,t,n){return Yv(e,n)?`<`:`[`}Qv.peek=$v;function Qv(e,t,n,r){let i=e.referenceType,a=n.enter(`linkReference`),o=n.enter(`label`),s=n.createTracker(r),c=s.move(`[`),l=n.containerPhrasing(e,{before:c,after:`]`,...s.current()});c+=s.move(l+`][`),o();let u=n.stack;n.stack=[],o=n.enter(`reference`);let d=n.safe(n.associationId(e),{before:c,after:`]`,...s.current()});return o(),n.stack=u,a(),i===`full`||!l||l!==d?c+=s.move(d+`]`):i===`shortcut`?c=c.slice(0,-1):c+=s.move(`]`),c}function $v(){return`[`}function ey(e){let t=e.options.bullet||`*`;if(t!==`*`&&t!==`+`&&t!==`-`)throw Error("Cannot serialize items with `"+t+"` for `options.bullet`, expected `*`, `+`, or `-`");return t}function ty(e){let t=ey(e),n=e.options.bulletOther;if(!n)return t===`*`?`-`:`*`;if(n!==`*`&&n!==`+`&&n!==`-`)throw Error("Cannot serialize items with `"+n+"` for `options.bulletOther`, expected `*`, `+`, or `-`");if(n===t)throw Error("Expected `bullet` (`"+t+"`) and `bulletOther` (`"+n+"`) to be different");return n}function ny(e){let t=e.options.bulletOrdered||`.`;if(t!==`.`&&t!==`)`)throw Error("Cannot serialize items with `"+t+"` for `options.bulletOrdered`, expected `.` or `)`");return t}function ry(e){let t=e.options.rule||`*`;if(t!==`*`&&t!==`-`&&t!==`_`)throw Error("Cannot serialize rules with `"+t+"` for `options.rule`, expected `*`, `-`, or `_`");return t}function iy(e,t,n,r){let i=n.enter(`list`),a=n.bulletCurrent,o=e.ordered?ny(n):ey(n),s=e.ordered?o===`.`?`)`:`.`:ty(n),c=t&&n.bulletLastUsed?o===n.bulletLastUsed:!1;if(!e.ordered){let t=e.children?e.children[0]:void 0;if((o===`*`||o===`-`)&&t&&(!t.children||!t.children[0])&&n.stack[n.stack.length-1]===`list`&&n.stack[n.stack.length-2]===`listItem`&&n.stack[n.stack.length-3]===`list`&&n.stack[n.stack.length-4]===`listItem`&&n.indexStack[n.indexStack.length-1]===0&&n.indexStack[n.indexStack.length-2]===0&&n.indexStack[n.indexStack.length-3]===0&&(c=!0),ry(n)===o&&t){let t=-1;for(;++t<e.children.length;){let n=e.children[t];if(n&&n.type===`listItem`&&n.children&&n.children[0]&&n.children[0].type===`thematicBreak`){c=!0;break}}}}c&&(o=s),n.bulletCurrent=o;let l=n.containerFlow(e,r);return n.bulletLastUsed=o,n.bulletCurrent=a,i(),l}function ay(e){let t=e.options.listItemIndent||`one`;if(t!==`tab`&&t!==`one`&&t!==`mixed`)throw Error("Cannot serialize items with `"+t+"` for `options.listItemIndent`, expected `tab`, `one`, or `mixed`");return t}function oy(e,t,n,r){let i=ay(n),a=n.bulletCurrent||ey(n);t&&t.type===`list`&&t.ordered&&(a=(typeof t.start==`number`&&t.start>-1?t.start:1)+(n.options.incrementListMarker===!1?0:t.children.indexOf(e))+a);let o=a.length+1;(i===`tab`||i===`mixed`&&(t&&t.type===`list`&&t.spread||e.spread))&&(o=Math.ceil(o/4)*4);let s=n.createTracker(r);s.move(a+` `.repeat(o-a.length)),s.shift(o);let c=n.enter(`listItem`),l=n.indentLines(n.containerFlow(e,s.current()),u);return c(),l;function u(e,t,n){return t?(n?``:` `.repeat(o))+e:(n?a:a+` `.repeat(o-a.length))+e}}function sy(e,t,n,r){let i=n.enter(`paragraph`),a=n.enter(`phrasing`),o=n.containerPhrasing(e,r);return a(),i(),o}var cy=hg([`break`,`delete`,`emphasis`,`footnote`,`footnoteReference`,`image`,`imageReference`,`inlineCode`,`inlineMath`,`link`,`linkReference`,`mdxJsxTextElement`,`mdxTextExpression`,`strong`,`text`,`textDirective`]);function ly(e,t,n,r){return(e.children.some(function(e){return cy(e)})?n.containerPhrasing:n.containerFlow).call(n,e,r)}function uy(e){let t=e.options.strong||`*`;if(t!==`*`&&t!==`_`)throw Error("Cannot serialize strong with `"+t+"` for `options.strong`, expected `*`, or `_`");return t}dy.peek=fy;function dy(e,t,n,r){let i=uy(n),a=n.enter(`strong`),o=n.createTracker(r),s=o.move(i+i),c=o.move(n.containerPhrasing(e,{after:i,before:s,...o.current()})),l=c.charCodeAt(0),u=Iv(r.before.charCodeAt(r.before.length-1),l,i);u.inside&&(c=Fv(l)+c.slice(1));let d=c.charCodeAt(c.length-1),f=Iv(r.after.charCodeAt(0),d,i);f.inside&&(c=c.slice(0,-1)+Fv(d));let p=o.move(i+i);return a(),n.attentionEncodeSurroundingInfo={after:f.outside,before:u.outside},s+c+p}function fy(e,t,n){return n.options.strong||`*`}function py(e,t,n,r){return n.safe(e.value,r)}function my(e){let t=e.options.ruleRepetition||3;if(t<3)throw Error("Cannot serialize rules with repetition `"+t+"` for `options.ruleRepetition`, expected `3` or more");return t}function hy(e,t,n){let r=(ry(n)+(n.options.ruleSpaces?` `:``)).repeat(my(n));return n.options.ruleSpaces?r.slice(0,-1):r}var gy={blockquote:Sv,break:Ev,code:Av,definition:Nv,emphasis:Lv,hardBreak:Ev,heading:Bv,html:Vv,image:Uv,imageReference:Gv,inlineCode:qv,link:Xv,linkReference:Qv,list:iy,listItem:oy,paragraph:sy,root:ly,strong:dy,text:py,thematicBreak:hy};function _y(){return{enter:{table:vy,tableData:Sy,tableHeader:Sy,tableRow:by},exit:{codeText:Cy,table:yy,tableData:xy,tableHeader:xy,tableRow:xy}}}function vy(e){let t=e._align;this.enter({type:`table`,align:t.map(function(e){return e===`none`?null:e}),children:[]},e),this.data.inTable=!0}function yy(e){this.exit(e),this.data.inTable=void 0}function by(e){this.enter({type:`tableRow`,children:[]},e)}function xy(e){this.exit(e)}function Sy(e){this.enter({type:`tableCell`,children:[]},e)}function Cy(e){let t=this.resume();this.data.inTable&&(t=t.replace(/\\([\\|])/g,wy));let n=this.stack[this.stack.length-1];n.type,n.value=t,this.exit(e)}function wy(e,t){return t===`|`?t:e}function Ty(e){let t=e||{},n=t.tableCellPadding,r=t.tablePipeAlign,i=t.stringLength,a=n?` `:`|`;return{unsafe:[{character:`\r`,inConstruct:`tableCell`},{character:`
 `,inConstruct:`tableCell`},{atBreak:!0,character:`|`,after:`[	 :-]`},{character:`|`,inConstruct:`tableCell`},{atBreak:!0,character:`:`,after:`-`},{atBreak:!0,character:`-`,after:`[:|-]`}],handlers:{inlineCode:f,table:o,tableCell:c,tableRow:s}};function o(e,t,n,r){return l(u(e,n,r),e.align)}function s(e,t,n,r){let i=l([d(e,n,r)]);return i.slice(0,i.indexOf(`
-`))}function c(e,t,n,r){let i=n.enter(`tableCell`),o=n.enter(`phrasing`),s=n.containerPhrasing(e,{...r,before:a,after:a});return o(),i(),s}function l(e,t){return yv(e,{align:t,alignDelimiters:r,padding:n,stringLength:i})}function u(e,t,n){let r=e.children,i=-1,a=[],o=t.enter(`table`);for(;++i<r.length;)a[i]=d(r[i],t,n);return o(),a}function d(e,t,n){let r=e.children,i=-1,a=[],o=t.enter(`tableRow`);for(;++i<r.length;)a[i]=c(r[i],e,t,n);return o(),a}function f(e,t,n){let r=gy.inlineCode(e,t,n);return n.stack.includes(`tableCell`)&&(r=r.replace(/\|/g,`\\$&`)),r}}function Ey(){return{exit:{taskListCheckValueChecked:Oy,taskListCheckValueUnchecked:Oy,paragraph:ky}}}function Dy(){return{unsafe:[{atBreak:!0,character:`-`,after:`[:|-]`}],handlers:{listItem:Ay}}}function Oy(e){let t=this.stack[this.stack.length-2];t.type,t.checked=e.type===`taskListCheckValueChecked`}function ky(e){let t=this.stack[this.stack.length-2];if(t&&t.type===`listItem`&&typeof t.checked==`boolean`){let e=this.stack[this.stack.length-1];e.type;let n=e.children[0];if(n&&n.type===`text`){let r=t.children,i=-1,a;for(;++i<r.length;){let e=r[i];if(e.type===`paragraph`){a=e;break}}a===e&&(n.value=n.value.slice(1),n.value.length===0?e.children.shift():e.position&&n.position&&typeof n.position.start.offset==`number`&&(n.position.start.column++,n.position.start.offset++,e.position.start=Object.assign({},n.position.start)))}}this.exit(e)}function Ay(e,t,n,r){let i=e.children[0],a=typeof e.checked==`boolean`&&i&&i.type===`paragraph`,o=`[`+(e.checked?`x`:` `)+`] `,s=n.createTracker(r);a&&s.move(o);let c=gy.listItem(e,t,n,{...r,...s.current()});return a&&(c=c.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/,l)),c;function l(e){return e+o}}function jy(){return[L_(),sv(),fv(),_y(),Ey()]}function My(e){return{extensions:[R_(),cv(e),pv(),Ty(e),Dy()]}}var Ny={tokenize:qy,partial:!0},Py={tokenize:Jy,partial:!0},Fy={tokenize:Yy,partial:!0},Iy={tokenize:Xy,partial:!0},Ly={tokenize:Zy,partial:!0},Ry={name:`wwwAutolink`,tokenize:Gy,previous:Qy},zy={name:`protocolAutolink`,tokenize:Ky,previous:$y},By={name:`emailAutolink`,tokenize:Wy,previous:eb},Vy={};function Hy(){return{text:Vy}}for(var Uy=48;Uy<123;)Vy[Uy]=By,Uy++,Uy===58?Uy=65:Uy===91&&(Uy=97);Vy[43]=By,Vy[45]=By,Vy[46]=By,Vy[95]=By,Vy[72]=[By,zy],Vy[104]=[By,zy],Vy[87]=[By,Ry],Vy[119]=[By,Ry];function Wy(e,t,n){let r=this,i,a;return o;function o(t){return!tb(t)||!eb.call(r,r.previous)||nb(r.events)?n(t):(e.enter(`literalAutolink`),e.enter(`literalAutolinkEmail`),s(t))}function s(t){return tb(t)?(e.consume(t),s):t===64?(e.consume(t),c):n(t)}function c(t){return t===46?e.check(Ly,u,l)(t):t===45||t===95||zf(t)?(a=!0,e.consume(t),c):u(t)}function l(t){return e.consume(t),i=!0,c}function u(o){return a&&i&&Rf(r.previous)?(e.exit(`literalAutolinkEmail`),e.exit(`literalAutolink`),t(o)):n(o)}}function Gy(e,t,n){let r=this;return i;function i(t){return t!==87&&t!==119||!Qy.call(r,r.previous)||nb(r.events)?n(t):(e.enter(`literalAutolink`),e.enter(`literalAutolinkWww`),e.check(Ny,e.attempt(Py,e.attempt(Fy,a),n),n)(t))}function a(n){return e.exit(`literalAutolinkWww`),e.exit(`literalAutolink`),t(n)}}function Ky(e,t,n){let r=this,i=``,a=!1;return o;function o(t){return(t===72||t===104)&&$y.call(r,r.previous)&&!nb(r.events)?(e.enter(`literalAutolink`),e.enter(`literalAutolinkHttp`),i+=String.fromCodePoint(t),e.consume(t),s):n(t)}function s(t){if(Rf(t)&&i.length<5)return i+=String.fromCodePoint(t),e.consume(t),s;if(t===58){let n=i.toLowerCase();if(n===`http`||n===`https`)return e.consume(t),c}return n(t)}function c(t){return t===47?(e.consume(t),a?l:(a=!0,c)):n(t)}function l(t){return t===null||Vf(t)||Gf(t)||qf(t)||Kf(t)?n(t):e.attempt(Py,e.attempt(Fy,u),n)(t)}function u(n){return e.exit(`literalAutolinkHttp`),e.exit(`literalAutolink`),t(n)}}function qy(e,t,n){let r=0;return i;function i(t){return(t===87||t===119)&&r<3?(r++,e.consume(t),i):t===46&&r===3?(e.consume(t),a):n(t)}function a(e){return e===null?n(e):t(e)}}function Jy(e,t,n){let r,i,a;return o;function o(t){return t===46||t===95?e.check(Iy,c,s)(t):t===null||Gf(t)||qf(t)||t!==45&&Kf(t)?c(t):(a=!0,e.consume(t),o)}function s(t){return t===95?r=!0:(i=r,r=void 0),e.consume(t),o}function c(e){return i||r||!a?n(e):t(e)}}function Yy(e,t){let n=0,r=0;return i;function i(o){return o===40?(n++,e.consume(o),i):o===41&&r<n?a(o):o===33||o===34||o===38||o===39||o===41||o===42||o===44||o===46||o===58||o===59||o===60||o===63||o===93||o===95||o===126?e.check(Iy,t,a)(o):o===null||Gf(o)||qf(o)?t(o):(e.consume(o),i)}function a(t){return t===41&&r++,e.consume(t),i}}function Xy(e,t,n){return r;function r(o){return o===33||o===34||o===39||o===41||o===42||o===44||o===46||o===58||o===59||o===63||o===95||o===126?(e.consume(o),r):o===38?(e.consume(o),a):o===93?(e.consume(o),i):o===60||o===null||Gf(o)||qf(o)?t(o):n(o)}function i(e){return e===null||e===40||e===91||Gf(e)||qf(e)?t(e):r(e)}function a(e){return Rf(e)?o(e):n(e)}function o(t){return t===59?(e.consume(t),r):Rf(t)?(e.consume(t),o):n(t)}}function Zy(e,t,n){return r;function r(t){return e.consume(t),i}function i(e){return zf(e)?n(e):t(e)}}function Qy(e){return e===null||e===40||e===42||e===95||e===91||e===93||e===126||Gf(e)}function $y(e){return!Rf(e)}function eb(e){return!(e===47||tb(e))}function tb(e){return e===43||e===45||e===46||e===95||zf(e)}function nb(e){let t=e.length,n=!1;for(;t--;){let r=e[t][1];if((r.type===`labelLink`||r.type===`labelImage`)&&!r._balanced){n=!0;break}if(r._gfmAutolinkLiteralWalkedInto){n=!1;break}}return e.length>0&&!n&&(e[e.length-1][1]._gfmAutolinkLiteralWalkedInto=!0),n}var rb={tokenize:db,partial:!0};function ib(){return{document:{91:{name:`gfmFootnoteDefinition`,tokenize:cb,continuation:{tokenize:lb},exit:ub}},text:{91:{name:`gfmFootnoteCall`,tokenize:sb},93:{name:`gfmPotentialFootnoteCall`,add:`after`,tokenize:ab,resolveTo:ob}}}}function ab(e,t,n){let r=this,i=r.events.length,a=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),o;for(;i--;){let e=r.events[i][1];if(e.type===`labelImage`){o=e;break}if(e.type===`gfmFootnoteCall`||e.type===`labelLink`||e.type===`label`||e.type===`image`||e.type===`link`)break}return s;function s(i){if(!o||!o._balanced)return n(i);let s=Lf(r.sliceSerialize({start:o.end,end:r.now()}));return s.codePointAt(0)!==94||!a.includes(s.slice(1))?n(i):(e.enter(`gfmFootnoteCallLabelMarker`),e.consume(i),e.exit(`gfmFootnoteCallLabelMarker`),t(i))}}function ob(e,t){let n=e.length;for(;n--;)if(e[n][1].type===`labelImage`&&e[n][0]===`enter`){e[n][1];break}e[n+1][1].type=`data`,e[n+3][1].type=`gfmFootnoteCallLabelMarker`;let r={type:`gfmFootnoteCall`,start:Object.assign({},e[n+3][1].start),end:Object.assign({},e[e.length-1][1].end)},i={type:`gfmFootnoteCallMarker`,start:Object.assign({},e[n+3][1].end),end:Object.assign({},e[n+3][1].end)};i.end.column++,i.end.offset++,i.end._bufferIndex++;let a={type:`gfmFootnoteCallString`,start:Object.assign({},i.end),end:Object.assign({},e[e.length-1][1].start)},o={type:`chunkString`,contentType:`string`,start:Object.assign({},a.start),end:Object.assign({},a.end)},s=[e[n+1],e[n+2],[`enter`,r,t],e[n+3],e[n+4],[`enter`,i,t],[`exit`,i,t],[`enter`,a,t],[`enter`,o,t],[`exit`,o,t],[`exit`,a,t],e[e.length-2],e[e.length-1],[`exit`,r,t]];return e.splice(n,e.length-n+1,...s),e}function sb(e,t,n){let r=this,i=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),a=0,o;return s;function s(t){return e.enter(`gfmFootnoteCall`),e.enter(`gfmFootnoteCallLabelMarker`),e.consume(t),e.exit(`gfmFootnoteCallLabelMarker`),c}function c(t){return t===94?(e.enter(`gfmFootnoteCallMarker`),e.consume(t),e.exit(`gfmFootnoteCallMarker`),e.enter(`gfmFootnoteCallString`),e.enter(`chunkString`).contentType=`string`,l):n(t)}function l(s){if(a>999||s===93&&!o||s===null||s===91||Gf(s))return n(s);if(s===93){e.exit(`chunkString`);let a=e.exit(`gfmFootnoteCallString`);return i.includes(Lf(r.sliceSerialize(a)))?(e.enter(`gfmFootnoteCallLabelMarker`),e.consume(s),e.exit(`gfmFootnoteCallLabelMarker`),e.exit(`gfmFootnoteCall`),t):n(s)}return Gf(s)||(o=!0),a++,e.consume(s),s===92?u:l}function u(t){return t===91||t===92||t===93?(e.consume(t),a++,l):l(t)}}function cb(e,t,n){let r=this,i=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),a,o=0,s;return c;function c(t){return e.enter(`gfmFootnoteDefinition`)._container=!0,e.enter(`gfmFootnoteDefinitionLabel`),e.enter(`gfmFootnoteDefinitionLabelMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionLabelMarker`),l}function l(t){return t===94?(e.enter(`gfmFootnoteDefinitionMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionMarker`),e.enter(`gfmFootnoteDefinitionLabelString`),e.enter(`chunkString`).contentType=`string`,u):n(t)}function u(t){if(o>999||t===93&&!s||t===null||t===91||Gf(t))return n(t);if(t===93){e.exit(`chunkString`);let n=e.exit(`gfmFootnoteDefinitionLabelString`);return a=Lf(r.sliceSerialize(n)),e.enter(`gfmFootnoteDefinitionLabelMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionLabelMarker`),e.exit(`gfmFootnoteDefinitionLabel`),f}return Gf(t)||(s=!0),o++,e.consume(t),t===92?d:u}function d(t){return t===91||t===92||t===93?(e.consume(t),o++,u):u(t)}function f(t){return t===58?(e.enter(`definitionMarker`),e.consume(t),e.exit(`definitionMarker`),i.includes(a)||i.push(a),$(e,p,`gfmFootnoteDefinitionWhitespace`)):n(t)}function p(e){return t(e)}}function lb(e,t,n){return e.check(up,t,e.attempt(rb,t,n))}function ub(e){e.exit(`gfmFootnoteDefinition`)}function db(e,t,n){let r=this;return $(e,i,`gfmFootnoteDefinitionIndent`,5);function i(e){let i=r.events[r.events.length-1];return i&&i[1].type===`gfmFootnoteDefinitionIndent`&&i[2].sliceSerialize(i[1],!0).length===4?t(e):n(e)}}function fb(e){let t=(e||{}).singleTilde,n={name:`strikethrough`,tokenize:i,resolveAll:r};return t??=!0,{text:{126:n},insideSpan:{null:[n]},attentionMarkers:{null:[126]}};function r(e,t){let n=-1;for(;++n<e.length;)if(e[n][0]===`enter`&&e[n][1].type===`strikethroughSequenceTemporary`&&e[n][1]._close){let r=n;for(;r--;)if(e[r][0]===`exit`&&e[r][1].type===`strikethroughSequenceTemporary`&&e[r][1]._open&&e[n][1].end.offset-e[n][1].start.offset===e[r][1].end.offset-e[r][1].start.offset){e[n][1].type=`strikethroughSequence`,e[r][1].type=`strikethroughSequence`;let i={type:`strikethrough`,start:Object.assign({},e[r][1].start),end:Object.assign({},e[n][1].end)},a={type:`strikethroughText`,start:Object.assign({},e[r][1].end),end:Object.assign({},e[n][1].start)},o=[[`enter`,i,t],[`enter`,e[r][1],t],[`exit`,e[r][1],t],[`enter`,a,t]],s=t.parser.constructs.insideSpan.null;s&&Af(o,o.length,0,rp(s,e.slice(r+1,n),t)),Af(o,o.length,0,[[`exit`,a,t],[`enter`,e[n][1],t],[`exit`,e[n][1],t],[`exit`,i,t]]),Af(e,r-1,n-r+3,o),n=r+o.length-2;break}}for(n=-1;++n<e.length;)e[n][1].type===`strikethroughSequenceTemporary`&&(e[n][1].type=`data`);return e}function i(e,n,r){let i=this.previous,a=this.events,o=0;return s;function s(t){return i===126&&a[a.length-1][1].type!==`characterEscape`?r(t):(e.enter(`strikethroughSequenceTemporary`),c(t))}function c(a){let s=np(i);if(a===126)return o>1?r(a):(e.consume(a),o++,c);if(o<2&&!t)return r(a);let l=e.exit(`strikethroughSequenceTemporary`),u=np(a);return l._open=!u||u===2&&!!s,l._close=!s||s===2&&!!u,n(a)}}}var pb=class{constructor(){this.map=[]}add(e,t,n){mb(this,e,t,n)}consume(e){if(this.map.sort(function(e,t){return e[0]-t[0]}),this.map.length===0)return;let t=this.map.length,n=[];for(;t>0;)--t,n.push(e.slice(this.map[t][0]+this.map[t][1]),this.map[t][2]),e.length=this.map[t][0];n.push(e.slice()),e.length=0;let r=n.pop();for(;r;){for(let t of r)e.push(t);r=n.pop()}this.map.length=0}};function mb(e,t,n,r){let i=0;if(!(n===0&&r.length===0)){for(;i<e.map.length;){if(e.map[i][0]===t){e.map[i][1]+=n,e.map[i][2].push(...r);return}i+=1}e.map.push([t,n,r])}}function hb(e,t){let n=!1,r=[];for(;t<e.length;){let i=e[t];if(n){if(i[0]===`enter`)i[1].type===`tableContent`&&r.push(e[t+1][1].type===`tableDelimiterMarker`?`left`:`none`);else if(i[1].type===`tableContent`){if(e[t-1][1].type===`tableDelimiterMarker`){let e=r.length-1;r[e]=r[e]===`left`?`center`:`right`}}else if(i[1].type===`tableDelimiterRow`)break}else i[0]===`enter`&&i[1].type===`tableDelimiterRow`&&(n=!0);t+=1}return r}function gb(){return{flow:{null:{name:`table`,tokenize:_b,resolveAll:vb}}}}function _b(e,t,n){let r=this,i=0,a=0,o;return s;function s(e){let t=r.events.length-1;for(;t>-1;){let e=r.events[t][1].type;if(e===`lineEnding`||e===`linePrefix`)t--;else break}let i=t>-1?r.events[t][1].type:null,a=i===`tableHead`||i===`tableRow`?S:c;return a===S&&r.parser.lazy[r.now().line]?n(e):a(e)}function c(t){return e.enter(`tableHead`),e.enter(`tableRow`),l(t)}function l(e){return e===124?u(e):(o=!0,a+=1,u(e))}function u(t){return t===null?n(t):Z(t)?a>1?(a=0,r.interrupt=!0,e.exit(`tableRow`),e.enter(`lineEnding`),e.consume(t),e.exit(`lineEnding`),p):n(t):Q(t)?$(e,u,`whitespace`)(t):(a+=1,o&&(o=!1,i+=1),t===124?(e.enter(`tableCellDivider`),e.consume(t),e.exit(`tableCellDivider`),o=!0,u):(e.enter(`data`),d(t)))}function d(t){return t===null||t===124||Gf(t)?(e.exit(`data`),u(t)):(e.consume(t),t===92?f:d)}function f(t){return t===92||t===124?(e.consume(t),d):d(t)}function p(t){return r.interrupt=!1,r.parser.lazy[r.now().line]?n(t):(e.enter(`tableDelimiterRow`),o=!1,Q(t)?$(e,m,`linePrefix`,r.parser.constructs.disable.null.includes(`codeIndented`)?void 0:4)(t):m(t))}function m(t){return t===45||t===58?g(t):t===124?(o=!0,e.enter(`tableCellDivider`),e.consume(t),e.exit(`tableCellDivider`),h):x(t)}function h(t){return Q(t)?$(e,g,`whitespace`)(t):g(t)}function g(t){return t===58?(a+=1,o=!0,e.enter(`tableDelimiterMarker`),e.consume(t),e.exit(`tableDelimiterMarker`),_):t===45?(a+=1,_(t)):t===null||Z(t)?b(t):x(t)}function _(t){return t===45?(e.enter(`tableDelimiterFiller`),v(t)):x(t)}function v(t){return t===45?(e.consume(t),v):t===58?(o=!0,e.exit(`tableDelimiterFiller`),e.enter(`tableDelimiterMarker`),e.consume(t),e.exit(`tableDelimiterMarker`),y):(e.exit(`tableDelimiterFiller`),y(t))}function y(t){return Q(t)?$(e,b,`whitespace`)(t):b(t)}function b(n){return n===124?m(n):n===null||Z(n)?!o||i!==a?x(n):(e.exit(`tableDelimiterRow`),e.exit(`tableHead`),t(n)):x(n)}function x(e){return n(e)}function S(t){return e.enter(`tableRow`),C(t)}function C(n){return n===124?(e.enter(`tableCellDivider`),e.consume(n),e.exit(`tableCellDivider`),C):n===null||Z(n)?(e.exit(`tableRow`),t(n)):Q(n)?$(e,C,`whitespace`)(n):(e.enter(`data`),w(n))}function w(t){return t===null||t===124||Gf(t)?(e.exit(`data`),C(t)):(e.consume(t),t===92?T:w)}function T(t){return t===92||t===124?(e.consume(t),w):w(t)}}function vb(e,t){let n=-1,r=!0,i=0,a=[0,0,0,0],o=[0,0,0,0],s=!1,c=0,l,u,d,f=new pb;for(;++n<e.length;){let p=e[n],m=p[1];p[0]===`enter`?m.type===`tableHead`?(s=!1,c!==0&&(bb(f,t,c,l,u),u=void 0,c=0),l={type:`table`,start:Object.assign({},m.start),end:Object.assign({},m.end)},f.add(n,0,[[`enter`,l,t]])):m.type===`tableRow`||m.type===`tableDelimiterRow`?(r=!0,d=void 0,a=[0,0,0,0],o=[0,n+1,0,0],s&&(s=!1,u={type:`tableBody`,start:Object.assign({},m.start),end:Object.assign({},m.end)},f.add(n,0,[[`enter`,u,t]])),i=m.type===`tableDelimiterRow`?2:u?3:1):i&&(m.type===`data`||m.type===`tableDelimiterMarker`||m.type===`tableDelimiterFiller`)?(r=!1,o[2]===0&&(a[1]!==0&&(o[0]=o[1],d=yb(f,t,a,i,void 0,d),a=[0,0,0,0]),o[2]=n)):m.type===`tableCellDivider`&&(r?r=!1:(a[1]!==0&&(o[0]=o[1],d=yb(f,t,a,i,void 0,d)),a=o,o=[a[1],n,0,0])):m.type===`tableHead`?(s=!0,c=n):m.type===`tableRow`||m.type===`tableDelimiterRow`?(c=n,a[1]===0?o[1]!==0&&(d=yb(f,t,o,i,n,d)):(o[0]=o[1],d=yb(f,t,a,i,n,d)),i=0):i&&(m.type===`data`||m.type===`tableDelimiterMarker`||m.type===`tableDelimiterFiller`)&&(o[3]=n)}for(c!==0&&bb(f,t,c,l,u),f.consume(t.events),n=-1;++n<t.events.length;){let e=t.events[n];e[0]===`enter`&&e[1].type===`table`&&(e[1]._align=hb(t.events,n))}return e}function yb(e,t,n,r,i,a){let o=r===1?`tableHeader`:r===2?`tableDelimiter`:`tableData`;n[0]!==0&&(a.end=Object.assign({},xb(t.events,n[0])),e.add(n[0],0,[[`exit`,a,t]]));let s=xb(t.events,n[1]);if(a={type:o,start:Object.assign({},s),end:Object.assign({},s)},e.add(n[1],0,[[`enter`,a,t]]),n[2]!==0){let i=xb(t.events,n[2]),a=xb(t.events,n[3]),o={type:`tableContent`,start:Object.assign({},i),end:Object.assign({},a)};if(e.add(n[2],0,[[`enter`,o,t]]),r!==2){let r=t.events[n[2]],i=t.events[n[3]];if(r[1].end=Object.assign({},i[1].end),r[1].type=`chunkText`,r[1].contentType=`text`,n[3]>n[2]+1){let t=n[2]+1,r=n[3]-n[2]-1;e.add(t,r,[])}}e.add(n[3]+1,0,[[`exit`,o,t]])}return i!==void 0&&(a.end=Object.assign({},xb(t.events,i)),e.add(i,0,[[`exit`,a,t]]),a=void 0),a}function bb(e,t,n,r,i){let a=[],o=xb(t.events,n);i&&(i.end=Object.assign({},o),a.push([`exit`,i,t])),r.end=Object.assign({},o),a.push([`exit`,r,t]),e.add(n+1,0,a)}function xb(e,t){let n=e[t],r=n[0]===`enter`?`start`:`end`;return n[1][r]}var Sb={name:`tasklistCheck`,tokenize:wb};function Cb(){return{text:{91:Sb}}}function wb(e,t,n){let r=this;return i;function i(t){return r.previous!==null||!r._gfmTasklistFirstContentOfListItem?n(t):(e.enter(`taskListCheck`),e.enter(`taskListCheckMarker`),e.consume(t),e.exit(`taskListCheckMarker`),a)}function a(t){return Gf(t)?(e.enter(`taskListCheckValueUnchecked`),e.consume(t),e.exit(`taskListCheckValueUnchecked`),o):t===88||t===120?(e.enter(`taskListCheckValueChecked`),e.consume(t),e.exit(`taskListCheckValueChecked`),o):n(t)}function o(t){return t===93?(e.enter(`taskListCheckMarker`),e.consume(t),e.exit(`taskListCheckMarker`),e.exit(`taskListCheck`),s):n(t)}function s(r){return Z(r)?t(r):Q(r)?e.check({tokenize:Tb},t,n)(r):n(r)}}function Tb(e,t,n){return $(e,r,`whitespace`);function r(e){return e===null?n(e):t(e)}}function Eb(e){return Nf([Hy(),ib(),fb(e),gb(),Cb()])}var Db={};function Ob(e){let t=this,n=e||Db,r=t.data(),i=r.micromarkExtensions||=[],a=r.fromMarkdownExtensions||=[],o=r.toMarkdownExtensions||=[];i.push(Eb(n)),a.push(jy()),o.push(My(n))}var kb=`# ForgeORM Complete Enterprise Wiki
+`))}function c(e,t,n,r){let i=n.enter(`tableCell`),o=n.enter(`phrasing`),s=n.containerPhrasing(e,{...r,before:a,after:a});return o(),i(),s}function l(e,t){return yv(e,{align:t,alignDelimiters:r,padding:n,stringLength:i})}function u(e,t,n){let r=e.children,i=-1,a=[],o=t.enter(`table`);for(;++i<r.length;)a[i]=d(r[i],t,n);return o(),a}function d(e,t,n){let r=e.children,i=-1,a=[],o=t.enter(`tableRow`);for(;++i<r.length;)a[i]=c(r[i],e,t,n);return o(),a}function f(e,t,n){let r=gy.inlineCode(e,t,n);return n.stack.includes(`tableCell`)&&(r=r.replace(/\|/g,`\\$&`)),r}}function Ey(){return{exit:{taskListCheckValueChecked:Oy,taskListCheckValueUnchecked:Oy,paragraph:ky}}}function Dy(){return{unsafe:[{atBreak:!0,character:`-`,after:`[:|-]`}],handlers:{listItem:Ay}}}function Oy(e){let t=this.stack[this.stack.length-2];t.type,t.checked=e.type===`taskListCheckValueChecked`}function ky(e){let t=this.stack[this.stack.length-2];if(t&&t.type===`listItem`&&typeof t.checked==`boolean`){let e=this.stack[this.stack.length-1];e.type;let n=e.children[0];if(n&&n.type===`text`){let r=t.children,i=-1,a;for(;++i<r.length;){let e=r[i];if(e.type===`paragraph`){a=e;break}}a===e&&(n.value=n.value.slice(1),n.value.length===0?e.children.shift():e.position&&n.position&&typeof n.position.start.offset==`number`&&(n.position.start.column++,n.position.start.offset++,e.position.start=Object.assign({},n.position.start)))}}this.exit(e)}function Ay(e,t,n,r){let i=e.children[0],a=typeof e.checked==`boolean`&&i&&i.type===`paragraph`,o=`[`+(e.checked?`x`:` `)+`] `,s=n.createTracker(r);a&&s.move(o);let c=gy.listItem(e,t,n,{...r,...s.current()});return a&&(c=c.replace(/^(?:[*+-]|\d+\.)([\r\n]| {1,3})/,l)),c;function l(e){return e+o}}function jy(){return[L_(),sv(),fv(),_y(),Ey()]}function My(e){return{extensions:[R_(),cv(e),pv(),Ty(e),Dy()]}}var Ny={tokenize:qy,partial:!0},Py={tokenize:Jy,partial:!0},Fy={tokenize:Yy,partial:!0},Iy={tokenize:Xy,partial:!0},Ly={tokenize:Zy,partial:!0},Ry={name:`wwwAutolink`,tokenize:Gy,previous:Qy},zy={name:`protocolAutolink`,tokenize:Ky,previous:$y},By={name:`emailAutolink`,tokenize:Wy,previous:eb},Vy={};function Hy(){return{text:Vy}}for(var Uy=48;Uy<123;)Vy[Uy]=By,Uy++,Uy===58?Uy=65:Uy===91&&(Uy=97);Vy[43]=By,Vy[45]=By,Vy[46]=By,Vy[95]=By,Vy[72]=[By,zy],Vy[104]=[By,zy],Vy[87]=[By,Ry],Vy[119]=[By,Ry];function Wy(e,t,n){let r=this,i,a;return o;function o(t){return!tb(t)||!eb.call(r,r.previous)||nb(r.events)?n(t):(e.enter(`literalAutolink`),e.enter(`literalAutolinkEmail`),s(t))}function s(t){return tb(t)?(e.consume(t),s):t===64?(e.consume(t),c):n(t)}function c(t){return t===46?e.check(Ly,u,l)(t):t===45||t===95||zf(t)?(a=!0,e.consume(t),c):u(t)}function l(t){return e.consume(t),i=!0,c}function u(o){return a&&i&&Rf(r.previous)?(e.exit(`literalAutolinkEmail`),e.exit(`literalAutolink`),t(o)):n(o)}}function Gy(e,t,n){let r=this;return i;function i(t){return t!==87&&t!==119||!Qy.call(r,r.previous)||nb(r.events)?n(t):(e.enter(`literalAutolink`),e.enter(`literalAutolinkWww`),e.check(Ny,e.attempt(Py,e.attempt(Fy,a),n),n)(t))}function a(n){return e.exit(`literalAutolinkWww`),e.exit(`literalAutolink`),t(n)}}function Ky(e,t,n){let r=this,i=``,a=!1;return o;function o(t){return(t===72||t===104)&&$y.call(r,r.previous)&&!nb(r.events)?(e.enter(`literalAutolink`),e.enter(`literalAutolinkHttp`),i+=String.fromCodePoint(t),e.consume(t),s):n(t)}function s(t){if(Rf(t)&&i.length<5)return i+=String.fromCodePoint(t),e.consume(t),s;if(t===58){let n=i.toLowerCase();if(n===`http`||n===`https`)return e.consume(t),c}return n(t)}function c(t){return t===47?(e.consume(t),a?l:(a=!0,c)):n(t)}function l(t){return t===null||Vf(t)||Gf(t)||qf(t)||Kf(t)?n(t):e.attempt(Py,e.attempt(Fy,u),n)(t)}function u(n){return e.exit(`literalAutolinkHttp`),e.exit(`literalAutolink`),t(n)}}function qy(e,t,n){let r=0;return i;function i(t){return(t===87||t===119)&&r<3?(r++,e.consume(t),i):t===46&&r===3?(e.consume(t),a):n(t)}function a(e){return e===null?n(e):t(e)}}function Jy(e,t,n){let r,i,a;return o;function o(t){return t===46||t===95?e.check(Iy,c,s)(t):t===null||Gf(t)||qf(t)||t!==45&&Kf(t)?c(t):(a=!0,e.consume(t),o)}function s(t){return t===95?r=!0:(i=r,r=void 0),e.consume(t),o}function c(e){return i||r||!a?n(e):t(e)}}function Yy(e,t){let n=0,r=0;return i;function i(o){return o===40?(n++,e.consume(o),i):o===41&&r<n?a(o):o===33||o===34||o===38||o===39||o===41||o===42||o===44||o===46||o===58||o===59||o===60||o===63||o===93||o===95||o===126?e.check(Iy,t,a)(o):o===null||Gf(o)||qf(o)?t(o):(e.consume(o),i)}function a(t){return t===41&&r++,e.consume(t),i}}function Xy(e,t,n){return r;function r(o){return o===33||o===34||o===39||o===41||o===42||o===44||o===46||o===58||o===59||o===63||o===95||o===126?(e.consume(o),r):o===38?(e.consume(o),a):o===93?(e.consume(o),i):o===60||o===null||Gf(o)||qf(o)?t(o):n(o)}function i(e){return e===null||e===40||e===91||Gf(e)||qf(e)?t(e):r(e)}function a(e){return Rf(e)?o(e):n(e)}function o(t){return t===59?(e.consume(t),r):Rf(t)?(e.consume(t),o):n(t)}}function Zy(e,t,n){return r;function r(t){return e.consume(t),i}function i(e){return zf(e)?n(e):t(e)}}function Qy(e){return e===null||e===40||e===42||e===95||e===91||e===93||e===126||Gf(e)}function $y(e){return!Rf(e)}function eb(e){return!(e===47||tb(e))}function tb(e){return e===43||e===45||e===46||e===95||zf(e)}function nb(e){let t=e.length,n=!1;for(;t--;){let r=e[t][1];if((r.type===`labelLink`||r.type===`labelImage`)&&!r._balanced){n=!0;break}if(r._gfmAutolinkLiteralWalkedInto){n=!1;break}}return e.length>0&&!n&&(e[e.length-1][1]._gfmAutolinkLiteralWalkedInto=!0),n}var rb={tokenize:db,partial:!0};function ib(){return{document:{91:{name:`gfmFootnoteDefinition`,tokenize:cb,continuation:{tokenize:lb},exit:ub}},text:{91:{name:`gfmFootnoteCall`,tokenize:sb},93:{name:`gfmPotentialFootnoteCall`,add:`after`,tokenize:ab,resolveTo:ob}}}}function ab(e,t,n){let r=this,i=r.events.length,a=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),o;for(;i--;){let e=r.events[i][1];if(e.type===`labelImage`){o=e;break}if(e.type===`gfmFootnoteCall`||e.type===`labelLink`||e.type===`label`||e.type===`image`||e.type===`link`)break}return s;function s(i){if(!o||!o._balanced)return n(i);let s=Lf(r.sliceSerialize({start:o.end,end:r.now()}));return s.codePointAt(0)!==94||!a.includes(s.slice(1))?n(i):(e.enter(`gfmFootnoteCallLabelMarker`),e.consume(i),e.exit(`gfmFootnoteCallLabelMarker`),t(i))}}function ob(e,t){let n=e.length;for(;n--;)if(e[n][1].type===`labelImage`&&e[n][0]===`enter`){e[n][1];break}e[n+1][1].type=`data`,e[n+3][1].type=`gfmFootnoteCallLabelMarker`;let r={type:`gfmFootnoteCall`,start:Object.assign({},e[n+3][1].start),end:Object.assign({},e[e.length-1][1].end)},i={type:`gfmFootnoteCallMarker`,start:Object.assign({},e[n+3][1].end),end:Object.assign({},e[n+3][1].end)};i.end.column++,i.end.offset++,i.end._bufferIndex++;let a={type:`gfmFootnoteCallString`,start:Object.assign({},i.end),end:Object.assign({},e[e.length-1][1].start)},o={type:`chunkString`,contentType:`string`,start:Object.assign({},a.start),end:Object.assign({},a.end)},s=[e[n+1],e[n+2],[`enter`,r,t],e[n+3],e[n+4],[`enter`,i,t],[`exit`,i,t],[`enter`,a,t],[`enter`,o,t],[`exit`,o,t],[`exit`,a,t],e[e.length-2],e[e.length-1],[`exit`,r,t]];return e.splice(n,e.length-n+1,...s),e}function sb(e,t,n){let r=this,i=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),a=0,o;return s;function s(t){return e.enter(`gfmFootnoteCall`),e.enter(`gfmFootnoteCallLabelMarker`),e.consume(t),e.exit(`gfmFootnoteCallLabelMarker`),c}function c(t){return t===94?(e.enter(`gfmFootnoteCallMarker`),e.consume(t),e.exit(`gfmFootnoteCallMarker`),e.enter(`gfmFootnoteCallString`),e.enter(`chunkString`).contentType=`string`,l):n(t)}function l(s){if(a>999||s===93&&!o||s===null||s===91||Gf(s))return n(s);if(s===93){e.exit(`chunkString`);let a=e.exit(`gfmFootnoteCallString`);return i.includes(Lf(r.sliceSerialize(a)))?(e.enter(`gfmFootnoteCallLabelMarker`),e.consume(s),e.exit(`gfmFootnoteCallLabelMarker`),e.exit(`gfmFootnoteCall`),t):n(s)}return Gf(s)||(o=!0),a++,e.consume(s),s===92?u:l}function u(t){return t===91||t===92||t===93?(e.consume(t),a++,l):l(t)}}function cb(e,t,n){let r=this,i=r.parser.gfmFootnotes||(r.parser.gfmFootnotes=[]),a,o=0,s;return c;function c(t){return e.enter(`gfmFootnoteDefinition`)._container=!0,e.enter(`gfmFootnoteDefinitionLabel`),e.enter(`gfmFootnoteDefinitionLabelMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionLabelMarker`),l}function l(t){return t===94?(e.enter(`gfmFootnoteDefinitionMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionMarker`),e.enter(`gfmFootnoteDefinitionLabelString`),e.enter(`chunkString`).contentType=`string`,u):n(t)}function u(t){if(o>999||t===93&&!s||t===null||t===91||Gf(t))return n(t);if(t===93){e.exit(`chunkString`);let n=e.exit(`gfmFootnoteDefinitionLabelString`);return a=Lf(r.sliceSerialize(n)),e.enter(`gfmFootnoteDefinitionLabelMarker`),e.consume(t),e.exit(`gfmFootnoteDefinitionLabelMarker`),e.exit(`gfmFootnoteDefinitionLabel`),f}return Gf(t)||(s=!0),o++,e.consume(t),t===92?d:u}function d(t){return t===91||t===92||t===93?(e.consume(t),o++,u):u(t)}function f(t){return t===58?(e.enter(`definitionMarker`),e.consume(t),e.exit(`definitionMarker`),i.includes(a)||i.push(a),$(e,p,`gfmFootnoteDefinitionWhitespace`)):n(t)}function p(e){return t(e)}}function lb(e,t,n){return e.check(up,t,e.attempt(rb,t,n))}function ub(e){e.exit(`gfmFootnoteDefinition`)}function db(e,t,n){let r=this;return $(e,i,`gfmFootnoteDefinitionIndent`,5);function i(e){let i=r.events[r.events.length-1];return i&&i[1].type===`gfmFootnoteDefinitionIndent`&&i[2].sliceSerialize(i[1],!0).length===4?t(e):n(e)}}function fb(e){let t=(e||{}).singleTilde,n={name:`strikethrough`,tokenize:i,resolveAll:r};return t??=!0,{text:{126:n},insideSpan:{null:[n]},attentionMarkers:{null:[126]}};function r(e,t){let n=-1;for(;++n<e.length;)if(e[n][0]===`enter`&&e[n][1].type===`strikethroughSequenceTemporary`&&e[n][1]._close){let r=n;for(;r--;)if(e[r][0]===`exit`&&e[r][1].type===`strikethroughSequenceTemporary`&&e[r][1]._open&&e[n][1].end.offset-e[n][1].start.offset===e[r][1].end.offset-e[r][1].start.offset){e[n][1].type=`strikethroughSequence`,e[r][1].type=`strikethroughSequence`;let i={type:`strikethrough`,start:Object.assign({},e[r][1].start),end:Object.assign({},e[n][1].end)},a={type:`strikethroughText`,start:Object.assign({},e[r][1].end),end:Object.assign({},e[n][1].start)},o=[[`enter`,i,t],[`enter`,e[r][1],t],[`exit`,e[r][1],t],[`enter`,a,t]],s=t.parser.constructs.insideSpan.null;s&&Af(o,o.length,0,rp(s,e.slice(r+1,n),t)),Af(o,o.length,0,[[`exit`,a,t],[`enter`,e[n][1],t],[`exit`,e[n][1],t],[`exit`,i,t]]),Af(e,r-1,n-r+3,o),n=r+o.length-2;break}}for(n=-1;++n<e.length;)e[n][1].type===`strikethroughSequenceTemporary`&&(e[n][1].type=`data`);return e}function i(e,n,r){let i=this.previous,a=this.events,o=0;return s;function s(t){return i===126&&a[a.length-1][1].type!==`characterEscape`?r(t):(e.enter(`strikethroughSequenceTemporary`),c(t))}function c(a){let s=np(i);if(a===126)return o>1?r(a):(e.consume(a),o++,c);if(o<2&&!t)return r(a);let l=e.exit(`strikethroughSequenceTemporary`),u=np(a);return l._open=!u||u===2&&!!s,l._close=!s||s===2&&!!u,n(a)}}}var pb=class{constructor(){this.map=[]}add(e,t,n){mb(this,e,t,n)}consume(e){if(this.map.sort(function(e,t){return e[0]-t[0]}),this.map.length===0)return;let t=this.map.length,n=[];for(;t>0;)--t,n.push(e.slice(this.map[t][0]+this.map[t][1]),this.map[t][2]),e.length=this.map[t][0];n.push(e.slice()),e.length=0;let r=n.pop();for(;r;){for(let t of r)e.push(t);r=n.pop()}this.map.length=0}};function mb(e,t,n,r){let i=0;if(!(n===0&&r.length===0)){for(;i<e.map.length;){if(e.map[i][0]===t){e.map[i][1]+=n,e.map[i][2].push(...r);return}i+=1}e.map.push([t,n,r])}}function hb(e,t){let n=!1,r=[];for(;t<e.length;){let i=e[t];if(n){if(i[0]===`enter`)i[1].type===`tableContent`&&r.push(e[t+1][1].type===`tableDelimiterMarker`?`left`:`none`);else if(i[1].type===`tableContent`){if(e[t-1][1].type===`tableDelimiterMarker`){let e=r.length-1;r[e]=r[e]===`left`?`center`:`right`}}else if(i[1].type===`tableDelimiterRow`)break}else i[0]===`enter`&&i[1].type===`tableDelimiterRow`&&(n=!0);t+=1}return r}function gb(){return{flow:{null:{name:`table`,tokenize:_b,resolveAll:vb}}}}function _b(e,t,n){let r=this,i=0,a=0,o;return s;function s(e){let t=r.events.length-1;for(;t>-1;){let e=r.events[t][1].type;if(e===`lineEnding`||e===`linePrefix`)t--;else break}let i=t>-1?r.events[t][1].type:null,a=i===`tableHead`||i===`tableRow`?S:c;return a===S&&r.parser.lazy[r.now().line]?n(e):a(e)}function c(t){return e.enter(`tableHead`),e.enter(`tableRow`),l(t)}function l(e){return e===124?u(e):(o=!0,a+=1,u(e))}function u(t){return t===null?n(t):Z(t)?a>1?(a=0,r.interrupt=!0,e.exit(`tableRow`),e.enter(`lineEnding`),e.consume(t),e.exit(`lineEnding`),p):n(t):Q(t)?$(e,u,`whitespace`)(t):(a+=1,o&&(o=!1,i+=1),t===124?(e.enter(`tableCellDivider`),e.consume(t),e.exit(`tableCellDivider`),o=!0,u):(e.enter(`data`),d(t)))}function d(t){return t===null||t===124||Gf(t)?(e.exit(`data`),u(t)):(e.consume(t),t===92?f:d)}function f(t){return t===92||t===124?(e.consume(t),d):d(t)}function p(t){return r.interrupt=!1,r.parser.lazy[r.now().line]?n(t):(e.enter(`tableDelimiterRow`),o=!1,Q(t)?$(e,m,`linePrefix`,r.parser.constructs.disable.null.includes(`codeIndented`)?void 0:4)(t):m(t))}function m(t){return t===45||t===58?g(t):t===124?(o=!0,e.enter(`tableCellDivider`),e.consume(t),e.exit(`tableCellDivider`),h):x(t)}function h(t){return Q(t)?$(e,g,`whitespace`)(t):g(t)}function g(t){return t===58?(a+=1,o=!0,e.enter(`tableDelimiterMarker`),e.consume(t),e.exit(`tableDelimiterMarker`),_):t===45?(a+=1,_(t)):t===null||Z(t)?b(t):x(t)}function _(t){return t===45?(e.enter(`tableDelimiterFiller`),v(t)):x(t)}function v(t){return t===45?(e.consume(t),v):t===58?(o=!0,e.exit(`tableDelimiterFiller`),e.enter(`tableDelimiterMarker`),e.consume(t),e.exit(`tableDelimiterMarker`),y):(e.exit(`tableDelimiterFiller`),y(t))}function y(t){return Q(t)?$(e,b,`whitespace`)(t):b(t)}function b(n){return n===124?m(n):n===null||Z(n)?!o||i!==a?x(n):(e.exit(`tableDelimiterRow`),e.exit(`tableHead`),t(n)):x(n)}function x(e){return n(e)}function S(t){return e.enter(`tableRow`),C(t)}function C(n){return n===124?(e.enter(`tableCellDivider`),e.consume(n),e.exit(`tableCellDivider`),C):n===null||Z(n)?(e.exit(`tableRow`),t(n)):Q(n)?$(e,C,`whitespace`)(n):(e.enter(`data`),w(n))}function w(t){return t===null||t===124||Gf(t)?(e.exit(`data`),C(t)):(e.consume(t),t===92?T:w)}function T(t){return t===92||t===124?(e.consume(t),w):w(t)}}function vb(e,t){let n=-1,r=!0,i=0,a=[0,0,0,0],o=[0,0,0,0],s=!1,c=0,l,u,d,f=new pb;for(;++n<e.length;){let p=e[n],m=p[1];p[0]===`enter`?m.type===`tableHead`?(s=!1,c!==0&&(bb(f,t,c,l,u),u=void 0,c=0),l={type:`table`,start:Object.assign({},m.start),end:Object.assign({},m.end)},f.add(n,0,[[`enter`,l,t]])):m.type===`tableRow`||m.type===`tableDelimiterRow`?(r=!0,d=void 0,a=[0,0,0,0],o=[0,n+1,0,0],s&&(s=!1,u={type:`tableBody`,start:Object.assign({},m.start),end:Object.assign({},m.end)},f.add(n,0,[[`enter`,u,t]])),i=m.type===`tableDelimiterRow`?2:u?3:1):i&&(m.type===`data`||m.type===`tableDelimiterMarker`||m.type===`tableDelimiterFiller`)?(r=!1,o[2]===0&&(a[1]!==0&&(o[0]=o[1],d=yb(f,t,a,i,void 0,d),a=[0,0,0,0]),o[2]=n)):m.type===`tableCellDivider`&&(r?r=!1:(a[1]!==0&&(o[0]=o[1],d=yb(f,t,a,i,void 0,d)),a=o,o=[a[1],n,0,0])):m.type===`tableHead`?(s=!0,c=n):m.type===`tableRow`||m.type===`tableDelimiterRow`?(c=n,a[1]===0?o[1]!==0&&(d=yb(f,t,o,i,n,d)):(o[0]=o[1],d=yb(f,t,a,i,n,d)),i=0):i&&(m.type===`data`||m.type===`tableDelimiterMarker`||m.type===`tableDelimiterFiller`)&&(o[3]=n)}for(c!==0&&bb(f,t,c,l,u),f.consume(t.events),n=-1;++n<t.events.length;){let e=t.events[n];e[0]===`enter`&&e[1].type===`table`&&(e[1]._align=hb(t.events,n))}return e}function yb(e,t,n,r,i,a){let o=r===1?`tableHeader`:r===2?`tableDelimiter`:`tableData`;n[0]!==0&&(a.end=Object.assign({},xb(t.events,n[0])),e.add(n[0],0,[[`exit`,a,t]]));let s=xb(t.events,n[1]);if(a={type:o,start:Object.assign({},s),end:Object.assign({},s)},e.add(n[1],0,[[`enter`,a,t]]),n[2]!==0){let i=xb(t.events,n[2]),a=xb(t.events,n[3]),o={type:`tableContent`,start:Object.assign({},i),end:Object.assign({},a)};if(e.add(n[2],0,[[`enter`,o,t]]),r!==2){let r=t.events[n[2]],i=t.events[n[3]];if(r[1].end=Object.assign({},i[1].end),r[1].type=`chunkText`,r[1].contentType=`text`,n[3]>n[2]+1){let t=n[2]+1,r=n[3]-n[2]-1;e.add(t,r,[])}}e.add(n[3]+1,0,[[`exit`,o,t]])}return i!==void 0&&(a.end=Object.assign({},xb(t.events,i)),e.add(i,0,[[`exit`,a,t]]),a=void 0),a}function bb(e,t,n,r,i){let a=[],o=xb(t.events,n);i&&(i.end=Object.assign({},o),a.push([`exit`,i,t])),r.end=Object.assign({},o),a.push([`exit`,r,t]),e.add(n+1,0,a)}function xb(e,t){let n=e[t],r=n[0]===`enter`?`start`:`end`;return n[1][r]}var Sb={name:`tasklistCheck`,tokenize:wb};function Cb(){return{text:{91:Sb}}}function wb(e,t,n){let r=this;return i;function i(t){return r.previous!==null||!r._gfmTasklistFirstContentOfListItem?n(t):(e.enter(`taskListCheck`),e.enter(`taskListCheckMarker`),e.consume(t),e.exit(`taskListCheckMarker`),a)}function a(t){return Gf(t)?(e.enter(`taskListCheckValueUnchecked`),e.consume(t),e.exit(`taskListCheckValueUnchecked`),o):t===88||t===120?(e.enter(`taskListCheckValueChecked`),e.consume(t),e.exit(`taskListCheckValueChecked`),o):n(t)}function o(t){return t===93?(e.enter(`taskListCheckMarker`),e.consume(t),e.exit(`taskListCheckMarker`),e.exit(`taskListCheck`),s):n(t)}function s(r){return Z(r)?t(r):Q(r)?e.check({tokenize:Tb},t,n)(r):n(r)}}function Tb(e,t,n){return $(e,r,`whitespace`);function r(e){return e===null?n(e):t(e)}}function Eb(e){return Nf([Hy(),ib(),fb(e),gb(),Cb()])}var Db={};function Ob(e){let t=this,n=e||Db,r=t.data(),i=r.micromarkExtensions||=[],a=r.fromMarkdownExtensions||=[],o=r.toMarkdownExtensions||=[];i.push(Eb(n)),a.push(jy()),o.push(My(n))}var kb=`# ForgeORM Bible — Complete Enterprise Guide
 
-> AI-first enterprise ORM, data platform, vector search, RAG, workflow, reporting, and low-code platform for modern .NET applications.
+# ForgeORM
+## The Modern Enterprise ORM + Analytics + DataFrame Platform for .NET 8 & .NET 10
 
 ---
 
-## 1. Introduction
+# Table of Contents
 
-ForgeORM is designed for enterprise-grade .NET systems where developers need more than a traditional ORM.
+1. Introduction
+2. Installation
+3. Architecture Overview
+4. ForgeDbContext
+5. Query APIs
+6. CRUD Operations
+7. Record Mapping
+8. Enum Mapping
+9. Dynamic Queries
+10. Search APIs
+11. Split Queries
+12. Graph Insert
+13. Table-Valued Parameters (TVP)
+14. Window Functions
+15. Analytics Engine
+16. Pivot Tables
+17. DataFrame APIs
+18. CSV Import
+19. JSON Import
+20. Save DataFrame to Database
+21. Query DataFrames
+22. Vertical Slice Architecture
+23. Onion Architecture
+24. CQRS
+25. Minimal APIs
+26. Transactions
+27. Bulk Operations
+28. Performance Optimization
+29. Caching
+30. Redis
+31. Workflow Engine
+32. AI Features
+33. Vector Search
+34. Telemetry & Logging
+35. Multi Database Support
+36. Best Practices
+37. Advanced Enterprise Scenarios
+38. Complete Example Project
+39. Troubleshooting
+40. Roadmap
+
+---
+
+# 1. Introduction
+
+ForgeORM is a modern enterprise ORM and analytics framework for .NET.
 
 It combines:
 
-- ORM
-- Micro ORM
-- LINQ provider
-- Query builder
-- Multi-database providers
-- Bulk operations
-- Redis caching
-- Multi-tenancy
-- Auditing
-- Outbox
-- Reporting
-- Telemetry
-- Security
-- Vector search
-- AI querying
-- AI diagnostics
-- AI optimization
-- AI code generation
-- AI migrations
-- RAG engine
-- Workflow engine
-- Event sourcing
-- Realtime engine
-- AI agents
-- Low-code ERP generator
-- React Studio
-- SaaS platform
-- Marketplace
+- EF-style developer experience
+- Dapper-like performance philosophy
+- Full SQL control
+- Analytics engine
+- Pandas-like DataFrame support
+- Enterprise architecture support
+- AI-ready extensibility
+
+ForgeORM is designed for:
+
+- Enterprise APIs
+- CQRS systems
+- Minimal APIs
+- Distributed systems
+- Analytics platforms
+- High-performance services
+- AI-first applications
+- Financial systems
+- Healthcare systems
+- Government systems
 
 ---
 
-## 2. Supported Databases
+# 2. Installation
 
-| Database | Support |
-|---|---|
-| SQL Server | Supported |
-| PostgreSQL | Supported |
-| MySQL | Supported |
-| MariaDB | Supported |
-| SQLite | Supported |
-| Oracle | Supported |
-| MongoDB | Planned/Provider |
-| CosmosDB | Planned/Provider |
-| Redis | Cache / Vector / PubSub |
-| PostgreSQL pgvector | Vector Search |
-| Qdrant | Vector Store |
-| Pinecone | Vector Store |
-| Weaviate | Vector Store |
-
----
-
-## 3. Installation
-
-### SQL Server
+## NuGet Packages
 
 \`\`\`bash
-dotnet add package ForgeORM.SqlServer
+ dotnet add package ForgeORM.Core
+ dotnet add package ForgeORM.Analytics
+ dotnet add package ForgeORM.Workflow
 \`\`\`
 
-### PostgreSQL
+## SQL Server Provider
 
 \`\`\`bash
-dotnet add package ForgeORM.PostgreSql
+ dotnet add package Microsoft.Data.SqlClient
 \`\`\`
 
-### MySQL
+## Analytics Support
 
 \`\`\`bash
-dotnet add package ForgeORM.MySql
-\`\`\`
-
-### Oracle
-
-\`\`\`bash
-dotnet add package ForgeORM.Oracle
-\`\`\`
-
-### Redis Cache
-
-\`\`\`bash
-dotnet add package ForgeORM.Caching.Redis
-\`\`\`
-
-### AI
-
-\`\`\`bash
-dotnet add package ForgeORM.AI
-\`\`\`
-
-### Vector Search
-
-\`\`\`bash
-dotnet add package ForgeORM.Vector
+ dotnet add package Microsoft.Data.Analysis
 \`\`\`
 
 ---
 
-## 4. Basic Setup
+# 3. Architecture Overview
 
-### SQL Server
+ForgeORM Architecture:
+
+\`\`\`text
+Application
+    ↓
+ForgeDbContext
+    ↓
+Forge Query APIs
+    ↓
+ForgeAdo
+    ↓
+ADO.NET Provider
+    ↓
+Database
+\`\`\`
+
+Modules:
+
+\`\`\`text
+ForgeORM.Core
+ForgeORM.Analytics
+ForgeORM.Workflow
+ForgeORM.VectorSearch
+ForgeORM.AI
+ForgeORM.DataFrame
+\`\`\`
+
+---
+
+# 4. ForgeDbContext
+
+## Registration
 
 \`\`\`csharp
 builder.Services.AddForgeOrm(options =>
 {
-    options.UseSqlServer(configuration.GetConnectionString("Default"));
+    options.UseSqlServer(connectionString);
 });
 \`\`\`
 
-### PostgreSQL
+## Injection
 
 \`\`\`csharp
-builder.Services.AddForgeOrm(options =>
+app.MapGet("/products", async (ForgeDbContext db) =>
 {
-    options.UsePostgreSql(configuration.GetConnectionString("Default"));
-});
-\`\`\`
-
-### MySQL
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMySql(configuration.GetConnectionString("Default"));
-});
-\`\`\`
-
-### Oracle
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseOracle(configuration.GetConnectionString("Default"));
+    return await db.QueryAsync<Product>("SELECT * FROM Products");
 });
 \`\`\`
 
 ---
 
-## 5. Core ORM
+# 5. Query APIs
 
-### Query Entity
+## QueryAsync
 
 \`\`\`csharp
-var customers = await db.Query<Customer>()
-    .Where(x => x.IsActive)
+var products = await db.QueryAsync<Product>(
+    "SELECT * FROM Products WHERE Price > @price",
+    new { price = 100 });
+\`\`\`
+
+## QuerySingleAsync
+
+\`\`\`csharp
+var product = await db.QuerySingleOrDefaultAsync<Product>(
+    "SELECT * FROM Products WHERE Id=@id",
+    new { id });
+\`\`\`
+
+## ExecuteAsync
+
+\`\`\`csharp
+await db.ExecuteAsync(
+    "UPDATE Products SET Price=@price WHERE Id=@id",
+    new { id = 1, price = 500 });
+\`\`\`
+
+## ExecuteScalarAsync
+
+\`\`\`csharp
+var count = await db.ExecuteScalarAsync<int>(
+    "SELECT COUNT(*) FROM Products");
+\`\`\`
+
+---
+
+# 6. CRUD Operations
+
+## Insert
+
+\`\`\`csharp
+await db.InsertAsync(product);
+\`\`\`
+
+## Update
+
+\`\`\`csharp
+await db.UpdateAsync(product);
+\`\`\`
+
+## Delete
+
+\`\`\`csharp
+await db.DeleteAsync<Product>(id);
+\`\`\`
+
+## Find
+
+\`\`\`csharp
+var product = await db.FindAsync<Product>(id);
+\`\`\`
+
+---
+
+# 7. Record Mapping
+
+ForgeORM supports C# records automatically.
+
+\`\`\`csharp
+public sealed record ProductSummary(
+    int Id,
+    string Name,
+    decimal Price);
+\`\`\`
+
+Usage:
+
+\`\`\`csharp
+var result = await db.QueryAsync<ProductSummary>(
+    "SELECT Id, Name, Price FROM Products");
+\`\`\`
+
+---
+
+# 8. Enum Mapping
+
+## Enum
+
+\`\`\`csharp
+public enum OrderStatus
+{
+    Draft = 1,
+    Paid = 2,
+    Cancelled = 3
+}
+\`\`\`
+
+## Entity
+
+\`\`\`csharp
+public sealed class Order
+{
+    public int Id { get; set; }
+    public OrderStatus Status { get; set; }
+}
+\`\`\`
+
+ForgeORM automatically converts:
+
+- int → enum
+- string → enum
+- enum → database value
+
+---
+
+# 9. Dynamic Queries
+
+\`\`\`csharp
+var result = await db.QueryDynamicAsync(
+    "SELECT * FROM Orders");
+\`\`\`
+
+Result:
+
+\`\`\`json
+[
+  {
+    "Id": 1,
+    "OrderNo": "ORD-1001"
+  }
+]
+\`\`\`
+
+---
+
+# 10. Search APIs
+
+## Search
+
+\`\`\`csharp
+var result = await db.Search<Product>()
+    .OptionalLike(x => x.Name, request.Name)
+    .OptionalBetween(x => x.Price, request.MinPrice, request.MaxPrice)
+    .Page(1, 20)
+    .ToPagedAsync();
+\`\`\`
+
+## When To Use
+
+Use Search APIs when:
+
+- Dynamic filtering required
+- Paging required
+- Admin grids
+- Search screens
+- APIs with many optional filters
+
+---
+
+# 11. Split Queries
+
+## One To One
+
+\`\`\`csharp
+var orders = await db.Split<Order>()
+    .IncludeOne<Customer>(x => x.CustomerId)
     .ToListAsync();
 \`\`\`
 
-### Insert Entity
+## One To Many
 
 \`\`\`csharp
-await db.InsertAsync(customer);
-\`\`\`
-
-### Update Entity
-
-\`\`\`csharp
-await db.UpdateAsync(customer);
-\`\`\`
-
-### Delete Entity
-
-\`\`\`csharp
-await db.DeleteAsync(customer);
-\`\`\`
-
-### SQL Server Output
-
-\`\`\`sql
-SELECT *
-FROM [Customers]
-WHERE [IsActive] = 1;
-\`\`\`
-
-### PostgreSQL Output
-
-\`\`\`sql
-SELECT *
-FROM "Customers"
-WHERE "IsActive" = true;
-\`\`\`
-
-### MySQL Output
-
-\`\`\`sql
-SELECT *
-FROM \`Customers\`
-WHERE \`IsActive\` = 1;
-\`\`\`
-
-### Oracle Output
-
-\`\`\`sql
-SELECT *
-FROM Customers
-WHERE IsActive = 1;
-\`\`\`
-
----
-
-## 6. Query Builder
-
-\`\`\`csharp
-var query = db.Query<Product>()
-    .Where(x => x.Price > 100)
-    .OrderByDescending(x => x.CreatedAt)
-    .Take(10);
-\`\`\`
-
-### Dynamic Filters
-
-\`\`\`csharp
-var query = db.Query<Customer>()
-    .When(!string.IsNullOrWhiteSpace(filter.Name),
-        q => q.Where(x => x.Name.Contains(filter.Name)))
-    .When(filter.Country is not null,
-        q => q.Where(x => x.Country == filter.Country));
-\`\`\`
-
----
-
-## 7. LINQ Provider
-
-### Includes
-
-\`\`\`csharp
-var orders = await db.Query<Order>()
-    .Include(x => x.Items)
-    .ThenInclude(x => x.Product)
+var orders = await db.Split<Order>()
+    .IncludeMany<OrderItem>(x => x.Items)
     .ToListAsync();
 \`\`\`
 
-### Aggregates
+## When To Use
+
+Use split queries when:
+
+- Large graph loading
+- Avoid cartesian explosion
+- Better performance
+- Enterprise reporting
+
+---
+
+# 12. Graph Insert
+
+## Parent Child Insert
 
 \`\`\`csharp
-var total = await db.Query<Order>()
-    .SumAsync(x => x.Total);
+await db.InsertGraphAsync<Order, CreateOrderDto>(dto);
 \`\`\`
 
-### Group By
+Automatically:
+
+- inserts parent
+- inserts children
+- manages foreign keys
+- wraps transaction
+
+---
+
+# 13. Table-Valued Parameters (TVP)
+
+## High Performance Bulk Insert
 
 \`\`\`csharp
-var report = await db.Query<Order>()
-    .GroupBy(x => x.Country)
-    .Select(x => new
+await db.InsertGraphAsync<Order, CreateOrderDto>(
+    dto,
+    graph =>
     {
-        Country = x.Key,
-        Total = x.Sum(y => y.Total)
-    })
-    .ToListAsync();
+        graph.Children<OrderItem>(x => x.Items)
+            .UseSqlServerTvp(
+                tableType: "dbo.OrderItemTvp",
+                procedure: "dbo.InsertOrderItemsTvp");
+    });
 \`\`\`
+
+## When To Use
+
+Use TVP when:
+
+- Large child collections
+- Bulk insert
+- Enterprise batch systems
+- Financial imports
+- ERP systems
 
 ---
 
-## 8. Raw SQL
+# 14. Window Functions
+
+## Row Number
 
 \`\`\`csharp
-var products = await db.SqlAsync<Product>(
-    "SELECT * FROM Products WHERE Price > @Price",
-    new { Price = 100 });
+.RowNumber()
+    .PartitionBy(x => x.CustomerId)
+    .OrderByDescending(x => x.CreatedAt)
+    .As("RowNo")
 \`\`\`
 
----
-
-## 9. Stored Procedures
+## Rank
 
 \`\`\`csharp
-var products = await db.StoredProcedureAsync<Product>(
-    "sp_GetProducts",
-    new { CategoryId = 10 });
+.Rank()
+    .PartitionBy(x => x.CustomerId)
+    .OrderByDescending(x => x.GrandTotal)
+    .As("RankNo")
+\`\`\`
+
+## Running Total
+
+\`\`\`csharp
+.Sum(x => x.GrandTotal)
+    .PartitionBy(x => x.CustomerId)
+    .OrderBy(x => x.CreatedAt)
+    .RowsBetweenUnboundedPrecedingAndCurrentRow()
+    .As("RunningSales")
 \`\`\`
 
 ---
 
-## 10. Bulk Operations
+# 15. Analytics Engine
 
-### Bulk Insert
+## Analytics Query
+
+\`\`\`csharp
+var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .ToDynamicListAsync();
+\`\`\`
+
+## Supported Functions
+
+- RowNumber
+- Rank
+- DenseRank
+- Ntile
+- Lag
+- Lead
+- FirstValue
+- LastValue
+- PercentileCont
+- PercentileDisc
+- Avg
+- Sum
+- Min
+- Max
+- Count
+
+---
+
+# 16. Pivot Tables
+
+## Pivot Query
+
+\`\`\`csharp
+var sql = db.Pivot<Order>()
+    .From("Orders")
+    .Rows(x => x.CustomerId)
+    .Columns(x => x.Status)
+    .Values(x => x.GrandTotal)
+    .Aggregate("SUM")
+    .Render("Draft", "Paid", "Cancelled");
+\`\`\`
+
+---
+
+# 17. DataFrame APIs
+
+ForgeORM supports pandas-like DataFrames.
+
+## Create Frame
+
+\`\`\`csharp
+var frame = await db.Frame<Order>()
+    .ToFrameAsync();
+\`\`\`
+
+## GroupBy
+
+\`\`\`csharp
+var grouped = frame.GroupBy("CustomerId");
+\`\`\`
+
+## Aggregation
+
+\`\`\`csharp
+var result = grouped.Agg(new
+{
+    Total = ForgeAgg.Sum("GrandTotal"),
+    Avg = ForgeAgg.Avg("GrandTotal")
+});
+\`\`\`
+
+---
+
+# 18. CSV Import
+
+## Import CSV
+
+\`\`\`csharp
+var frame = ForgeDataFrame.ReadCsv("orders.csv");
+\`\`\`
+
+## Query CSV
+
+\`\`\`csharp
+var result = frame
+    .Where("GrandTotal > 1000")
+    .OrderByDescending("GrandTotal");
+\`\`\`
+
+---
+
+# 19. JSON Import
+
+## Import JSON
+
+\`\`\`csharp
+var frame = ForgeDataFrame.ReadJson("orders.json");
+\`\`\`
+
+---
+
+# 20. Save DataFrame To Database
+
+\`\`\`csharp
+await frame.ToTableAsync(
+    db,
+    "ImportedOrders");
+\`\`\`
+
+---
+
+# 21. Query DataFrames
+
+\`\`\`csharp
+var result = frame
+    .Filter(x => x["GrandTotal"] > 1000)
+    .Select("OrderNo", "GrandTotal")
+    .Take(20);
+\`\`\`
+
+---
+
+# 22. Vertical Slice Architecture
+
+## Recommended Structure
+
+\`\`\`text
+Features/
+ ├── Orders/
+ │    ├── Create/
+ │    ├── Update/
+ │    ├── Search/
+ │    └── Analytics/
+\`\`\`
+
+---
+
+# 23. Onion Architecture
+
+## Layers
+
+\`\`\`text
+Domain
+Application
+Infrastructure
+API
+\`\`\`
+
+ForgeORM belongs inside Infrastructure.
+
+---
+
+# 24. CQRS
+
+## Query Handler
+
+\`\`\`csharp
+public sealed class GetOrdersHandler
+{
+    private readonly ForgeDbContext _db;
+
+    public async Task<IReadOnlyList<OrderDto>> Handle()
+    {
+        return await _db.QueryAsync<OrderDto>(
+            "SELECT * FROM Orders");
+    }
+}
+\`\`\`
+
+---
+
+# 25. Minimal APIs
+
+\`\`\`csharp
+app.MapGet("/orders", async (ForgeDbContext db) =>
+{
+    return await db.QueryAsync<Order>(
+        "SELECT * FROM Orders");
+});
+\`\`\`
+
+---
+
+# 26. Transactions
+
+\`\`\`csharp
+await using var tx = await db.BeginTransactionAsync();
+
+await db.InsertAsync(order);
+await db.InsertAsync(items);
+
+await tx.CommitAsync();
+\`\`\`
+
+---
+
+# 27. Bulk Operations
+
+## Bulk Insert
 
 \`\`\`csharp
 await db.BulkInsertAsync(products);
 \`\`\`
 
-### Bulk Update
+## Bulk Update
 
 \`\`\`csharp
 await db.BulkUpdateAsync(products);
 \`\`\`
 
-### Bulk Delete
+---
+
+# 28. Performance Optimization
+
+ForgeORM optimizations:
+
+- Pure ADO.NET
+- Fast materialization
+- Constructor mapping
+- Minimal allocations
+- Split queries
+- TVP batching
+- Dynamic SQL rendering
+- Query reuse
+
+---
+
+# 29. Caching
 
 \`\`\`csharp
-await db.BulkDeleteAsync(products);
-\`\`\`
-
-### Bulk Merge / Upsert
-
-\`\`\`csharp
-await db.BulkMergeAsync(products);
-\`\`\`
-
-### SQL Server Strategy
-
-Uses SQL Server bulk copy.
-
-\`\`\`sql
-BULK INSERT Products
-FROM 'products.csv';
-\`\`\`
-
-### PostgreSQL Strategy
-
-Uses COPY.
-
-\`\`\`sql
-COPY Products FROM STDIN;
-\`\`\`
-
-### MySQL Strategy
-
-Uses batched INSERT.
-
-\`\`\`sql
-INSERT INTO Products(Name, Price)
-VALUES (...), (...), (...);
+await db.Cacheable(TimeSpan.FromMinutes(5))
+    .QueryAsync<Product>(sql);
 \`\`\`
 
 ---
 
-## 11. Multi-Tenancy
-
-### Enable
+# 30. Redis
 
 \`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableMultiTenancy();
-});
-\`\`\`
-
-### Tenant Provider
-
-\`\`\`csharp
-public sealed class HeaderTenantProvider : ITenantProvider
-{
-    private readonly IHttpContextAccessor _http;
-
-    public HeaderTenantProvider(IHttpContextAccessor http)
-    {
-        _http = http;
-    }
-
-    public string TenantId =>
-        _http.HttpContext?.Request.Headers["X-Tenant-Id"].FirstOrDefault()
-        ?? "default";
-}
-\`\`\`
-
-### Tenant Query
-
-\`\`\`csharp
-var customers = await db.Query<Customer>()
-    .WhereTenant()
-    .ToListAsync();
-\`\`\`
-
-### Supported Tenancy Models
-
-| Model | Description |
-|---|---|
-| Shared Database | TenantId column |
-| Shared Schema | Same tables, tenant filters |
-| Dedicated Database | One DB per tenant |
-| Sharded Tenancy | Tenant routing |
-
----
-
-## 12. Auditing
-
-### Enable
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableAuditing();
-});
-\`\`\`
-
-### Auditable Entity
-
-\`\`\`csharp
-public abstract class AuditableEntity
-{
-    public DateTimeOffset CreatedAt { get; set; }
-    public string? CreatedBy { get; set; }
-    public DateTimeOffset? UpdatedAt { get; set; }
-    public string? UpdatedBy { get; set; }
-}
-\`\`\`
-
-### Soft Delete
-
-\`\`\`csharp
-public interface ISoftDelete
-{
-    bool IsDeleted { get; set; }
-}
+builder.Services.AddStackExchangeRedisCache(...);
 \`\`\`
 
 ---
 
-## 13. Outbox Pattern
+# 31. Workflow Engine
 
-### Save Event
+Features:
 
-\`\`\`csharp
-await outbox.SaveAsync(new OrderCreatedEvent(order.Id));
-\`\`\`
-
-### Publish Events
-
-\`\`\`csharp
-await outboxPublisher.PublishPendingAsync();
-\`\`\`
-
-### Outbox Table
-
-\`\`\`sql
-CREATE TABLE OutboxMessages
-(
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Type NVARCHAR(500) NOT NULL,
-    Payload NVARCHAR(MAX) NOT NULL,
-    CreatedAt DATETIME2 NOT NULL,
-    ProcessedAt DATETIME2 NULL
-);
-\`\`\`
+- Saga orchestration
+- Compensation
+- Retry handling
+- Workflow persistence
+- Distributed workflows
 
 ---
 
-## 14. Reporting Engine
+# 32. AI Features
 
-### Dynamic Report
+Features:
 
-\`\`\`csharp
-var report = await db.Reporting<Order>()
-    .GroupBy(x => x.Country)
-    .Sum(x => x.Total)
-    .ToListAsync();
-\`\`\`
-
-### Pivot Report
-
-\`\`\`csharp
-var pivot = await db.Reporting<Sale>()
-    .Pivot(row: x => x.Country, column: x => x.Year)
-    .Sum(x => x.Amount)
-    .ToListAsync();
-\`\`\`
-
-### Export
-
-\`\`\`csharp
-await report.ExportExcelAsync();
-await report.ExportCsvAsync();
-await report.ExportPdfAsync();
-\`\`\`
-
----
-
-## 15. Telemetry
-
-### Enable
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableTelemetry();
-});
-\`\`\`
-
-### OpenTelemetry
-
-\`\`\`csharp
-builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing =>
-    {
-        tracing.AddAspNetCoreInstrumentation();
-        tracing.AddHttpClientInstrumentation();
-        tracing.AddSource("ForgeORM");
-    });
-\`\`\`
-
-### Captured Metrics
-
-- Query duration
-- Query count
-- Slow queries
-- Cache hit ratio
-- Cache miss ratio
-- Bulk operation duration
-- Failed commands
-- Tenant usage
-- AI token usage
-
----
-
-## 16. Redis Caching
-
-ForgeORM does not host Redis. The application owner provides Redis.
-
-### Enable Redis Cache
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddRedisCache(options =>
-    {
-        options.ConnectionString = configuration["Redis:ConnectionString"];
-        options.InstanceName = "ForgeORM";
-    });
-\`\`\`
-
-### Query Cache
-
-\`\`\`csharp
-var products = await db.Query<Product>()
-    .Cache(TimeSpan.FromMinutes(5))
-    .ToListAsync();
-\`\`\`
-
-### Cache Tags
-
-\`\`\`csharp
-var products = await db.Query<Product>()
-    .Cache(TimeSpan.FromMinutes(5))
-    .CacheTag("products")
-    .ToListAsync();
-\`\`\`
-
-### Tenant-Aware Cache Key
-
-\`\`\`text
-tenant:{tenantId}:entity:{entityName}:query:{hash}
-\`\`\`
-
----
-
-## 17. Security
-
-### SQL Injection Protection
-
-ForgeORM uses parameterized queries.
-
-\`\`\`csharp
-await db.SqlAsync<Product>(
-    "SELECT * FROM Products WHERE Name = @Name",
-    new { Name = input });
-\`\`\`
-
-### Masking
-
-\`\`\`csharp
-var masked = masking.MaskEmail("user@example.com");
-\`\`\`
-
-### Encryption
-
-\`\`\`csharp
-var encrypted = encryption.Encrypt("sensitive-value");
-var plain = encryption.Decrypt(encrypted);
-\`\`\`
-
-### Row-Level Security
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.EnableRowLevelSecurity();
-});
-\`\`\`
-
----
-
-## 18. Vector Search
-
-### Insert Vector
-
-\`\`\`csharp
-await vectorStore.UpsertAsync(
-    id: "doc-1",
-    vector: embedding,
-    metadata: new { Title = "Customer Policy" });
-\`\`\`
-
-### Search Vector
-
-\`\`\`csharp
-var results = await vectorStore.SearchAsync(
-    vector: queryEmbedding,
-    topK: 5);
-\`\`\`
-
-### PostgreSQL pgvector
-
-\`\`\`sql
-CREATE EXTENSION IF NOT EXISTS vector;
-
-CREATE TABLE Documents
-(
-    Id TEXT PRIMARY KEY,
-    Content TEXT NOT NULL,
-    Embedding VECTOR(1536)
-);
-\`\`\`
-
-### SQL Server Vector Search
-
-\`\`\`sql
-CREATE TABLE Documents
-(
-    Id NVARCHAR(100) PRIMARY KEY,
-    Content NVARCHAR(MAX),
-    Embedding VECTOR(1536)
-);
-\`\`\`
-
-### Redis Vector
-
-\`\`\`text
-FT.CREATE idx:documents ON HASH PREFIX 1 doc:
-SCHEMA content TEXT embedding VECTOR FLAT 6 TYPE FLOAT32 DIM 1536 DISTANCE_METRIC COSINE
-\`\`\`
-
----
-
-## 19. AI Provider Strategy
-
-ForgeORM should not force one AI provider.
-
-Users can bring:
-
-- OpenAI
-- Azure OpenAI
-- Gemini
-- Claude
-- Ollama
-- OpenRouter
-- DeepSeek
-- Groq
-- Mistral
-- Local LLMs
-
-### AI Provider Abstraction
-
-\`\`\`csharp
-public interface IForgeAiProvider
-{
-    Task<string> CompleteAsync(string prompt, CancellationToken cancellationToken = default);
-
-    Task<float[]> EmbeddingAsync(string text, CancellationToken cancellationToken = default);
-}
-\`\`\`
-
----
-
-## 20. OpenAI Setup
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddOpenAI(options =>
-    {
-        options.ApiKey = configuration["AI:OpenAI:ApiKey"];
-        options.Model = "gpt-4.1";
-    });
-\`\`\`
-
----
-
-## 21. Gemini Setup
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddGemini(options =>
-    {
-        options.ApiKey = configuration["AI:Gemini:ApiKey"];
-        options.Model = "gemini-2.5-pro";
-    });
-\`\`\`
-
----
-
-## 22. Claude Setup
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddClaude(options =>
-    {
-        options.ApiKey = configuration["AI:Claude:ApiKey"];
-        options.Model = "claude-sonnet-4";
-    });
-\`\`\`
-
----
-
-## 23. Ollama Setup
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddOllama(options =>
-    {
-        options.Endpoint = "http://localhost:11434";
-        options.Model = "llama3";
-    });
-\`\`\`
-
----
-
-## 24. AI Querying
-
-\`\`\`csharp
-var customers = await ai.QueryAsync<Customer>(
-    "Get top 10 active customers from Dubai who purchased in last 30 days");
-\`\`\`
-
-### Pipeline
-
-\`\`\`text
-Natural language
-  -> intent analysis
-  -> schema context
-  -> query generation
-  -> SQL safety validation
-  -> execution
-  -> result shaping
-\`\`\`
-
----
-
-## 25. AI Diagnostics
-
-\`\`\`csharp
-var analysis = await aiDiagnostics.AnalyzeQueryAsync(sql);
-\`\`\`
-
-### Example Output
-
-\`\`\`text
-Potential missing index on Orders.CustomerId.
-Query scans a large table.
-Consider adding pagination.
-\`\`\`
-
----
-
-## 26. AI Optimization
-
-\`\`\`csharp
-var optimized = await aiOptimizer.OptimizeAsync(sql);
-\`\`\`
-
-### Example Suggestion
-
-\`\`\`sql
-CREATE INDEX IX_Orders_CustomerId_CreatedAt
-ON Orders(CustomerId, CreatedAt);
-\`\`\`
-
----
-
-## 27. AI Code Generation
-
-### Generate Repository
-
-\`\`\`csharp
-var code = await aiCodeGenerator.GenerateRepositoryAsync<Customer>();
-\`\`\`
-
-### Generate Minimal API
-
-\`\`\`csharp
-var api = await aiCodeGenerator.GenerateMinimalApiAsync<Product>();
-\`\`\`
-
-### Generate DTOs
-
-\`\`\`csharp
-var dto = await aiCodeGenerator.GenerateDtoAsync<Customer>();
-\`\`\`
-
----
-
-## 28. AI Migrations
-
-\`\`\`csharp
-var migration = await aiMigrationPlanner.GenerateMigrationPlanAsync(
-    oldSchema,
-    newSchema);
-\`\`\`
-
----
-
-## 29. RAG Engine
-
-### Upload Document
-
-\`\`\`csharp
-await rag.UploadAsync(fileStream, "policy.pdf");
-\`\`\`
-
-### Chunk
-
-\`\`\`csharp
-var chunks = await rag.ChunkAsync(document);
-\`\`\`
-
-### Embed
-
-\`\`\`csharp
-await rag.GenerateEmbeddingsAsync(chunks);
-\`\`\`
-
-### Ask
-
-\`\`\`csharp
-var answer = await rag.AskAsync(
-    "What is the refund policy?");
-\`\`\`
-
-### Architecture
-
-\`\`\`text
-Document
-  -> chunking
-  -> embeddings
-  -> vector store
-  -> semantic retrieval
-  -> LLM response
-\`\`\`
-
----
-
-## 30. Workflow Engine
-
-### Start Workflow
-
-\`\`\`csharp
-await workflow.StartAsync("OrderApproval", new
-{
-    OrderId = order.Id
-});
-\`\`\`
-
-### Workflow Definition
-
-\`\`\`csharp
-var workflow = WorkflowDefinition.Create("OrderApproval")
-    .Step("ValidateOrder")
-    .Step("ReserveInventory")
-    .Step("RequestApproval")
-    .Step("CompleteOrder");
-\`\`\`
-
-### Compensation
-
-\`\`\`csharp
-await workflow.CompensateAsync(instanceId);
-\`\`\`
-
----
-
-## 31. Visual Workflow Designer
-
-The React Studio can display workflow nodes.
-
-\`\`\`json
-{
-  "nodes": [
-    { "id": "start", "type": "start" },
-    { "id": "validate", "type": "action", "label": "Validate Order" },
-    { "id": "approve", "type": "approval", "label": "Manager Approval" }
-  ],
-  "edges": [
-    { "from": "start", "to": "validate" },
-    { "from": "validate", "to": "approve" }
-  ]
-}
-\`\`\`
-
----
-
-## 32. Event Sourcing
-
-### Append Event
-
-\`\`\`csharp
-await eventStore.AppendAsync(
-    streamId: order.Id.ToString(),
-    @event: new OrderCreated(order.Id));
-\`\`\`
-
-### Read Stream
-
-\`\`\`csharp
-var events = await eventStore.ReadStreamAsync(order.Id.ToString());
-\`\`\`
-
-### Replay Projection
-
-\`\`\`csharp
-await projection.ReplayAsync("orders");
-\`\`\`
-
----
-
-## 33. Realtime Engine
-
-### SignalR Setup
-
-\`\`\`csharp
-builder.Services.AddSignalR();
-
-app.MapHub<ForgeRealtimeHub>("/forgeorm/realtime");
-\`\`\`
-
-### Subscribe to Entity Changes
-
-\`\`\`csharp
-await realtime.SubscribeAsync<Order>();
-\`\`\`
-
----
-
-## 34. AI Agents
-
-### Query Agent
-
-\`\`\`csharp
-await aiAgents.RunAsync("query-agent", new
-{
-    Task = "Find slow reporting queries"
-});
-\`\`\`
-
-### Optimization Agent
-
-\`\`\`csharp
-await aiAgents.RunAsync("optimization-agent", new
-{
-    Task = "Recommend indexes"
-});
-\`\`\`
-
-### Reporting Agent
-
-\`\`\`csharp
-await aiAgents.RunAsync("reporting-agent", new
-{
-    Task = "Generate sales report"
-});
-\`\`\`
-
----
-
-## 35. Semantic Schema Understanding
-
-\`\`\`csharp
-var model = await schemaAnalyzer.AnalyzeAsync();
-\`\`\`
-
-### Output
-
-\`\`\`json
-{
-  "entities": ["Customer", "Order", "Product"],
-  "relationships": ["Customer has many Orders", "Order has many Products"],
-  "aggregates": ["CustomerAggregate", "OrderAggregate"]
-}
-\`\`\`
-
----
-
-## 36. Low-Code ERP Generator
-
-### Prompt
-
-\`\`\`text
-Generate ERP for manufacturing company with inventory, sales, procurement, HR, finance, approvals, reports.
-\`\`\`
-
-### Generated Modules
-
-- Inventory
-- Sales
-- Procurement
-- Finance
-- HR
-- CRM
-- Workflow approvals
-- Dashboards
-- Reports
-- APIs
-- Permissions
-
----
-
-## 37. API Gateway and Service Mesh
-
-### Gateway Features
-
-- Rate limiting
-- Authentication
-- Authorization
-- Retries
-- Circuit breaker
-- API aggregation
-- Distributed tracing
-
-### YARP Example
-
-\`\`\`json
-{
-  "ReverseProxy": {
-    "Routes": {
-      "forgeorm-api": {
-        "ClusterId": "api",
-        "Match": {
-          "Path": "/api/{**catch-all}"
-        }
-      }
-    }
-  }
-}
-\`\`\`
-
----
-
-## 38. Distributed Query Engine
-
-\`\`\`csharp
-var result = await distributedQuery.QueryAsync(new DistributedQueryRequest
-{
-    Sources = ["sqlserver", "postgresql", "mongodb"],
-    Query = "Get customer sales summary"
-});
-\`\`\`
-
----
-
-## 39. Data Virtualization
-
-\`\`\`csharp
-var result = await virtualization.QueryAsync("customers")
-    .From("sqlserver")
-    .Join("crm-api")
-    .ExecuteAsync();
-\`\`\`
-
----
-
-## 40. Cloud Deployment Generator
-
-### Docker
-
-\`\`\`bash
-forgeorm generate docker
-\`\`\`
-
-### Kubernetes
-
-\`\`\`bash
-forgeorm generate k8s
-\`\`\`
-
-### Terraform
-
-\`\`\`bash
-forgeorm generate terraform --provider azure
-\`\`\`
-
----
-
-## 41. Infrastructure as Code
-
-### Terraform Azure SQL Example
-
-\`\`\`hcl
-resource "azurerm_mssql_server" "forgeorm" {
-  name                         = "forgeorm-sql"
-  resource_group_name          = azurerm_resource_group.main.name
-  location                     = azurerm_resource_group.main.location
-  administrator_login          = "sqladmin"
-  administrator_login_password = var.sql_password
-}
-\`\`\`
-
----
-
-## 42. Distributed Cache Cluster
-
-### Redis Cluster
-
-\`\`\`csharp
-builder.Services.AddForgeOrm()
-    .AddRedisCache(options =>
-    {
-        options.ConnectionString = configuration["Redis:ClusterConnectionString"];
-        options.UseCluster = true;
-    });
-\`\`\`
-
----
-
-## 43. AI Security Analyzer
-
-\`\`\`csharp
-var result = await securityAnalyzer.AnalyzeAsync(sql);
-\`\`\`
-
-### Detects
-
-- Unsafe raw SQL
-- Tenant filter missing
-- SQL injection risk
-- Sensitive columns exposed
-- Missing authorization policy
-
----
-
-## 44. AI Observability
-
-\`\`\`csharp
-var recommendation = await observabilityAi.AnalyzeAsync(metrics);
-\`\`\`
-
-### Example Output
-
-\`\`\`text
-Orders report query latency increased 45%.
-Cache hit ratio dropped below 40%.
-Recommended action: add index on Orders.CreatedAt.
-\`\`\`
-
----
-
-## 45. Time Travel Queries
-
-\`\`\`csharp
-var orders = await db.Query<Order>()
-    .AsOf(DateTime.UtcNow.AddDays(-30))
-    .ToListAsync();
-\`\`\`
-
-### SQL Server Temporal Table
-
-\`\`\`sql
-SELECT *
-FROM Orders
-FOR SYSTEM_TIME AS OF '2026-01-01T00:00:00';
-\`\`\`
-
-### PostgreSQL History Table
-
-\`\`\`sql
-SELECT *
-FROM OrdersHistory
-WHERE ValidFrom <= @AsOf AND ValidTo > @AsOf;
-\`\`\`
-
----
-
-## 46. Offline Sync
-
-### Initialize Local Store
-
-\`\`\`csharp
-await sync.InitializeOfflineStoreAsync();
-\`\`\`
-
-### Sync Changes
-
-\`\`\`csharp
-await sync.SynchronizeAsync();
-\`\`\`
-
-### Conflict Resolution
-
-\`\`\`csharp
-await sync.ResolveConflictsAsync(ConflictStrategy.ServerWins);
-\`\`\`
-
----
-
-## 47. Marketplace
-
-### Install Template
-
-\`\`\`bash
-forgeorm marketplace install erp-inventory-module
-\`\`\`
-
-### Marketplace Items
-
-- Providers
-- Templates
-- AI agents
-- Reports
-- Workflows
-- ERP modules
-- CRM modules
-- Dashboard packs
-
----
-
-## 48. Enterprise Identity Platform
-
-### RBAC
-
-\`\`\`csharp
-policy.RequireRole("Admin");
-\`\`\`
-
-### ABAC
-
-\`\`\`csharp
-policy.RequireClaim("department", "Finance");
-\`\`\`
-
-### Policy Engine
-
-\`\`\`csharp
-await policyEngine.AuthorizeAsync(user, "orders.approve");
-\`\`\`
-
----
-
-## 49. AI Memory System
-
-\`\`\`csharp
-await aiMemory.SaveAsync("schema-summary", schemaDescription);
-
-var memory = await aiMemory.GetAsync("schema-summary");
-\`\`\`
-
-### Memory Types
-
-- Schema memory
-- Query history
-- Optimization history
-- User preference memory
-- Tenant-specific memory
-- Project memory
-
----
-
-## 50. React Studio
-
-### Studio Sections
-
-- Dashboard
-- Database Explorer
-- ERD Designer
-- Query Visualizer
-- API Tester
-- AI Chat
-- RAG Documents
-- Workflow Designer
-- Reports
-- Monitoring
-- Marketplace
-- Tenants
-- Security
-- Migrations
-
-### Example Route Config
-
-\`\`\`tsx
-export const routes = [
-  { path: "/dashboard", label: "Dashboard" },
-  { path: "/database", label: "Database Explorer" },
-  { path: "/erd", label: "ERD Designer" },
-  { path: "/query", label: "Query Visualizer" },
-  { path: "/api-tester", label: "API Tester" },
-  { path: "/ai", label: "AI Assistant" },
-  { path: "/rag", label: "RAG Documents" },
-  { path: "/workflow", label: "Workflow Designer" },
-  { path: "/reports", label: "Reports" },
-  { path: "/monitoring", label: "Monitoring" }
-];
-\`\`\`
-
----
-
-## 51. API Testing
-
-\`\`\`csharp
-var response = await apiTester.SendAsync(new ApiTestRequest
-{
-    Method = "GET",
-    Url = "/api/products"
-});
-\`\`\`
-
----
-
-## 52. Monitoring Dashboard
-
-### Metrics Endpoint
-
-\`\`\`http
-GET /api/studio/monitoring/metrics
-\`\`\`
-
-### Response
-
-\`\`\`json
-{
-  "queriesPerMinute": 120,
-  "averageQueryMs": 18,
-  "cacheHitRatio": 0.82,
-  "slowQueries": 3,
-  "activeTenants": 12
-}
-\`\`\`
-
----
-
-## 53. SaaS Platform
-
-### Tenant Endpoint
-
-\`\`\`http
-GET /api/studio/tenants
-\`\`\`
-
-### Tenant Model
-
-\`\`\`csharp
-public sealed record TenantDto(
-    string Id,
-    string Name,
-    string Plan,
-    bool IsActive);
-\`\`\`
-
----
-
-## 54. GraphQL
-
-\`\`\`csharp
-builder.Services.AddForgeGraphQL();
-
-app.MapGraphQL("/graphql");
-\`\`\`
-
----
-
-## 55. OData
-
-\`\`\`csharp
-builder.Services.AddForgeOData();
-
-app.MapODataRoute("odata", "odata");
-\`\`\`
-
----
-
-## 56. CQRS
-
-### Command
-
-\`\`\`csharp
-public sealed record CreateProductCommand(
-    string Name,
-    decimal Price);
-\`\`\`
-
-### Handler
-
-\`\`\`csharp
-public sealed class CreateProductHandler
-{
-    public Task Handle(CreateProductCommand command)
-    {
-        return Task.CompletedTask;
-    }
-}
-\`\`\`
-
-### Query
-
-\`\`\`csharp
-public sealed record GetProductsQuery;
-\`\`\`
-
----
-
-## 57. SQL Server Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
-    options.EnableCaching();
-    options.EnableAuditing();
-    options.EnableTelemetry();
-    options.EnableMultiTenancy();
-    options.EnableOutbox();
-});
-\`\`\`
-
----
-
-## 58. PostgreSQL Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UsePostgreSql(configuration.GetConnectionString("PostgreSql"));
-    options.EnableVectorSearch();
-    options.EnableCaching();
-    options.EnableTelemetry();
-});
-\`\`\`
-
----
-
-## 59. MySQL Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMySql(configuration.GetConnectionString("MySql"));
-    options.EnableCaching();
-});
-\`\`\`
-
----
-
-## 60. Oracle Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseOracle(configuration.GetConnectionString("Oracle"));
-    options.EnableAuditing();
-});
-\`\`\`
-
----
-
-## 61. MongoDB Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseMongoDb(configuration.GetConnectionString("MongoDb"));
-});
-\`\`\`
-
----
-
-## 62. CosmosDB Full Example
-
-\`\`\`csharp
-builder.Services.AddForgeOrm(options =>
-{
-    options.UseCosmos(configuration["Cosmos:ConnectionString"]);
-});
-\`\`\`
-
----
-
-## 63. Docker Deployment
-
-\`\`\`dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
-WORKDIR /app
-COPY ./publish .
-ENTRYPOINT ["dotnet", "ForgeORM.SampleApi.dll"]
-\`\`\`
-
----
-
-## 64. Kubernetes Deployment
-
-\`\`\`yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: forgeorm-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: forgeorm-api
-  template:
-    metadata:
-      labels:
-        app: forgeorm-api
-    spec:
-      containers:
-        - name: forgeorm-api
-          image: forgeorm/api:latest
-          ports:
-            - containerPort: 8080
-\`\`\`
-
----
-
-## 65. GitHub Actions
-
-\`\`\`yaml
-name: Build ForgeORM
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 10.0.x
-      - name: Restore
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --configuration Release --no-build
-\`\`\`
-
----
-
-## 66. Best Practices
-
-Use ForgeORM with:
-
-- Clean Architecture
-- Vertical Slice Architecture
-- CQRS
-- Outbox Pattern
-- Event Sourcing
-- OpenTelemetry
-- Redis caching
-- Tenant-aware security
+- AI query optimization
 - AI diagnostics
-- Central package management
-- Docker
-- Kubernetes
-- CI/CD
+- AI CRUD generation
+- AI analytics
+- AI recommendations
 
 ---
 
-## 67. Recommended Production Stack
+# 33. Vector Search
 
-| Area | Recommended |
-|---|---|
-| Primary DB | PostgreSQL or SQL Server |
-| Cache | Redis |
-| Messaging | Kafka or RabbitMQ |
-| Vector | pgvector or Qdrant |
-| AI | BYO OpenAI/Gemini/Claude/Ollama |
-| Telemetry | OpenTelemetry |
-| Logs | Serilog + Seq |
-| Deployment | Kubernetes |
-| Gateway | YARP |
-| Auth | Keycloak / OpenIddict |
+\`\`\`csharp
+var result = await vectorStore.SearchAsync(vector);
+\`\`\`
 
 ---
 
-## 68. Product Positioning
+# 34. Telemetry & Logging
 
-ForgeORM should be positioned as:
+Supports:
 
-> AI-first enterprise data platform for modern .NET applications.
-
-Not only:
-
-> Another ORM.
+- OpenTelemetry
+- Serilog
+- Seq
+- Structured logging
+- Query tracing
 
 ---
 
-## 69. V1 → V4 Roadmap
+# 35. Multi Database Support
 
-### V1
+Supported:
 
-- Core ORM
-- LINQ provider
-- Query builder
-- SQL generation
 - SQL Server
 - PostgreSQL
-
-### V2
-
-- Bulk operations
-- Redis caching
-- Multi-tenancy
-- Auditing
-- Outbox
-- Reporting
-- Telemetry
-- Security
-
-### V3
-
-- AI querying
-- AI diagnostics
-- AI optimization
-- AI code generation
-- AI migrations
-- Vector search
-- RAG
-
-### V4
-
-- React Studio
-- Workflow designer
-- ERD designer
-- API tester
-- SaaS platform
-- AI agents
-- Marketplace
-- Low-code ERP generator
-- Monitoring dashboards
+- MySQL
+- Oracle
+- SQLite
 
 ---
 
-## 70. Final Vision
+# 36. Best Practices
 
-ForgeORM evolves into:
+## Recommended
+
+- Use split queries for large graphs
+- Use TVP for large inserts
+- Use search APIs for admin grids
+- Use analytics engine for reports
+- Use DataFrames for CSV/JSON analytics
+- Keep raw SQL for advanced scenarios
+
+## Avoid
+
+- N+1 queries
+- huge joins
+- loading unnecessary columns
+- over-fetching data
+
+---
+
+# 37. Advanced Enterprise Scenarios
+
+## ERP Systems
+
+Use:
+
+- TVP
+- Graph insert
+- Analytics
+- Pivot tables
+- CQRS
+
+## Financial Systems
+
+Use:
+
+- Window functions
+- Percentiles
+- Running totals
+- Split queries
+
+## Healthcare
+
+Use:
+
+- Search APIs
+- Analytics
+- DataFrames
+
+---
+
+# 38. Complete Example Project
+
+\`\`\`text
+src/
+ ├── API
+ ├── Application
+ ├── Domain
+ ├── Infrastructure
+ └── Features
+\`\`\`
+
+Features:
+
+- Orders
+- Products
+- Customers
+- Payments
+- Shipments
+- Analytics
+
+---
+
+# 39. Troubleshooting
+
+## Enum Issues
+
+Add:
+
+\`\`\`csharp
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter());
+});
+\`\`\`
+
+## IN Query Issues
+
+Use:
+
+\`\`\`sql
+WHERE Id IN @Ids
+\`\`\`
+
+ForgeORM automatically expands parameters.
+
+## Record Mapping Issues
+
+Ensure SQL column names match constructor names.
+
+---
+
+# 40. Roadmap
+
+Upcoming:
+
+- Source generators
+- LINQ provider
+- Query compilation cache
+- Distributed DataFrames
+- DuckDB integration
+- Parquet support
+- GPU acceleration
+- AI query planning
+- Visual analytics
+- Dashboard engine
+
+---
+
+# Conclusion
+
+ForgeORM is designed to become:
+
+\`\`\`text
+ORM + Analytics + DataFrame + AI + Enterprise Platform
+\`\`\`
+
+It combines:
 
 - ORM
-- Enterprise data platform
-- AI backend platform
-- RAG engine
-- Workflow system
-- Low-code ERP/CRM generator
-- SaaS platform
-- AI enterprise operating system for .NET`,Ab=[{title:`Introduction`,slug:`1-introduction`},{title:`Supported Databases`,slug:`2-supported-databases`},{title:`Installation`,slug:`3-installation`},{title:`Basic Setup`,slug:`4-basic-setup`},{title:`Core ORM`,slug:`5-core-orm`},{title:`Query Builder`,slug:`6-query-builder`},{title:`LINQ Provider`,slug:`7-linq-provider`},{title:`Bulk Operations`,slug:`10-bulk-operations`},{title:`Multi-Tenancy`,slug:`11-multi-tenancy`},{title:`Auditing`,slug:`12-auditing`},{title:`Outbox Pattern`,slug:`13-outbox-pattern`},{title:`Reporting Engine`,slug:`14-reporting-engine`},{title:`Telemetry`,slug:`15-telemetry`},{title:`Redis Caching`,slug:`16-redis-caching`},{title:`Security`,slug:`17-security`},{title:`Vector Search`,slug:`18-vector-search`},{title:`AI Provider Strategy`,slug:`19-ai-provider-strategy`},{title:`AI Querying`,slug:`24-ai-querying`},{title:`RAG Engine`,slug:`29-rag-engine`},{title:`Workflow Engine`,slug:`30-workflow-engine`},{title:`Event Sourcing`,slug:`32-event-sourcing`},{title:`React Studio`,slug:`50-react-studio`},{title:`Roadmap`,slug:`69-v1--v4-roadmap`}];function jb(){return(0,R.jsx)(`div`,{className:`forgeWikiImported`,children:(0,R.jsxs)(`div`,{className:`forgeWikiImportedLayout`,children:[(0,R.jsxs)(`aside`,{className:`forgeWikiImportedAside`,children:[(0,R.jsx)(`h2`,{className:`forgeWikiTitle`,children:`ForgeORM Wiki`}),(0,R.jsx)(`nav`,{className:`forgeWikiNav`,children:Ab.map(e=>(0,R.jsx)(`a`,{href:`#${e.slug}`,className:`forgeWikiNavLink`,children:e.title},e.slug))})]}),(0,R.jsx)(`main`,{className:`forgeWikiImportedMain`,children:(0,R.jsx)(`article`,{className:`forgeWikiMarkdown`,children:(0,R.jsx)(w_,{remarkPlugins:[Ob],children:kb})})})]})})}var Mb=`/assets/images/fervidex-logo.png`,Nb=[[`home`,`Home`],[`products`,`Products`],[`wiki`,`Wiki`],[`forgeorm-full-wiki`,`ForgeORM Docs`],[`playground`,`Playground`],[`api`,`API Docs`],[`blog`,`Blog`],[`about`,`About`]],Pb=[`Fast QueryAsync / ExecuteAsync APIs`,`Raw SQL mapping`,`Stored procedure execution`,`Multiple result set mapping`,`Expression-based filtering`,`Fluent query builder`,`Optional filters`,`Pagination`,`DTO projection`,`Safe interpolated SQL`],Fb=[`Bulk insert/update/delete`,`Provider packages for SQL Server, PostgreSQL, MySQL, Oracle`,`Unit of Work helpers`,`Transactions`,`Multi-tenancy filters`,`Auditing fields`,`Soft delete`,`Change history`,`Redis/in-memory cache adapters`,`OpenTelemetry spans`],Ib=[`Outbox pattern`,`Reporting DSL`,`Dynamic pivot-friendly filters`,`JSON result streaming`,`Split queries for hierarchies`,`ToShape<T>() projection concept`,`Source-generator mapping roadmap`,`Vector search extension points`,`AI query explanation`,`AI diagnostics`],Lb=[`React Studio`,`ERD designer`,`Query visualizer`,`API testing console`,`SaaS workspace`,`Monitoring dashboards`,`AI optimization`,`AI code generation`,`AI migrations`,`Enterprise architecture memory`],Rb=[`HTML/CSS to PDF rendering`,`Structured layout tree and paint engine`,`Headers and footers`,`Table pagination`,`Card/report rendering`,`Unicode and RTL planning`,`Large PDF streaming`,`CLI tooling`,`Minimal API integration`,`Word/Excel/PDF conversion roadmap`,`Image handling roadmap`,`NuGet packaging`];function zb(){let e=()=>location.hash?.replace(`#`,``)||`home`,[t,n]=(0,E.useState)(e()),[r,i]=(0,E.useState)(!1),[a,o]=(0,E.useState)(localStorage.theme||`dark`);E.useEffect(()=>{document.documentElement.dataset.theme=a,localStorage.theme=a},[a]),E.useEffect(()=>{let t=()=>n(e());return window.addEventListener(`hashchange`,t),()=>window.removeEventListener(`hashchange`,t)},[]);let s=e=>{n(e),location.hash=e,i(!1),scrollTo(0,0)};return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(Bb,{page:t,go:s,open:r,setOpen:i,theme:a,setTheme:o}),(0,R.jsxs)(`main`,{children:[t===`home`&&(0,R.jsx)(Vb,{go:s}),` `,t===`products`&&(0,R.jsx)(Wb,{go:s}),` `,t===`wiki`&&(0,R.jsx)(Kb,{}),` `,t===`forgeorm-full-wiki`&&(0,R.jsx)(jb,{}),` `,t===`playground`&&(0,R.jsx)(Yb,{}),` `,t===`api`&&(0,R.jsx)(Xb,{}),` `,t===`blog`&&(0,R.jsx)(Zb,{setPage:n}),` `,t.startsWith(`article-`)&&(0,R.jsx)($b,{slug:t}),` `,t===`about`&&(0,R.jsx)(tx,{})]}),(0,R.jsx)(ox,{go:s})]})}function Bb({page:e,go:t,open:n,setOpen:r,theme:i,setTheme:a}){return(0,R.jsxs)(`header`,{className:`nav`,children:[(0,R.jsxs)(`div`,{className:`brand`,onClick:()=>t(`home`),children:[(0,R.jsx)(`img`,{src:Mb}),(0,R.jsx)(`span`,{children:`Fervidex Systems`})]}),(0,R.jsx)(`button`,{className:`hamb`,onClick:()=>r(!n),children:n?(0,R.jsx)(_e,{}):(0,R.jsx)(ue,{})}),(0,R.jsxs)(`nav`,{className:n?`show`:``,children:[Nb.map(([n,r])=>(0,R.jsx)(`button`,{className:e===n?`active`:``,onClick:()=>t(n),children:r},n)),(0,R.jsx)(`button`,{className:`theme`,onClick:()=>a(i===`dark`?`light`:`dark`),children:i===`dark`?(0,R.jsx)(ge,{}):(0,R.jsx)(de,{})})]})]})}function Vb({go:e}){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(Hb,{go:e}),(0,R.jsx)(Ub,{}),(0,R.jsx)(nx,{title:`Enterprise-grade product features`,sub:`The site now includes dark/light theme, AI animated hero, searchable docs, playgrounds, PDF demo, Wiki sidebar, syntax-highlighted examples, SEO metadata, blog, API docs, charts, NuGet badges and GitHub stars UI.`,children:(0,R.jsxs)(`div`,{className:`grid three`,children:[(0,R.jsx)(ix,{title:`ForgeORM`,icon:(0,R.jsx)(se,{}),desc:`Micro ORM with SQL intelligence, bulk operations, multi-tenancy, outbox, caching, telemetry, AI and vector-ready extension points.`}),(0,R.jsx)(ix,{title:`ForgePDF`,icon:(0,R.jsx)(ce,{}),desc:`HTML/CSS to PDF engine for reports, invoices and enterprise documents with CLI and API usage examples.`}),(0,R.jsx)(ix,{title:`Developer Studio`,icon:(0,R.jsx)(oe,{}),desc:`Roadmap for React Studio, ERD designer, query visualizer, API testing, SaaS dashboards and AI optimization.`})]})}),(0,R.jsx)(ex,{}),(0,R.jsx)(ax,{go:e})]})}function Hb({go:e}){return(0,R.jsxs)(`section`,{className:`hero`,children:[(0,R.jsx)(`div`,{className:`orb o1`}),(0,R.jsx)(`div`,{className:`orb o2`}),(0,R.jsx)(`div`,{className:`gridlines`}),(0,R.jsxs)(Ju.div,{initial:{opacity:0,y:22},animate:{opacity:1,y:0},className:`heroText`,children:[(0,R.jsxs)(`span`,{className:`eyebrow`,children:[(0,R.jsx)(pe,{size:16}),` AI-powered developer platform`]}),(0,R.jsx)(`h1`,{children:`High-graphics React website for ForgeORM, ForgePDF and Fervidex Systems.`}),(0,R.jsx)(`p`,{children:`Comprehensive product pages, searchable Wiki, interactive examples, API help, benchmarks and marketplace-ready content for your .NET and AI engineering tools.`}),(0,R.jsxs)(`div`,{className:`actions`,children:[(0,R.jsxs)(`button`,{onClick:()=>e(`wiki`),children:[`Open Wiki `,(0,R.jsx)(ie,{size:18})]}),(0,R.jsxs)(`button`,{className:`ghost`,onClick:()=>e(`playground`),children:[`Try Playground `,(0,R.jsx)(j,{size:18})]})]})]}),(0,R.jsxs)(Ju.div,{initial:{opacity:0,scale:.92},animate:{opacity:1,scale:1},transition:{delay:.15},className:`aiPanel`,children:[(0,R.jsxs)(`div`,{className:`glassTop`,children:[(0,R.jsx)(me,{}),(0,R.jsx)(`span`,{children:`AI Architecture Console`})]}),(0,R.jsx)(`pre`,{children:(0,R.jsx)(`code`,{children:`dotnet add package ForgeORM
+- Query builder
+- Analytics engine
+- Pivot engine
+- DataFrame processing
+- AI tooling
+- Enterprise architecture support
+
+inside one modern .NET ecosystem.
+
+
+
+---
+
+# 41. Stream-Based CSV and JSON Imports
+
+ForgeORM DataFrame APIs should support both path-based imports and stream-based imports. Stream support is important for ASP.NET Core uploads, Azure Blob Storage, S3, message pipelines, and enterprise ETL scenarios where writing temporary files is not ideal.
+
+## CSV Upload Example
+
+\`\`\`csharp
+app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+        return Results.BadRequest("Invalid tableName.");
+
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new
+    {
+        tableName,
+        file.FileName,
+        rows = frame.RowCount,
+        columns = frame.Columns
+    });
+});
+\`\`\`
+
+## JSON Upload Example
+
+\`\`\`csharp
+app.MapPost("/dataframes/import/json-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+        return Results.BadRequest("Invalid tableName.");
+
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromJsonAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new
+    {
+        tableName,
+        file.FileName,
+        rows = frame.RowCount,
+        columns = frame.Columns
+    });
+});
+\`\`\`
+
+---
+
+# 42. Dirty Data Handling
+
+CSV and JSON imports often contain placeholder values. ForgeORM should treat these values as null-like values during import and table persistence.
+
+\`\`\`text
+?, -, --, NA, N/A, NULL, null, nan, none
+\`\`\`
+
+These values should become:
+
+\`\`\`sql
+NULL
+\`\`\`
+
+This behavior is similar to pandas and prevents errors such as:
+
+\`\`\`text
+Error converting data type nvarchar to numeric
+\`\`\`
+
+## Example CSV
+
+\`\`\`csv
+Country,Sales
+USA,100
+Canada,?
+UK,N/A
+\`\`\`
+
+Expected database result:
+
+\`\`\`text
+USA     100
+Canada  NULL
+UK      NULL
+\`\`\`
+
+---
+
+# 43. Safe SQL Identifier Validation
+
+When users provide dynamic table names for CSV or JSON imports, the name must be validated.
+
+\`\`\`csharp
+if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+    return Results.BadRequest("Invalid tableName.");
+\`\`\`
+
+ForgeORM should escape identifiers internally:
+
+\`\`\`sql
+[Country], [Continent], [1980], [1981]
+\`\`\`
+
+This fixes numeric CSV column names and prevents invalid SQL.
+
+---
+
+# 44. DataFrame Persistence to SQL Tables
+
+ForgeORM DataFrame can create a SQL table from CSV or JSON data and insert rows safely.
+
+\`\`\`csharp
+await frame.ToTableAsync(
+    db,
+    tableName: "ImportedOrders",
+    cancellationToken: ct);
+\`\`\`
+
+DataFrame persistence should include:
+
+- schema inference
+- null-like value conversion
+- numeric column support
+- identifier escaping
+- parameterized inserts
+- safe table names
+
+---
+
+# 45. Analytics Execution Pipeline
+
+Analytics queries can render SQL or execute directly.
+
+## Render SQL
+
+\`\`\`csharp
+var sql = db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .Render()
+    .Sql;
+\`\`\`
+
+## Execute Analytics
+
+\`\`\`csharp
+var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .Select(x => x.CustomerId)
+    .Select(x => x.GrandTotal)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .ToDynamicListAsync(ct);
+\`\`\`
+
+Use named arguments internally so \`CancellationToken\` is never passed as SQL parameters.
+
+---
+
+# 46. ForgeORM.AspNetCore Integration
+
+ASP.NET Core applications should reference the integration package so setup is simple.
+
+\`\`\`bash
+dotnet add package ForgeORM.AspNetCore
+\`\`\`
+
+Recommended setup:
+
+\`\`\`csharp
+builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableCaching();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();
+\`\`\`
+
+The integration package should wire:
+
+- ForgeDbContext
+- QueryAst services
+- Analytics services
+- DataFrame services
+- JSON enum options
+- health checks
+- middleware
+- telemetry
+
+---
+
+# 47. QueryAst Architecture
+
+Advanced query features belong in QueryAst, not low-level Core.
+
+\`\`\`text
+ForgeORM.Core       -> ADO.NET engine, materializer, CRUD, transactions
+ForgeORM.QueryAst   -> query builders, search, SplitGraph, SQL rendering
+ForgeORM.Analytics  -> DataFrames, analytics, pivot, pandas-like APIs
+ForgeORM.AspNetCore -> DI, middleware, web integration
+\`\`\`
+
+This keeps the core stable and allows advanced modules to evolve without breaking existing users.
+
+---
+
+# 48. Regression Testing Strategy
+
+ForgeORM should include regression tests for every bug fixed.
+
+Recommended test areas:
+
+\`\`\`text
+ForgeORM.Core.Tests
+ForgeORM.QueryAst.Tests
+ForgeORM.Analytics.Tests
+ForgeORM.DataFrame.Tests
+ForgeORM.AspNetCore.Tests
+\`\`\`
+
+Test cases should cover:
+
+- record constructor mapping
+- enum mapping
+- \`IN @Ids\` expansion
+- CancellationToken not bound as parameter
+- CSV dirty-data import
+- JSON dirty-data import
+- numeric CSV headers
+- safe table-name validation
+- analytics SQL rendering
+- analytics dynamic execution
+- SplitGraph one-to-one and one-to-many
+
+---
+
+# 49. ForgeCommerce Demo
+
+ForgeCommerce is the official demo repository for ForgeORM.
+
+\`\`\`text
+https://github.com/ahmedRaheel/ForgeCommerce
+\`\`\`
+
+It demonstrates:
+
+- Minimal APIs
+- ForgeDbContext
+- Search APIs
+- SplitGraph
+- record mapping
+- enum mapping
+- analytics window functions
+- DataFrame CSV/JSON import
+- table creation from uploaded files
+- TVP graph insert
+- Swagger
+
+---
+
+# 50. Enterprise Security Best Practices
+
+Always validate dynamic identifiers. Always parameterize values. Never concatenate user values into SQL.
+
+Safe:
+
+\`\`\`csharp
+await db.QueryAsync<Order>(
+    "SELECT * FROM Orders WHERE CustomerId = @customerId",
+    new { customerId });
+\`\`\`
+
+Unsafe:
+
+\`\`\`csharp
+await db.QueryAsync<Order>(
+    $"SELECT * FROM Orders WHERE CustomerId = {customerId}");
+\`\`\`
+
+ForgeORM should provide secure defaults for:
+
+- dynamic table names
+- CSV/JSON imports
+- DataFrame persistence
+- query builders
+- analytics execution
+- stored procedure parameters
+`,Ab=[{title:`1. Introduction`,slug:`1-introduction`},{title:`2. Installation`,slug:`2-installation`},{title:`3. Architecture Overview`,slug:`3-architecture-overview`},{title:`4. ForgeDbContext`,slug:`4-forgedbcontext`},{title:`5. Query APIs`,slug:`5-query-apis`},{title:`6. CRUD Operations`,slug:`6-crud-operations`},{title:`7. Record Mapping`,slug:`7-record-mapping`},{title:`8. Enum Mapping`,slug:`8-enum-mapping`},{title:`9. Dynamic Queries`,slug:`9-dynamic-queries`},{title:`10. Search APIs`,slug:`10-search-apis`},{title:`11. Split Queries`,slug:`11-split-queries`},{title:`12. Graph Insert`,slug:`12-graph-insert`},{title:`13. Table-Valued Parameters (TVP)`,slug:`13-table-valued-parameters-tvp`},{title:`14. Window Functions`,slug:`14-window-functions`},{title:`15. Analytics Engine`,slug:`15-analytics-engine`},{title:`16. Pivot Tables`,slug:`16-pivot-tables`},{title:`17. DataFrame APIs`,slug:`17-dataframe-apis`},{title:`18. CSV Import`,slug:`18-csv-import`},{title:`19. JSON Import`,slug:`19-json-import`},{title:`20. Save DataFrame To Database`,slug:`20-save-dataframe-to-database`},{title:`21. Query DataFrames`,slug:`21-query-dataframes`},{title:`22. Vertical Slice Architecture`,slug:`22-vertical-slice-architecture`},{title:`23. Onion Architecture`,slug:`23-onion-architecture`},{title:`24. CQRS`,slug:`24-cqrs`},{title:`25. Minimal APIs`,slug:`25-minimal-apis`},{title:`26. Transactions`,slug:`26-transactions`},{title:`27. Bulk Operations`,slug:`27-bulk-operations`},{title:`28. Performance Optimization`,slug:`28-performance-optimization`},{title:`29. Caching`,slug:`29-caching`},{title:`30. Redis`,slug:`30-redis`},{title:`31. Workflow Engine`,slug:`31-workflow-engine`},{title:`32. AI Features`,slug:`32-ai-features`},{title:`33. Vector Search`,slug:`33-vector-search`},{title:`34. Telemetry & Logging`,slug:`34-telemetry-logging`},{title:`35. Multi Database Support`,slug:`35-multi-database-support`},{title:`36. Best Practices`,slug:`36-best-practices`},{title:`37. Advanced Enterprise Scenarios`,slug:`37-advanced-enterprise-scenarios`},{title:`38. Complete Example Project`,slug:`38-complete-example-project`},{title:`39. Troubleshooting`,slug:`39-troubleshooting`},{title:`40. Roadmap`,slug:`40-roadmap`},{title:`41. Stream-Based CSV and JSON Imports`,slug:`41-stream-based-csv-and-json-imports`},{title:`42. Dirty Data Handling`,slug:`42-dirty-data-handling`},{title:`43. Safe SQL Identifier Validation`,slug:`43-safe-sql-identifier-validation`},{title:`44. DataFrame Persistence to SQL Tables`,slug:`44-dataframe-persistence-to-sql-tables`},{title:`45. Analytics Execution Pipeline`,slug:`45-analytics-execution-pipeline`},{title:`46. ForgeORM.AspNetCore Integration`,slug:`46-forgeormaspnetcore-integration`},{title:`47. QueryAst Architecture`,slug:`47-queryast-architecture`},{title:`48. Regression Testing Strategy`,slug:`48-regression-testing-strategy`},{title:`49. ForgeCommerce Demo`,slug:`49-forgecommerce-demo`},{title:`50. Enterprise Security Best Practices`,slug:`50-enterprise-security-best-practices`}];function jb(e){return String(e).toLowerCase().replace(/<[^>]*>/g,``).replace(/[^a-z0-9\s-]/g,``).trim().replace(/\s+/g,`-`)}function Mb(e){return E.Children.toArray(e).map(e=>typeof e==`string`||typeof e==`number`?e:e?.props?.children?Mb(e.props.children):``).join(``)}function Nb({level:e,children:t}){let n=jb(Mb(t));return(0,R.jsx)(`h${e}`,{id:n,children:t})}function Pb(){let[e,t]=(0,E.useState)(``),[n,r]=(0,E.useState)(Ab[0]?.slug??``),i=(0,E.useMemo)(()=>{let t=e.trim().toLowerCase();return t?Ab.filter(e=>e.title.toLowerCase().includes(t)):Ab},[e]);(0,E.useEffect)(()=>{let e=()=>{let e=n;for(let t of Ab){let n=document.getElementById(t.slug);n&&n.getBoundingClientRect().top<=120&&(e=t.slug)}r(e)};return e(),window.addEventListener(`scroll`,e,{passive:!0}),()=>window.removeEventListener(`scroll`,e)},[n]);let a=e=>{let t=document.getElementById(e);t&&(t.scrollIntoView({behavior:`smooth`,block:`start`}),r(e))};return(0,R.jsx)(`div`,{className:`forgeWikiImported`,children:(0,R.jsxs)(`div`,{className:`forgeWikiImportedLayout`,children:[(0,R.jsxs)(`aside`,{className:`forgeWikiImportedAside`,children:[(0,R.jsxs)(`div`,{className:`forgeWikiAsideHeader`,children:[(0,R.jsx)(`span`,{className:`forgeWikiBadge`,children:`Updated Guide`}),(0,R.jsx)(`h2`,{className:`forgeWikiTitle`,children:`ForgeORM Bible`}),(0,R.jsx)(`p`,{children:`Complete enterprise guide, latest fixes, DataFrames, analytics and Wiki navigation.`})]}),(0,R.jsx)(`input`,{className:`forgeWikiSearch`,placeholder:`Search sections...`,value:e,onChange:e=>t(e.target.value)}),(0,R.jsx)(`nav`,{className:`forgeWikiNav`,children:i.map(e=>(0,R.jsx)(`button`,{type:`button`,onClick:()=>a(e.slug),className:`forgeWikiNavLink ${n===e.slug?`active`:``}`,children:e.title},e.slug))})]}),(0,R.jsxs)(`main`,{className:`forgeWikiImportedMain`,children:[(0,R.jsxs)(`div`,{className:`forgeWikiHeroCard`,children:[(0,R.jsx)(`span`,{children:`ForgeORM Documentation`}),(0,R.jsx)(`h1`,{children:`Enterprise ORM + Analytics + DataFrame Platform`}),(0,R.jsx)(`p`,{children:`Updated with stream CSV/JSON imports, dirty-data handling, safe SQL identifiers, analytics execution fixes, QueryAst architecture and ForgeCommerce demo guidance.`})]}),(0,R.jsx)(`article`,{className:`forgeWikiMarkdown`,children:(0,R.jsx)(w_,{remarkPlugins:[Ob],components:{h1:({children:e})=>(0,R.jsx)(Nb,{level:1,children:e}),h2:({children:e})=>(0,R.jsx)(Nb,{level:2,children:e}),h3:({children:e})=>(0,R.jsx)(Nb,{level:3,children:e})},children:kb})})]})]})})}var Fb=`/assets/images/fervidex-logo.png`,Ib=[[`home`,`Home`],[`products`,`Products`],[`wiki`,`Wiki`],[`forgeorm-full-wiki`,`ForgeORM Docs`],[`playground`,`Playground`],[`api`,`API Docs`],[`blog`,`Blog`],[`about`,`About`]],Lb=[`Fast QueryAsync / ExecuteAsync APIs`,`Raw SQL mapping`,`Stored procedure execution`,`Multiple result set mapping`,`Expression-based filtering`,`Fluent query builder`,`Optional filters`,`Pagination`,`DTO projection`,`Safe interpolated SQL`],Rb=[`Bulk insert/update/delete`,`Provider packages for SQL Server, PostgreSQL, MySQL, Oracle`,`Unit of Work helpers`,`Transactions`,`Multi-tenancy filters`,`Auditing fields`,`Soft delete`,`Change history`,`Redis/in-memory cache adapters`,`OpenTelemetry spans`],zb=[`Outbox pattern`,`Reporting DSL`,`Dynamic pivot-friendly filters`,`JSON result streaming`,`Split queries for hierarchies`,`ToShape<T>() projection concept`,`Source-generator mapping roadmap`,`Vector search extension points`,`AI query explanation`,`AI diagnostics`],Bb=[`React Studio`,`ERD designer`,`Query visualizer`,`API testing console`,`SaaS workspace`,`Monitoring dashboards`,`AI optimization`,`AI code generation`,`AI migrations`,`Enterprise architecture memory`],Vb=[`HTML/CSS to PDF rendering`,`Structured layout tree and paint engine`,`Headers and footers`,`Table pagination`,`Card/report rendering`,`Unicode and RTL planning`,`Large PDF streaming`,`CLI tooling`,`Minimal API integration`,`Word/Excel/PDF conversion roadmap`,`Image handling roadmap`,`NuGet packaging`];function Hb(){let e=()=>location.hash?.replace(`#`,``)||`home`,[t,n]=(0,E.useState)(e()),[r,i]=(0,E.useState)(!1),[a,o]=(0,E.useState)(localStorage.theme||`dark`);E.useEffect(()=>{document.documentElement.dataset.theme=a,localStorage.theme=a},[a]),E.useEffect(()=>{let t=()=>n(e());return window.addEventListener(`hashchange`,t),()=>window.removeEventListener(`hashchange`,t)},[]);let s=e=>{n(e),location.hash=e,i(!1),scrollTo(0,0)};return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(Ub,{page:t,go:s,open:r,setOpen:i,theme:a,setTheme:o}),(0,R.jsxs)(`main`,{children:[t===`home`&&(0,R.jsx)(Wb,{go:s}),` `,t===`products`&&(0,R.jsx)(qb,{go:s}),` `,t===`wiki`&&(0,R.jsx)(Yb,{}),` `,t===`forgeorm-full-wiki`&&(0,R.jsx)(Pb,{}),` `,t===`playground`&&(0,R.jsx)(Qb,{}),` `,t===`api`&&(0,R.jsx)($b,{}),` `,t===`blog`&&(0,R.jsx)(ex,{setPage:n}),` `,t.startsWith(`article-`)&&(0,R.jsx)(nx,{slug:t}),` `,t===`about`&&(0,R.jsx)(ix,{})]}),(0,R.jsx)(lx,{go:s})]})}function Ub({page:e,go:t,open:n,setOpen:r,theme:i,setTheme:a}){return(0,R.jsxs)(`header`,{className:`nav`,children:[(0,R.jsxs)(`div`,{className:`brand`,onClick:()=>t(`home`),children:[(0,R.jsx)(`img`,{src:Fb}),(0,R.jsx)(`span`,{children:`Fervidex Systems`})]}),(0,R.jsx)(`button`,{className:`hamb`,onClick:()=>r(!n),children:n?(0,R.jsx)(_e,{}):(0,R.jsx)(ue,{})}),(0,R.jsxs)(`nav`,{className:n?`show`:``,children:[Ib.map(([n,r])=>(0,R.jsx)(`button`,{className:e===n?`active`:``,onClick:()=>t(n),children:r},n)),(0,R.jsx)(`button`,{className:`theme`,onClick:()=>a(i===`dark`?`light`:`dark`),children:i===`dark`?(0,R.jsx)(ge,{}):(0,R.jsx)(de,{})})]})]})}function Wb({go:e}){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(Gb,{go:e}),(0,R.jsx)(Kb,{}),(0,R.jsx)(ax,{title:`Enterprise-grade product features`,sub:`The site now includes dark/light theme, AI animated hero, searchable docs, playgrounds, PDF demo, Wiki sidebar, syntax-highlighted examples, SEO metadata, blog, API docs, charts, NuGet badges and GitHub stars UI.`,children:(0,R.jsxs)(`div`,{className:`grid three`,children:[(0,R.jsx)(sx,{title:`ForgeORM`,icon:(0,R.jsx)(se,{}),desc:`Micro ORM with SQL intelligence, bulk operations, multi-tenancy, outbox, caching, telemetry, AI and vector-ready extension points.`}),(0,R.jsx)(sx,{title:`ForgePDF`,icon:(0,R.jsx)(ce,{}),desc:`HTML/CSS to PDF engine for reports, invoices and enterprise documents with CLI and API usage examples.`}),(0,R.jsx)(sx,{title:`Developer Studio`,icon:(0,R.jsx)(oe,{}),desc:`Roadmap for React Studio, ERD designer, query visualizer, API testing, SaaS dashboards and AI optimization.`})]})}),(0,R.jsx)(rx,{}),(0,R.jsx)(cx,{go:e})]})}function Gb({go:e}){return(0,R.jsxs)(`section`,{className:`hero`,children:[(0,R.jsx)(`div`,{className:`orb o1`}),(0,R.jsx)(`div`,{className:`orb o2`}),(0,R.jsx)(`div`,{className:`gridlines`}),(0,R.jsxs)(Ju.div,{initial:{opacity:0,y:22},animate:{opacity:1,y:0},className:`heroText`,children:[(0,R.jsxs)(`span`,{className:`eyebrow`,children:[(0,R.jsx)(pe,{size:16}),` AI-powered developer platform`]}),(0,R.jsx)(`h1`,{children:`High-graphics React website for ForgeORM, ForgePDF and Fervidex Systems.`}),(0,R.jsx)(`p`,{children:`Comprehensive product pages, searchable Wiki, interactive examples, API help, benchmarks and marketplace-ready content for your .NET and AI engineering tools.`}),(0,R.jsxs)(`div`,{className:`actions`,children:[(0,R.jsxs)(`button`,{onClick:()=>e(`wiki`),children:[`Open Wiki `,(0,R.jsx)(ie,{size:18})]}),(0,R.jsxs)(`button`,{className:`ghost`,onClick:()=>e(`playground`),children:[`Try Playground `,(0,R.jsx)(j,{size:18})]})]})]}),(0,R.jsxs)(Ju.div,{initial:{opacity:0,scale:.92},animate:{opacity:1,scale:1},transition:{delay:.15},className:`aiPanel`,children:[(0,R.jsxs)(`div`,{className:`glassTop`,children:[(0,R.jsx)(me,{}),(0,R.jsx)(`span`,{children:`AI Architecture Console`})]}),(0,R.jsx)(`pre`,{children:(0,R.jsx)(`code`,{children:`dotnet add package ForgeORM
 await db.QueryAsync<ProductDto>(query);
 await db.BulkInsertAsync(products);
 await renderer.RenderHtmlAsync(html);
-forgepdf render invoice.html invoice.pdf`})}),(0,R.jsxs)(`div`,{className:`pulseRows`,children:[(0,R.jsx)(`span`,{}),(0,R.jsx)(`span`,{}),(0,R.jsx)(`span`,{})]}),(0,R.jsxs)(`div`,{className:`metrics`,children:[(0,R.jsx)(`b`,{children:`V1–V4`}),(0,R.jsx)(`span`,{children:`Roadmap`}),(0,R.jsx)(`b`,{children:`20+`}),(0,R.jsx)(`span`,{children:`ORM features`}),(0,R.jsx)(`b`,{children:`PDF`}),(0,R.jsx)(`span`,{children:`Engine`})]})]})]})}function Ub(){return(0,R.jsxs)(`div`,{className:`badges`,children:[(0,R.jsxs)(`span`,{children:[(0,R.jsx)(re,{}),` NuGet: ForgeORM`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(re,{}),` NuGet: ForgePDF`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(he,{}),` GitHub Stars: 1.2k+`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(he,{}),` Production-ready docs`]})]})}function Wb({go:e}){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`Products`,desc:`A complete ecosystem for data access, document rendering, architecture scaffolding and enterprise delivery.`}),(0,R.jsxs)(`div`,{className:`productGrid`,children:[(0,R.jsx)(Gb,{name:`ForgeORM`,tag:`V1–V4 data platform roadmap`,icon:(0,R.jsx)(se,{}),bullets:[...Pb.slice(0,4),...Fb.slice(0,4),...Ib.slice(0,2),...Lb.slice(0,2)],go:e}),(0,R.jsx)(Gb,{name:`ForgePDF`,tag:`HTML/CSS to PDF engine`,icon:(0,R.jsx)(ce,{}),bullets:Rb,go:e}),(0,R.jsx)(Gb,{name:`OnionForge`,tag:`Onion Architecture + DDD + CQRS`,icon:(0,R.jsx)(le,{}),bullets:[`Clean Architecture scaffolding`,`Commands and queries`,`Handlers and endpoints`,`AI code suggestions`,`VS / VS Code / CLI packaging`],go:e}),(0,R.jsx)(Gb,{name:`SliceForge`,tag:`Vertical Slice generator`,icon:(0,R.jsx)(ae,{}),bullets:[`Feature-first modules`,`CRUD endpoints`,`Minimal APIs`,`Dependency wiring`,`Marketplace-ready developer experience`],go:e})]})]})}function Gb({name:e,tag:t,icon:n,bullets:r,go:i}){return(0,R.jsxs)(Ju.article,{whileHover:{y:-6},className:`product`,children:[(0,R.jsxs)(`div`,{className:`phead`,children:[n,(0,R.jsxs)(`div`,{children:[(0,R.jsx)(`h3`,{children:e}),(0,R.jsx)(`span`,{children:t})]})]}),(0,R.jsx)(`ul`,{children:r.map(e=>(0,R.jsxs)(`li`,{children:[(0,R.jsx)(k,{}),` `,e]},e))}),(0,R.jsxs)(`button`,{onClick:()=>i(e===`ForgeORM`?`forgeorm-full-wiki`:`wiki`),children:[`Read Wiki `,(0,R.jsx)(ne,{size:16})]})]})}function Kb(){let[e,t]=(0,E.useState)(``),n=(0,E.useMemo)(()=>qb.filter(t=>(t.title+t.body+t.items.join(` `)+t.code).toLowerCase().includes(e.toLowerCase())),[e]);return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`ForgeORM + ForgePDF Wiki`,desc:`Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors.`}),(0,R.jsxs)(`div`,{className:`searchBox`,children:[(0,R.jsx)(fe,{}),(0,R.jsx)(`input`,{placeholder:`Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer...`,value:e,onChange:e=>t(e.target.value)})]}),(0,R.jsxs)(`div`,{className:`wikiLayout`,children:[(0,R.jsxs)(`aside`,{children:[(0,R.jsx)(`a`,{href:`#orm-v1`,children:`ForgeORM V1`}),(0,R.jsx)(`a`,{href:`#orm-v2`,children:`ForgeORM V2`}),(0,R.jsx)(`a`,{href:`#orm-v3`,children:`ForgeORM V3`}),(0,R.jsx)(`a`,{href:`#orm-v4`,children:`ForgeORM V4`}),(0,R.jsx)(`a`,{href:`#pdf`,children:`ForgePDF`}),(0,R.jsx)(`a`,{href:`#ai`,children:`AI & Redis`}),(0,R.jsx)(`a`,{href:`#help`,children:`Help / FAQ`}),(0,R.jsx)(`button`,{className:`sideCta`,onClick:()=>{location.hash=`forgeorm-full-wiki`,scrollTo(0,0)},children:`Open Complete ForgeORM Wiki`})]}),(0,R.jsx)(`section`,{children:n.map(e=>(0,R.jsx)(Jb,{...e},e.id))})]})]})}var qb=[{id:`orm-v1`,title:`ForgeORM V1 — Core Micro ORM Foundation`,body:`V1 should establish the stable core: simple APIs, high performance, safe SQL, stored procedures, query builder, DTO projection and optional filters. This makes ForgeORM immediately useful for real projects before advanced features are added.`,items:Pb,code:`// V1: raw SQL + DTO projection
+forgepdf render invoice.html invoice.pdf`})}),(0,R.jsxs)(`div`,{className:`pulseRows`,children:[(0,R.jsx)(`span`,{}),(0,R.jsx)(`span`,{}),(0,R.jsx)(`span`,{})]}),(0,R.jsxs)(`div`,{className:`metrics`,children:[(0,R.jsx)(`b`,{children:`V1–V4`}),(0,R.jsx)(`span`,{children:`Roadmap`}),(0,R.jsx)(`b`,{children:`20+`}),(0,R.jsx)(`span`,{children:`ORM features`}),(0,R.jsx)(`b`,{children:`PDF`}),(0,R.jsx)(`span`,{children:`Engine`})]})]})]})}function Kb(){return(0,R.jsxs)(`div`,{className:`badges`,children:[(0,R.jsxs)(`span`,{children:[(0,R.jsx)(re,{}),` NuGet: ForgeORM`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(re,{}),` NuGet: ForgePDF`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(he,{}),` GitHub Stars: 1.2k+`]}),(0,R.jsxs)(`span`,{children:[(0,R.jsx)(he,{}),` Production-ready docs`]})]})}function qb({go:e}){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`Products`,desc:`A complete ecosystem for data access, document rendering, architecture scaffolding and enterprise delivery.`}),(0,R.jsxs)(`div`,{className:`productGrid`,children:[(0,R.jsx)(Jb,{name:`ForgeORM`,tag:`V1–V4 data platform roadmap`,icon:(0,R.jsx)(se,{}),bullets:[...Lb.slice(0,4),...Rb.slice(0,4),...zb.slice(0,2),...Bb.slice(0,2)],go:e}),(0,R.jsx)(Jb,{name:`ForgePDF`,tag:`HTML/CSS to PDF engine`,icon:(0,R.jsx)(ce,{}),bullets:Vb,go:e}),(0,R.jsx)(Jb,{name:`OnionForge`,tag:`Onion Architecture + DDD + CQRS`,icon:(0,R.jsx)(le,{}),bullets:[`Clean Architecture scaffolding`,`Commands and queries`,`Handlers and endpoints`,`AI code suggestions`,`VS / VS Code / CLI packaging`],go:e}),(0,R.jsx)(Jb,{name:`SliceForge`,tag:`Vertical Slice generator`,icon:(0,R.jsx)(ae,{}),bullets:[`Feature-first modules`,`CRUD endpoints`,`Minimal APIs`,`Dependency wiring`,`Marketplace-ready developer experience`],go:e})]})]})}function Jb({name:e,tag:t,icon:n,bullets:r,go:i}){return(0,R.jsxs)(Ju.article,{whileHover:{y:-6},className:`product`,children:[(0,R.jsxs)(`div`,{className:`phead`,children:[n,(0,R.jsxs)(`div`,{children:[(0,R.jsx)(`h3`,{children:e}),(0,R.jsx)(`span`,{children:t})]})]}),(0,R.jsx)(`ul`,{children:r.map(e=>(0,R.jsxs)(`li`,{children:[(0,R.jsx)(k,{}),` `,e]},e))}),(0,R.jsxs)(`button`,{onClick:()=>i(e===`ForgeORM`?`forgeorm-full-wiki`:`wiki`),children:[`Read Wiki `,(0,R.jsx)(ne,{size:16})]})]})}function Yb(){let[e,t]=(0,E.useState)(``),n=(0,E.useMemo)(()=>Xb.filter(t=>(t.title+t.body+t.items.join(` `)+t.code).toLowerCase().includes(e.toLowerCase())),[e]),r=e=>{let t=document.getElementById(e);t&&t.scrollIntoView({behavior:`smooth`,block:`start`})};return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`ForgeORM + ForgePDF Wiki`,desc:`Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors.`}),(0,R.jsxs)(`div`,{className:`searchBox`,children:[(0,R.jsx)(fe,{}),(0,R.jsx)(`input`,{placeholder:`Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer...`,value:e,onChange:e=>t(e.target.value)})]}),(0,R.jsxs)(`div`,{className:`wikiLayout`,children:[(0,R.jsxs)(`aside`,{children:[[[`orm-v1`,`ForgeORM V1`],[`orm-v2`,`ForgeORM V2`],[`orm-v3`,`ForgeORM V3`],[`orm-v4`,`ForgeORM V4`],[`pdf`,`ForgePDF`],[`ai`,`AI & Redis`],[`help`,`Help / FAQ`]].map(([e,t])=>(0,R.jsx)(`button`,{className:`wikiSideLink`,type:`button`,onClick:()=>r(e),children:t},e)),(0,R.jsx)(`button`,{className:`sideCta`,onClick:()=>{location.hash=`forgeorm-full-wiki`,scrollTo(0,0)},children:`Open Complete ForgeORM Wiki`})]}),(0,R.jsx)(`section`,{children:n.map(e=>(0,R.jsx)(Zb,{...e},e.id))})]})]})}var Xb=[{id:`orm-v1`,title:`ForgeORM V1 — Core Micro ORM Foundation`,body:`V1 should establish the stable core: simple APIs, high performance, safe SQL, stored procedures, query builder, DTO projection and optional filters. This makes ForgeORM immediately useful for real projects before advanced features are added.`,items:Lb,code:`// V1: raw SQL + DTO projection
 var customers = await db.QueryAsync<CustomerListDto>(
     "SELECT Id, Name, Email FROM Customers WHERE IsDeleted = 0 AND Name LIKE @search",
     new { search = $"%{search}%" });
@@ -1705,7 +1239,7 @@ var query = ForgeSql.Select<Customer>()
     .OrderByDescending("c.Id")
     .Page(page, pageSize);
 
-var result = await db.QueryAsync<CustomerListDto>(query);`},{id:`orm-v2`,title:`ForgeORM V2 — Enterprise Operations`,body:`V2 adds enterprise features required in real SaaS and line-of-business systems: bulk operations, transactions, multi-tenancy, auditing, soft delete, history, Redis cache adapters and telemetry.`,items:Fb,code:`// V2: bulk operations
+var result = await db.QueryAsync<CustomerListDto>(query);`},{id:`orm-v2`,title:`ForgeORM V2 — Enterprise Operations`,body:`V2 adds enterprise features required in real SaaS and line-of-business systems: bulk operations, transactions, multi-tenancy, auditing, soft delete, history, Redis cache adapters and telemetry.`,items:Rb,code:`// V2: bulk operations
 await db.BulkInsertAsync(products, batchSize: 5000);
 await db.BulkUpdateAsync(products, key: x => x.Id);
 await db.BulkDeleteAsync<Product>(ids);
@@ -1720,7 +1254,7 @@ var invoices = await db.QueryAsync<InvoiceDto>(
 
 // V2: cache adapter is configured by the user application
 services.AddForgeOrmCaching();
-services.AddStackExchangeRedisCache(o => o.Configuration = configuration["Redis:ConnectionString"]);`},{id:`orm-v3`,title:`ForgeORM V3 — Intelligence, Reporting, Outbox and Vector Search`,body:`V3 is where ForgeORM becomes more than a micro ORM. It adds outbox reliability, reporting DSL, split queries, JSON streaming, AI diagnostics and vector search extension points for RAG and semantic applications.`,items:Ib,code:`// V3: outbox event
+services.AddStackExchangeRedisCache(o => o.Configuration = configuration["Redis:ConnectionString"]);`},{id:`orm-v3`,title:`ForgeORM V3 — Intelligence, Reporting, Outbox and Vector Search`,body:`V3 is where ForgeORM becomes more than a micro ORM. It adds outbox reliability, reporting DSL, split queries, JSON streaming, AI diagnostics and vector search extension points for RAG and semantic applications.`,items:zb,code:`// V3: outbox event
 await db.TransactionAsync(async tx =>
 {
     await tx.InsertAsync(order);
@@ -1737,7 +1271,7 @@ var matches = await db.VectorSearchAsync<ProductEmbedding>(new VectorSearchReque
 });
 
 // V3: AI diagnostics
-var explanation = await db.Ai.ExplainQueryAsync(query, provider: "OpenAI|Gemini|Claude|Private");`},{id:`orm-v4`,title:`ForgeORM V4 — Studio, SaaS Platform and AI Automation`,body:`V4 is the viral product layer: React Studio, ERD designer, query visualizer, API testing, SaaS dashboard, monitoring, AI optimization, AI code generation and AI migrations.`,items:Lb,code:`// V4: AI migration generation concept
+var explanation = await db.Ai.ExplainQueryAsync(query, provider: "OpenAI|Gemini|Claude|Private");`},{id:`orm-v4`,title:`ForgeORM V4 — Studio, SaaS Platform and AI Automation`,body:`V4 is the viral product layer: React Studio, ERD designer, query visualizer, API testing, SaaS dashboard, monitoring, AI optimization, AI code generation and AI migrations.`,items:Bb,code:`// V4: AI migration generation concept
 var migration = await forgeStudio.GenerateMigrationAsync(new MigrationPrompt
 {
     DatabaseProvider = "SqlServer",
@@ -1747,7 +1281,7 @@ var migration = await forgeStudio.GenerateMigrationAsync(new MigrationPrompt
 
 // V4: query visualizer concept
 var plan = await forgeStudio.AnalyzeQueryPlanAsync(sql, parameters);
-var optimizedSql = await forgeStudio.Ai.OptimizeSqlAsync(sql, providerOptions);`},{id:`pdf`,title:`ForgePDF Wiki — Rendering, CLI and Live Demo Help`,body:`ForgePDF is positioned as a custom HTML/CSS to PDF engine for invoices, reports, enterprise statements and multilingual documents. It should ship with library APIs, CLI, Minimal API samples and accurate layout guidance.`,items:Rb,code:`// ForgePDF Minimal API example
+var optimizedSql = await forgeStudio.Ai.OptimizeSqlAsync(sql, providerOptions);`},{id:`pdf`,title:`ForgePDF Wiki — Rendering, CLI and Live Demo Help`,body:`ForgePDF is positioned as a custom HTML/CSS to PDF engine for invoices, reports, enterprise statements and multilingual documents. It should ship with library APIs, CLI, Minimal API samples and accurate layout guidance.`,items:Vb,code:`// ForgePDF Minimal API example
 app.MapPost("/api/pdf/render", async (RenderPdfRequest request, IForgePdfRenderer renderer) =>
 {
     var pdf = await renderer.RenderHtmlAsync(request.Html, new PdfRenderOptions
@@ -1778,7 +1312,7 @@ services.AddForgeOrmRedisCaching(options =>
 dotnet add package ForgeORM.SqlServer
 dotnet add package ForgeORM.RedisCaching
 dotnet add package ForgePDF.Core
-dotnet tool install --global ForgePDF.Cli`}];function Jb({id:e,title:t,body:n,items:r,code:i}){return(0,R.jsxs)(`article`,{id:e,className:`doc`,children:[(0,R.jsx)(`h2`,{children:t}),(0,R.jsx)(`p`,{children:n}),(0,R.jsx)(`div`,{className:`chips`,children:r.map(e=>(0,R.jsx)(`span`,{children:e},e))}),(0,R.jsxs)(`div`,{className:`codeHead`,children:[(0,R.jsx)(`span`,{children:`Example`}),(0,R.jsx)(A,{size:16})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:i})})]})}function Yb(){let[e,t]=(0,E.useState)(`Product`),[n,r]=(0,E.useState)(`100`),[i,a]=(0,E.useState)(`1`),o=`SELECT p.Id, p.Name, p.Price, c.Name AS CategoryName\nFROM ${e}s p\nLEFT JOIN Categories c ON p.CategoryId = c.Id\nWHERE p.IsDeleted = 0 AND p.Price >= @minPrice\nORDER BY p.Id DESC\nOFFSET ${(Number(i)-1)*20} ROWS FETCH NEXT 20 ROWS ONLY;`;return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`Interactive Playground`,desc:`Try the ORM query visualizer concept and ForgePDF live demo UI that can later connect to real APIs.`}),(0,R.jsxs)(`div`,{className:`playGrid`,children:[(0,R.jsxs)(`section`,{className:`tool`,children:[(0,R.jsx)(`h2`,{children:`ORM Query Playground`}),(0,R.jsxs)(`label`,{children:[`Entity`,(0,R.jsx)(`input`,{value:e,onChange:e=>t(e.target.value)})]}),(0,R.jsxs)(`label`,{children:[`Minimum Price`,(0,R.jsx)(`input`,{value:n,onChange:e=>r(e.target.value)})]}),(0,R.jsxs)(`label`,{children:[`Page`,(0,R.jsx)(`input`,{value:i,onChange:e=>a(e.target.value)})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:o})})]}),(0,R.jsxs)(`section`,{className:`tool`,children:[(0,R.jsx)(`h2`,{children:`PDF Live Demo`}),(0,R.jsx)(`textarea`,{defaultValue:`<header>Invoice #1001</header><main><h1>Fervidex Systems</h1><table><tr><td>ForgePDF</td><td>$99</td></tr></table></main><footer>Thank you</footer>`}),(0,R.jsxs)(`div`,{className:`pdfPreview`,children:[(0,R.jsx)(`h3`,{children:`PDF Preview`}),(0,R.jsx)(`p`,{children:`Invoice #1001`}),(0,R.jsx)(`b`,{children:`Fervidex Systems`}),(0,R.jsx)(`table`,{children:(0,R.jsx)(`tbody`,{children:(0,R.jsxs)(`tr`,{children:[(0,R.jsx)(`td`,{children:`ForgePDF`}),(0,R.jsx)(`td`,{children:`$99`})]})})}),(0,R.jsx)(`small`,{children:`Rendered preview placeholder — connect this panel to ForgePDF API.`})]})]})]})]})}function Xb(){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`API Documentation`,desc:`Sample endpoints to document ForgeORM and ForgePDF demos.`}),(0,R.jsx)(`div`,{className:`apiList`,children:[[`POST`,`/api/pdf/render`,`Render HTML to PDF and return application/pdf.`],[`POST`,`/api/orm/query`,`Execute safe query builder request.`],[`POST`,`/api/orm/bulk/products`,`Bulk import products.`],[`GET`,`/api/orm/benchmarks`,`Return benchmark metrics for charts.`],[`POST`,`/api/ai/explain-query`,`Explain or optimize SQL using user-owned AI endpoint.`]].map(e=>(0,R.jsxs)(`div`,{className:`endpoint`,children:[(0,R.jsx)(`b`,{children:e[0]}),(0,R.jsx)(`code`,{children:e[1]}),(0,R.jsx)(`span`,{children:e[2]})]},e[1]))})]})}function Zb({setPage:e}){let t=(t,n)=>{t.preventDefault(),e(n),location.hash=n,scrollTo(0,0)};return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`Blog Engine`,desc:`SEO-ready articles connected to full pages with code examples, product positioning and implementation guidance.`}),(0,R.jsx)(`div`,{className:`blogGrid`,children:Qb.map((e,n)=>(0,R.jsxs)(`article`,{className:`post`,children:[(0,R.jsxs)(`span`,{children:[e.category,` · Article `,n+1]}),(0,R.jsx)(`h2`,{children:e.title}),(0,R.jsx)(`p`,{children:e.summary}),(0,R.jsx)(`a`,{className:`readArticle`,href:`#${e.slug}`,onClick:n=>t(n,e.slug),children:`Read article`})]},e.slug))})]})}var Qb=[{slug:`article-forgeorm-viral`,category:`ForgeORM`,title:`Why ForgeORM can become a viral .NET data platform`,summary:`A product strategy article explaining how ForgeORM can go beyond Dapper-style data access and become a complete SQL intelligence layer.`,sections:[[`The opportunity`,`Most .NET teams either use EF Core for productivity or Dapper for speed. ForgeORM can win attention by combining micro-ORM performance with enterprise features that usually require many separate libraries.`],[`What makes it different`,`The viral angle is not only QueryAsync. It is optional filters, query builder, safe SQL interpolation, stored procedures, bulk operations, multi-tenancy, auditing, outbox, telemetry, vector search and AI-assisted diagnostics in one coherent developer experience.`],[`V1 to V4 positioning`,`V1 should be fast and simple. V2 should be enterprise-ready. V3 should add intelligence, outbox, reporting and vector search. V4 should become the Studio layer with ERD designer, query visualizer, SaaS dashboard and AI migration support.`],[`Go-to-market examples`,`Publish BenchmarkDotNet results, short LinkedIn demos, NuGet quick-start snippets and sample APIs showing real business scenarios such as products, invoices, customers and reports.`]],code:`// A viral ForgeORM example should be short, powerful and practical
+dotnet tool install --global ForgePDF.Cli`}];function Zb({id:e,title:t,body:n,items:r,code:i}){return(0,R.jsxs)(`article`,{id:e,className:`doc`,children:[(0,R.jsx)(`h2`,{children:t}),(0,R.jsx)(`p`,{children:n}),(0,R.jsx)(`div`,{className:`chips`,children:r.map(e=>(0,R.jsx)(`span`,{children:e},e))}),(0,R.jsxs)(`div`,{className:`codeHead`,children:[(0,R.jsx)(`span`,{children:`Example`}),(0,R.jsx)(A,{size:16})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:i})})]})}function Qb(){let[e,t]=(0,E.useState)(`Product`),[n,r]=(0,E.useState)(`100`),[i,a]=(0,E.useState)(`1`),o=`SELECT p.Id, p.Name, p.Price, c.Name AS CategoryName\nFROM ${e}s p\nLEFT JOIN Categories c ON p.CategoryId = c.Id\nWHERE p.IsDeleted = 0 AND p.Price >= @minPrice\nORDER BY p.Id DESC\nOFFSET ${(Number(i)-1)*20} ROWS FETCH NEXT 20 ROWS ONLY;`;return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`Interactive Playground`,desc:`Try the ORM query visualizer concept and ForgePDF live demo UI that can later connect to real APIs.`}),(0,R.jsxs)(`div`,{className:`playGrid`,children:[(0,R.jsxs)(`section`,{className:`tool`,children:[(0,R.jsx)(`h2`,{children:`ORM Query Playground`}),(0,R.jsxs)(`label`,{children:[`Entity`,(0,R.jsx)(`input`,{value:e,onChange:e=>t(e.target.value)})]}),(0,R.jsxs)(`label`,{children:[`Minimum Price`,(0,R.jsx)(`input`,{value:n,onChange:e=>r(e.target.value)})]}),(0,R.jsxs)(`label`,{children:[`Page`,(0,R.jsx)(`input`,{value:i,onChange:e=>a(e.target.value)})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:o})})]}),(0,R.jsxs)(`section`,{className:`tool`,children:[(0,R.jsx)(`h2`,{children:`PDF Live Demo`}),(0,R.jsx)(`textarea`,{defaultValue:`<header>Invoice #1001</header><main><h1>Fervidex Systems</h1><table><tr><td>ForgePDF</td><td>$99</td></tr></table></main><footer>Thank you</footer>`}),(0,R.jsxs)(`div`,{className:`pdfPreview`,children:[(0,R.jsx)(`h3`,{children:`PDF Preview`}),(0,R.jsx)(`p`,{children:`Invoice #1001`}),(0,R.jsx)(`b`,{children:`Fervidex Systems`}),(0,R.jsx)(`table`,{children:(0,R.jsx)(`tbody`,{children:(0,R.jsxs)(`tr`,{children:[(0,R.jsx)(`td`,{children:`ForgePDF`}),(0,R.jsx)(`td`,{children:`$99`})]})})}),(0,R.jsx)(`small`,{children:`Rendered preview placeholder — connect this panel to ForgePDF API.`})]})]})]})]})}function $b(){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`API Documentation`,desc:`Sample endpoints to document ForgeORM and ForgePDF demos.`}),(0,R.jsx)(`div`,{className:`apiList`,children:[[`POST`,`/api/pdf/render`,`Render HTML to PDF and return application/pdf.`],[`POST`,`/api/orm/query`,`Execute safe query builder request.`],[`POST`,`/api/orm/bulk/products`,`Bulk import products.`],[`GET`,`/api/orm/benchmarks`,`Return benchmark metrics for charts.`],[`POST`,`/api/ai/explain-query`,`Explain or optimize SQL using user-owned AI endpoint.`]].map(e=>(0,R.jsxs)(`div`,{className:`endpoint`,children:[(0,R.jsx)(`b`,{children:e[0]}),(0,R.jsx)(`code`,{children:e[1]}),(0,R.jsx)(`span`,{children:e[2]})]},e[1]))})]})}function ex({setPage:e}){let t=(t,n)=>{t.preventDefault(),e(n),location.hash=n,scrollTo(0,0)};return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`Blog Engine`,desc:`SEO-ready articles connected to full pages with code examples, product positioning and implementation guidance.`}),(0,R.jsx)(`div`,{className:`blogGrid`,children:tx.map((e,n)=>(0,R.jsxs)(`article`,{className:`post`,children:[(0,R.jsxs)(`span`,{children:[e.category,` · Article `,n+1]}),(0,R.jsx)(`h2`,{children:e.title}),(0,R.jsx)(`p`,{children:e.summary}),(0,R.jsx)(`a`,{className:`readArticle`,href:`#${e.slug}`,onClick:n=>t(n,e.slug),children:`Read article`})]},e.slug))})]})}var tx=[{slug:`article-forgeorm-viral`,category:`ForgeORM`,title:`Why ForgeORM can become a viral .NET data platform`,summary:`A product strategy article explaining how ForgeORM can go beyond Dapper-style data access and become a complete SQL intelligence layer.`,sections:[[`The opportunity`,`Most .NET teams either use EF Core for productivity or Dapper for speed. ForgeORM can win attention by combining micro-ORM performance with enterprise features that usually require many separate libraries.`],[`What makes it different`,`The viral angle is not only QueryAsync. It is optional filters, query builder, safe SQL interpolation, stored procedures, bulk operations, multi-tenancy, auditing, outbox, telemetry, vector search and AI-assisted diagnostics in one coherent developer experience.`],[`V1 to V4 positioning`,`V1 should be fast and simple. V2 should be enterprise-ready. V3 should add intelligence, outbox, reporting and vector search. V4 should become the Studio layer with ERD designer, query visualizer, SaaS dashboard and AI migration support.`],[`Go-to-market examples`,`Publish BenchmarkDotNet results, short LinkedIn demos, NuGet quick-start snippets and sample APIs showing real business scenarios such as products, invoices, customers and reports.`]],code:`// A viral ForgeORM example should be short, powerful and practical
 var result = await db.QueryAsync<ProductDto>(
     ForgeSql.Select<Product>()
         .From("Products p")
@@ -1818,4 +1352,121 @@ sliceforge add-crud   --entity Product   --module Products   --properties "Name:
 
 // OnionForge example
 onionforge add-command --name CreateProduct --module Products
-onionforge add-query --name GetProductById --module Products`}];function $b({slug:e}){let t=Qb.find(t=>t.slug===e)||Qb[0];return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:t.title,desc:t.summary}),(0,R.jsxs)(`article`,{className:`articlePage`,children:[(0,R.jsxs)(`div`,{className:`articleMeta`,children:[(0,R.jsx)(`span`,{children:t.category}),(0,R.jsx)(`span`,{children:`Fervidex Systems Knowledge Base`}),(0,R.jsx)(`span`,{children:`SEO Article`})]}),t.sections.map(([e,t])=>(0,R.jsxs)(`section`,{children:[(0,R.jsx)(`h2`,{children:e}),(0,R.jsx)(`p`,{children:t})]},e)),(0,R.jsxs)(`div`,{className:`codeHead`,children:[(0,R.jsx)(`span`,{children:`Implementation example`}),(0,R.jsx)(A,{size:16})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:t.code})}),(0,R.jsxs)(`div`,{className:`articleLinks`,children:[(0,R.jsx)(`a`,{href:`#blog`,children:`Back to blog`}),(0,R.jsx)(`a`,{href:`#wiki`,children:`Open Wiki`}),(0,R.jsx)(`a`,{href:`#playground`,children:`Try Playground`})]})]})]})}function ex(){return(0,R.jsxs)(`section`,{className:`section`,children:[(0,R.jsx)(`h2`,{children:`Benchmark Charts`}),(0,R.jsx)(`p`,{className:`sub`,children:`Visual benchmark section for marketing. Replace placeholder values with real BenchmarkDotNet results later.`}),(0,R.jsx)(`div`,{className:`chart`,children:[[`Raw query`,95],[`Bulk insert`,88],[`Cached query`,98],[`PDF render`,82]].map(([e,t])=>(0,R.jsxs)(`div`,{className:`bar`,children:[(0,R.jsx)(`span`,{children:e}),(0,R.jsx)(`i`,{style:{width:`${t}%`}}),(0,R.jsxs)(`b`,{children:[t,`%`]})]},e))})]})}function tx(){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(rx,{title:`About Fervidex Systems`,desc:`A brand built around passion, dedication, love for programming, motivation and struggle.`}),(0,R.jsx)(nx,{title:`Mission`,sub:`Build practical developer tools that reduce repetitive work and turn enterprise patterns into reusable products.`,children:(0,R.jsxs)(`div`,{className:`aboutPanel`,children:[(0,R.jsx)(`img`,{src:Mb}),(0,R.jsx)(`p`,{children:`Fervidex Systems provides solutions in .NET, Python and other modern stacks, with product focus on ForgeORM, ForgePDF, OnionForge and SliceForge.`})]})})]})}function nx({title:e,sub:t,children:n}){return(0,R.jsxs)(`section`,{className:`section`,children:[(0,R.jsx)(`h2`,{children:e}),t&&(0,R.jsx)(`p`,{className:`sub`,children:t}),n]})}function rx({title:e,desc:t}){return(0,R.jsxs)(`section`,{className:`pageHero`,children:[(0,R.jsxs)(`span`,{className:`eyebrow`,children:[(0,R.jsx)(ve,{size:16}),` Fervidex Systems`]}),(0,R.jsx)(`h1`,{children:e}),(0,R.jsx)(`p`,{children:t})]})}function ix({title:e,icon:t,desc:n}){return(0,R.jsxs)(Ju.div,{whileHover:{y:-5},className:`card`,children:[(0,R.jsx)(`div`,{className:`icon`,children:t}),(0,R.jsx)(`h3`,{children:e}),(0,R.jsx)(`p`,{children:n})]})}function ax({go:e}){return(0,R.jsxs)(`section`,{className:`cta`,children:[(0,R.jsx)(`h2`,{children:`Comprehensive docs make the products easier to sell.`}),(0,R.jsx)(`p`,{children:`Use the Wiki, Playground, Blog and API pages as the base for Azure Static Web Apps deployment.`}),(0,R.jsx)(`button`,{onClick:()=>e(`wiki`),children:`View Documentation`})]})}function ox({go:e}){return(0,R.jsxs)(`footer`,{children:[(0,R.jsxs)(`div`,{children:[(0,R.jsx)(`b`,{children:`Fervidex Systems`}),(0,R.jsx)(`p`,{children:`AI-ready engineering products for enterprise software teams.`})]}),(0,R.jsx)(`div`,{children:Nb.map(([t,n])=>(0,R.jsx)(`button`,{onClick:()=>e(t),children:n},t))})]})}(0,Yu.createRoot)(document.getElementById(`root`)).render((0,R.jsx)(zb,{}));
+onionforge add-query --name GetProductById --module Products`},{slug:`article-stability-updates`,category:`ForgeORM Bible`,title:`ForgeORM Stability Updates: What changed and why it matters`,summary:`A practical guide to the latest ForgeORM reliability fixes: analytics execution, cancellation token safety, enum mapping, stream imports and regression testing.`,sections:[[`Why stability matters`,`ForgeORM is moving from an experimental toolkit into a platform. That means stable behavior is more important than random rewrites. Recent work focuses on additive bug fixes, safer execution and stronger developer trust.`],[`Key fixes`,`The latest updates address analytics execution through ToDynamicListAsync, CancellationToken parameter binding, automatic enum mapping, stream-based CSV/JSON import overloads, numeric CSV headers and SQL identifier safety.`],[`Developer impact`,`Teams can now use ForgeORM in demos and enterprise prototypes with fewer surprises. The API surface remains familiar while the runtime becomes safer and more predictable.`],[`Recommended workflow`,`After every package update, run regression tests for query execution, dynamic results, CSV/JSON imports, enum mapping, record mapping, SplitGraph and analytics rendering.`]],code:`// Safe analytics execution should pass CancellationToken by name
+public async Task<IReadOnlyList<IDictionary<string, object?>>> ToDynamicListAsync(
+    CancellationToken cancellationToken = default)
+{
+    var render = Render();
+
+    return await _db.QueryDynamicAsync(
+        sql: render.Sql,
+        parameters: render.Parameters,
+        cancellationToken: cancellationToken);
+}`},{slug:`article-stream-csv-json-imports`,category:`DataFrames`,title:`Stream-based CSV and JSON imports in ForgeORM DataFrames`,summary:`How ForgeDataFrame supports API uploads, blob streams and enterprise ETL without forcing temporary files.`,sections:[[`Why streams are important`,`Enterprise applications rarely work only with local files. Data may come from HTTP uploads, Azure Blob Storage, AWS S3, message queues or in-memory pipelines. Stream overloads make imports flexible and cloud-ready.`],[`CSV stream import`,`CSV import should support path-based and stream-based APIs. This keeps backward compatibility while enabling ASP.NET file upload scenarios.`],[`JSON stream import`,`JSON imports follow the same model, making it easy to ingest uploaded JSON datasets and persist them as database tables.`],[`Developer experience`,`The user should provide a table name, upload a file and let ForgeORM infer schema, normalize dirty data and persist rows safely.`]],code:`app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new { tableName, rows = frame.RowCount, columns = frame.Columns });
+});`},{slug:`article-dirty-data-handling`,category:`DataFrames`,title:`Pandas-like dirty data handling for CSV and JSON imports`,summary:`ForgeORM DataFrames should treat ?, N/A, null and nan as NULL so imports do not fail on real-world data.`,sections:[[`Real data is messy`,`CSV and JSON files from business systems often contain ?, NA, N/A, null, nan, blanks or placeholder dashes. A strong DataFrame layer must handle these values automatically.`],[`Pandas-like behavior`,`Instead of failing when a numeric column contains ?, ForgeORM should normalize null-like values and insert NULL into the database.`],[`Better type inference`,`Column type inference should ignore null-like values. A mostly numeric column with a few ? values should still become numeric, with dirty placeholders inserted as NULL.`],[`Why this matters`,`This improves analytics imports, reporting dashboards and enterprise ETL scenarios where source files are rarely clean.`]],code:`private static bool IsNullLike(object? value)
+{
+    if (value is null || value is DBNull) return true;
+
+    var text = value.ToString()?.Trim();
+
+    return string.IsNullOrWhiteSpace(text)
+        || text == "?"
+        || text == "-"
+        || text == "--"
+        || text.Equals("NA", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("N/A", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("null", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("nan", StringComparison.OrdinalIgnoreCase);
+}`},{slug:`article-safe-sql-identifiers`,category:`Security`,title:`Safe dynamic table names and SQL identifiers in ForgeORM`,summary:`Dynamic DataFrame imports need safe table names, escaped columns and parameterized values to avoid SQL injection and invalid SQL.`,sections:[[`The problem`,`CSV files may contain columns such as 1980 or names with spaces. SQL Server requires identifiers like these to be escaped as [1980].`],[`The safety rule`,`Always validate user-provided table names and always escape generated column names. Values must always be parameters, never string-concatenated SQL.`],[`Where it is used`,`This matters in ToTableAsync, CSV imports, JSON imports, dynamic table creation and DataFrame persistence.`],[`Enterprise recommendation`,`Keep identifier validation inside ForgeORM.Core or ForgeORM.DataFrame so sample applications do not need to reinvent safety logic.`]],code:`if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+    return Results.BadRequest("Invalid table name.");
+
+// Column names like 1980 become [1980]
+var columnSql = string.Join(", ", frame.Columns.Select(ForgeSqlNameValidator.EscapeIdentifier));`},{slug:`article-analytics-window-functions`,category:`Analytics`,title:`Window functions in ForgeORM: running totals, ranks and analytics queries`,summary:`How ForgeORM turns advanced SQL analytics into fluent C# APIs using RowNumber, Rank, Lag, Lead, Sum and Percentile functions.`,sections:[[`Why window functions matter`,`Reports, dashboards and financial analytics often need ranking, running totals, previous values and grouped aggregates without losing row detail.`],[`ForgeORM fluent API`,`Developers can express window functions using typed C# expressions while still generating SQL Server-friendly analytics queries.`],[`Execution vs preview`,`Use the SQL preview endpoint to show generated SQL and the execution endpoint to return calculated rows. Both are useful in a playground and documentation portal.`],[`Best use cases`,`Use window functions for customer order ranking, running revenue, percentiles, year-over-year calculations and operational dashboards.`]],code:`var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .Sum(x => x.GrandTotal)
+        .PartitionBy(x => x.CustomerId)
+        .OrderBy(x => x.CreatedAt)
+        .RowsBetweenUnboundedPrecedingAndCurrentRow()
+        .As("RunningSales")
+    .ToDynamicListAsync(ct);`},{slug:`article-forgeorm-architecture-packages`,category:`Architecture`,title:`ForgeORM package architecture: Core, QueryAst, Analytics, DataFrame and AspNetCore`,summary:`A clean package separation strategy that keeps ForgeORM stable while allowing analytics, web integration and AI features to grow independently.`,sections:[[`Core package`,`ForgeORM.Core should contain the stable low-level engine: ForgeDbContext, ForgeAdo, materialization, value conversion, CRUD, transactions and safe execution.`],[`QueryAst package`,`ForgeORM.QueryAst should contain query builders, SplitGraph, search builders, expression parsing and SQL rendering.`],[`Analytics and DataFrame packages`,`Analytics and DataFrame features should remain optional so the core ORM stays lightweight while advanced reporting users can add richer modules.`],[`AspNetCore integration`,`ForgeORM.AspNetCore should provide the easiest onboarding path for web applications, including AddForgeOrm, middleware, health checks, Swagger helpers and JSON enum configuration.`]],code:`// Recommended application setup
+builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableDataFrames();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();`},{slug:`article-regression-testing-forgeorm`,category:`Testing`,title:`Regression testing strategy for ForgeORM releases`,summary:`A release-quality test plan for preventing repeated bugs in analytics, DataFrames, enum mapping, SplitGraph and dynamic SQL.`,sections:[[`Why tests are now critical`,`ForgeORM is published to NuGet, so every update must preserve existing behavior. Tests protect the product from accidental rewrites and breaking changes.`],[`Core tests`,`Test record constructor mapping, enum conversions, nullable values, dynamic query results, IN parameter expansion and CancellationToken handling.`],[`DataFrame tests`,`Test CSV and JSON imports, stream overloads, dirty-data normalization, numeric headers, schema inference and ToTableAsync inserts.`],[`Analytics tests`,`Test SQL rendering and execution for RowNumber, Rank, DenseRank, Lag, Lead, Sum, Avg and running totals.`]],code:`[Fact]
+public async Task QueryDynamicAsync_Should_Not_Bind_CancellationToken_As_Parameter()
+{
+    var result = await db.Analytics<Order>()
+        .From("Orders")
+        .Select(x => x.Id)
+        .RowNumber()
+            .PartitionBy(x => x.CustomerId)
+            .OrderByDescending(x => x.CreatedAt)
+            .As("RowNo")
+        .ToDynamicListAsync(CancellationToken.None);
+
+    Assert.NotNull(result);
+}`},{slug:`article-best-practices-enterprise`,category:`Best Practices`,title:`Enterprise best practices for using ForgeORM`,summary:`Practical guidance for choosing Search APIs, SplitGraph, TVP, DataFrames and Analytics in real systems.`,sections:[[`Use Search APIs for grids`,`Admin grids and search screens need optional filters and pagination. ForgeORM Search APIs give a repeatable pattern for these endpoints.`],[`Use SplitGraph for large object graphs`,`SplitGraph avoids cartesian explosion when loading parents and children, making it better for enterprise screens and reports.`],[`Use TVP for large inserts`,`When inserting parent-child data or bulk rows, SQL Server TVPs provide scalable performance and clean transaction handling.`],[`Use DataFrames for imports`,`CSV and JSON imports should land in DataFrames first, then be validated, cleaned, transformed and persisted into database tables.`]],code:`// Decision guide
+// Search API      -> optional filters and paging
+// SplitGraph      -> parent/child loading
+// TVP             -> large inserts
+// Analytics       -> reporting and window functions
+// DataFrame       -> CSV/JSON import and transformation
+// Raw SQL         -> advanced hand-tuned queries`},{slug:`article-queryast-splitgraph-architecture`,category:`Architecture`,title:`Why SplitGraph belongs in ForgeORM.QueryAst`,summary:`SplitGraph is query-composition infrastructure, so it belongs in QueryAst rather than Core or sample projects.`,sections:[[`Clean module boundaries`,`ForgeORM.Core should stay focused on ADO.NET execution, materialization, transactions and stable CRUD behavior. SplitGraph depends on query composition and relationship loading, so QueryAst is the correct home.`],[`User experience`,`Applications should still call db.SplitGraph<T>() through a simple extension. The complexity stays inside the library and the user only installs the integration package.`],[`Package strategy`,`ForgeORM.AspNetCore should reference Core and QueryAst so web projects get SplitGraph, Search APIs and query builders with one setup call.`],[`Best practice`,`Never push relationship-loading internals into samples. Samples should demonstrate usage, not ask users to build the ORM.`]],code:`var customers = await db.SplitGraph<Customer>()
+    .IncludeOne<CustomerProfile, int>(
+        ids => "SELECT * FROM CustomerProfiles WHERE CustomerId IN @Ids",
+        c => c.Id,
+        p => p.CustomerId,
+        (c, p) => c.Profile = p)
+    .ToListAsync("SELECT * FROM Customers", cancellationToken: ct);`},{slug:`article-aspnetcore-package-onboarding`,category:`ASP.NET Core`,title:`ForgeORM.AspNetCore: one package for web application onboarding`,summary:`Why ASP.NET applications should reference ForgeORM.AspNetCore for DI, middleware, JSON enums, health checks and Swagger helpers.`,sections:[[`Why this package matters`,`Developers do not want to manually wire every ForgeORM service. ForgeORM.AspNetCore should provide AddForgeOrm and UseForgeOrm as the main onboarding path.`],[`What it should register`,`The package should register ForgeDbContext, providers, QueryAst, Search, Analytics, DataFrames, health checks, telemetry, JSON enum options and middleware.`],[`Better samples`,`ForgeCommerce and future demos should depend on ForgeORM.AspNetCore so users see the easiest possible setup.`],[`Enterprise polish`,`A clean integration package makes ForgeORM feel mature and production-ready.`]],code:`builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableDataFrames();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();`},{slug:`article-dataframe-to-sql-table-imports`,category:`DataFrames`,title:`Turning CSV and JSON files into SQL tables with ForgeORM DataFrames`,summary:`A practical guide for uploading files, choosing table names, cleaning data and querying imported tables.`,sections:[[`Import workflow`,`The user uploads a CSV or JSON file, provides a safe table name, ForgeORM reads the stream, normalizes dirty values and persists the frame into SQL.`],[`Safe identifiers`,`User-provided table names must be validated and column names must be escaped. This is essential for files with numeric headers like 1980 or names containing spaces.`],[`Null-like values`,`Values such as ?, N/A, null, nan and blank strings should become database NULL values instead of breaking numeric inserts.`],[`Query after import`,`After persistence, users can query imported tables with Frame APIs or QueryDynamicAsync for analytics and dashboards.`]],code:`app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    await using var stream = file.OpenReadStream();
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+    await frame.ToTableAsync(db, tableName, cancellationToken: ct);
+    return Results.Ok(new { tableName, rows = frame.RowCount, columns = frame.Columns });
+});`},{slug:`article-forgecommerce-demo-walkthrough`,category:`Demo`,title:`ForgeCommerce demo walkthrough: proving ForgeORM in a real app`,summary:`How the ForgeCommerce demo demonstrates search, records, enums, SplitGraph, analytics and DataFrames in one application.`,sections:[[`Why ForgeCommerce exists`,`A polished demo is the fastest way to build trust. It shows developers what ForgeORM looks like in real Minimal APIs and enterprise architecture.`],[`Feature coverage`,`The demo includes products, orders, customers, analytics, DataFrame import endpoints, SQL preview, record mapping and enum mapping.`],[`What to improve next`,`Add dashboards, charts, file upload UI, benchmark pages and guided playground examples.`],[`Adoption value`,`A real demo makes the documentation believable and helps users clone, run and learn quickly.`]],code:`GET /products
+GET /products/search
+GET /orders/customer/{customerId}
+GET /customers/split
+GET /analytics/window-functions
+POST /dataframes/import/csv-to-table`},{slug:`article-forgeorm-release-stability`,category:`Release Strategy`,title:`ForgeORM release stability: additive features and safe bug fixes`,summary:`A NuGet product must avoid changing core behavior every release. New versions should be stable, additive and well-tested.`,sections:[[`Stable baseline`,`ForgeORM 1.x should keep public behavior stable. Patch versions should fix bugs only, while minor versions should add backward-compatible features.`],[`Avoid rewrites`,`Core execution logic should not be rewritten casually after NuGet publication. Refactor internally only when tests prove compatibility.`],[`Testing gate`,`Every release should pass regression tests for QueryAsync, dynamic mapping, DataFrames, analytics, SplitGraph, enum mapping and record mapping.`],[`Product trust`,`Predictable releases build developer trust faster than endless new features.`]],code:`1.3.0  Stable release
+1.3.1  Bug fixes only
+1.4.0  Additive features
+2.0.0  Breaking changes only when unavoidable`}];function nx({slug:e}){let t=tx.find(t=>t.slug===e)||tx[0];return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:t.title,desc:t.summary}),(0,R.jsxs)(`article`,{className:`articlePage`,children:[(0,R.jsxs)(`div`,{className:`articleMeta`,children:[(0,R.jsx)(`span`,{children:t.category}),(0,R.jsx)(`span`,{children:`Fervidex Systems Knowledge Base`}),(0,R.jsx)(`span`,{children:`SEO Article`})]}),t.sections.map(([e,t])=>(0,R.jsxs)(`section`,{children:[(0,R.jsx)(`h2`,{children:e}),(0,R.jsx)(`p`,{children:t})]},e)),(0,R.jsxs)(`div`,{className:`codeHead`,children:[(0,R.jsx)(`span`,{children:`Implementation example`}),(0,R.jsx)(A,{size:16})]}),(0,R.jsx)(`pre`,{className:`syntax`,children:(0,R.jsx)(`code`,{children:t.code})}),(0,R.jsxs)(`div`,{className:`articleLinks`,children:[(0,R.jsx)(`a`,{href:`#blog`,children:`Back to blog`}),(0,R.jsx)(`a`,{href:`#wiki`,children:`Open Wiki`}),(0,R.jsx)(`a`,{href:`#playground`,children:`Try Playground`})]})]})]})}function rx(){return(0,R.jsxs)(`section`,{className:`section`,children:[(0,R.jsx)(`h2`,{children:`Benchmark Charts`}),(0,R.jsx)(`p`,{className:`sub`,children:`Visual benchmark section for marketing. Replace placeholder values with real BenchmarkDotNet results later.`}),(0,R.jsx)(`div`,{className:`chart`,children:[[`Raw query`,95],[`Bulk insert`,88],[`Cached query`,98],[`PDF render`,82]].map(([e,t])=>(0,R.jsxs)(`div`,{className:`bar`,children:[(0,R.jsx)(`span`,{children:e}),(0,R.jsx)(`i`,{style:{width:`${t}%`}}),(0,R.jsxs)(`b`,{children:[t,`%`]})]},e))})]})}function ix(){return(0,R.jsxs)(R.Fragment,{children:[(0,R.jsx)(ox,{title:`About Fervidex Systems`,desc:`A brand built around passion, dedication, love for programming, motivation and struggle.`}),(0,R.jsx)(ax,{title:`Mission`,sub:`Build practical developer tools that reduce repetitive work and turn enterprise patterns into reusable products.`,children:(0,R.jsxs)(`div`,{className:`aboutPanel`,children:[(0,R.jsx)(`img`,{src:Fb}),(0,R.jsx)(`p`,{children:`Fervidex Systems provides solutions in .NET, Python and other modern stacks, with product focus on ForgeORM, ForgePDF, OnionForge and SliceForge.`})]})})]})}function ax({title:e,sub:t,children:n}){return(0,R.jsxs)(`section`,{className:`section`,children:[(0,R.jsx)(`h2`,{children:e}),t&&(0,R.jsx)(`p`,{className:`sub`,children:t}),n]})}function ox({title:e,desc:t}){return(0,R.jsxs)(`section`,{className:`pageHero`,children:[(0,R.jsxs)(`span`,{className:`eyebrow`,children:[(0,R.jsx)(ve,{size:16}),` Fervidex Systems`]}),(0,R.jsx)(`h1`,{children:e}),(0,R.jsx)(`p`,{children:t})]})}function sx({title:e,icon:t,desc:n}){return(0,R.jsxs)(Ju.div,{whileHover:{y:-5},className:`card`,children:[(0,R.jsx)(`div`,{className:`icon`,children:t}),(0,R.jsx)(`h3`,{children:e}),(0,R.jsx)(`p`,{children:n})]})}function cx({go:e}){return(0,R.jsxs)(`section`,{className:`cta`,children:[(0,R.jsx)(`h2`,{children:`Comprehensive docs make the products easier to sell.`}),(0,R.jsx)(`p`,{children:`Use the Wiki, Playground, Blog and API pages as the base for Azure Static Web Apps deployment.`}),(0,R.jsx)(`button`,{onClick:()=>e(`wiki`),children:`View Documentation`})]})}function lx({go:e}){return(0,R.jsxs)(`footer`,{children:[(0,R.jsxs)(`div`,{children:[(0,R.jsx)(`b`,{children:`Fervidex Systems`}),(0,R.jsx)(`p`,{children:`AI-ready engineering products for enterprise software teams.`})]}),(0,R.jsx)(`div`,{children:Ib.map(([t,n])=>(0,R.jsx)(`button`,{onClick:()=>e(t),children:n},t))})]})}(0,Yu.createRoot)(document.getElementById(`root`)).render((0,R.jsx)(Hb,{}));

@@ -41,7 +41,12 @@ function Badges(){return <div className="badges"><span><BadgeCheck/> NuGet: Forg
 function Products({go}){return <><PageHero title="Products" desc="A complete ecosystem for data access, document rendering, architecture scaffolding and enterprise delivery."/><div className="productGrid"><Product name="ForgeORM" tag="V1–V4 data platform roadmap" icon={<Database/>} bullets={[...ormV1.slice(0,4),...ormV2.slice(0,4),...ormV3.slice(0,2),...ormV4.slice(0,2)]} go={go}/><Product name="ForgePDF" tag="HTML/CSS to PDF engine" icon={<FileText/>} bullets={pdfFeatures} go={go}/><Product name="OnionForge" tag="Onion Architecture + DDD + CQRS" icon={<Layers3/>} bullets={['Clean Architecture scaffolding','Commands and queries','Handlers and endpoints','AI code suggestions','VS / VS Code / CLI packaging']} go={go}/><Product name="SliceForge" tag="Vertical Slice generator" icon={<Boxes/>} bullets={['Feature-first modules','CRUD endpoints','Minimal APIs','Dependency wiring','Marketplace-ready developer experience']} go={go}/></div></>}
 function Product({name,tag,icon,bullets,go}){return <motion.article whileHover={{y:-6}} className="product"><div className="phead">{icon}<div><h3>{name}</h3><span>{tag}</span></div></div><ul>{bullets.map(x=><li key={x}><CheckCircle2/> {x}</li>)}</ul><button onClick={()=>name==='ForgeORM'?go('forgeorm-full-wiki'):go('wiki')}>Read Wiki <ArrowRight size={16}/></button></motion.article>}
 
-function Wiki(){const [q,setQ]=useState(''); const docs=useMemo(()=>wikiDocs.filter(d=>(d.title+d.body+d.items.join(' ')+d.code).toLowerCase().includes(q.toLowerCase())),[q]); return <><PageHero title="ForgeORM + ForgePDF Wiki" desc="Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors."/><div className="searchBox"><Search/><input placeholder="Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer..." value={q} onChange={e=>setQ(e.target.value)}/></div><div className="wikiLayout"><aside><a href="#orm-v1">ForgeORM V1</a><a href="#orm-v2">ForgeORM V2</a><a href="#orm-v3">ForgeORM V3</a><a href="#orm-v4">ForgeORM V4</a><a href="#pdf">ForgePDF</a><a href="#ai">AI & Redis</a><a href="#help">Help / FAQ</a><button className="sideCta" onClick={()=>{location.hash='forgeorm-full-wiki'; scrollTo(0,0)}}>Open Complete ForgeORM Wiki</button></aside><section>{docs.map(d=><Doc key={d.id} {...d}/>)}</section></div></>}
+function Wiki(){
+  const [q,setQ]=useState('');
+  const docs=useMemo(()=>wikiDocs.filter(d=>(d.title+d.body+d.items.join(' ')+d.code).toLowerCase().includes(q.toLowerCase())),[q]);
+  const scrollDoc=(id)=>{const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});};
+  const links=[['orm-v1','ForgeORM V1'],['orm-v2','ForgeORM V2'],['orm-v3','ForgeORM V3'],['orm-v4','ForgeORM V4'],['pdf','ForgePDF'],['ai','AI & Redis'],['help','Help / FAQ']];
+  return <><PageHero title="ForgeORM + ForgePDF Wiki" desc="Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors."/><div className="searchBox"><Search/><input placeholder="Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer..." value={q} onChange={e=>setQ(e.target.value)}/></div><div className="wikiLayout"><aside>{links.map(([id,label])=><button className="wikiSideLink" type="button" key={id} onClick={()=>scrollDoc(id)}>{label}</button>)}<button className="sideCta" onClick={()=>{location.hash='forgeorm-full-wiki'; scrollTo(0,0)}}>Open Complete ForgeORM Wiki</button></aside><section>{docs.map(d=><Doc key={d.id} {...d}/>)}</section></div></>}
 const wikiDocs=[
 {id:'orm-v1',title:'ForgeORM V1 — Core Micro ORM Foundation',body:'V1 should establish the stable core: simple APIs, high performance, safe SQL, stored procedures, query builder, DTO projection and optional filters. This makes ForgeORM immediately useful for real projects before advanced features are added.',items:ormV1,code:`// V1: raw SQL + DTO projection
 var customers = await db.QueryAsync<CustomerListDto>(
@@ -211,7 +216,204 @@ sliceforge add-crud \
 
 // OnionForge example
 onionforge add-command --name CreateProduct --module Products
-onionforge add-query --name GetProductById --module Products`}
+onionforge add-query --name GetProductById --module Products`},
+{slug:'article-stability-updates',category:'ForgeORM Bible',title:'ForgeORM Stability Updates: What changed and why it matters',summary:'A practical guide to the latest ForgeORM reliability fixes: analytics execution, cancellation token safety, enum mapping, stream imports and regression testing.',sections:[
+['Why stability matters','ForgeORM is moving from an experimental toolkit into a platform. That means stable behavior is more important than random rewrites. Recent work focuses on additive bug fixes, safer execution and stronger developer trust.'],
+['Key fixes','The latest updates address analytics execution through ToDynamicListAsync, CancellationToken parameter binding, automatic enum mapping, stream-based CSV/JSON import overloads, numeric CSV headers and SQL identifier safety.'],
+['Developer impact','Teams can now use ForgeORM in demos and enterprise prototypes with fewer surprises. The API surface remains familiar while the runtime becomes safer and more predictable.'],
+['Recommended workflow','After every package update, run regression tests for query execution, dynamic results, CSV/JSON imports, enum mapping, record mapping, SplitGraph and analytics rendering.']
+],code:`// Safe analytics execution should pass CancellationToken by name
+public async Task<IReadOnlyList<IDictionary<string, object?>>> ToDynamicListAsync(
+    CancellationToken cancellationToken = default)
+{
+    var render = Render();
+
+    return await _db.QueryDynamicAsync(
+        sql: render.Sql,
+        parameters: render.Parameters,
+        cancellationToken: cancellationToken);
+}`},
+{slug:'article-stream-csv-json-imports',category:'DataFrames',title:'Stream-based CSV and JSON imports in ForgeORM DataFrames',summary:'How ForgeDataFrame supports API uploads, blob streams and enterprise ETL without forcing temporary files.',sections:[
+['Why streams are important','Enterprise applications rarely work only with local files. Data may come from HTTP uploads, Azure Blob Storage, AWS S3, message queues or in-memory pipelines. Stream overloads make imports flexible and cloud-ready.'],
+['CSV stream import','CSV import should support path-based and stream-based APIs. This keeps backward compatibility while enabling ASP.NET file upload scenarios.'],
+['JSON stream import','JSON imports follow the same model, making it easy to ingest uploaded JSON datasets and persist them as database tables.'],
+['Developer experience','The user should provide a table name, upload a file and let ForgeORM infer schema, normalize dirty data and persist rows safely.']
+],code:`app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    await using var stream = file.OpenReadStream();
+
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+
+    await frame.ToTableAsync(
+        db,
+        tableName: tableName,
+        cancellationToken: ct);
+
+    return Results.Ok(new { tableName, rows = frame.RowCount, columns = frame.Columns });
+});`},
+{slug:'article-dirty-data-handling',category:'DataFrames',title:'Pandas-like dirty data handling for CSV and JSON imports',summary:'ForgeORM DataFrames should treat ?, N/A, null and nan as NULL so imports do not fail on real-world data.',sections:[
+['Real data is messy','CSV and JSON files from business systems often contain ?, NA, N/A, null, nan, blanks or placeholder dashes. A strong DataFrame layer must handle these values automatically.'],
+['Pandas-like behavior','Instead of failing when a numeric column contains ?, ForgeORM should normalize null-like values and insert NULL into the database.'],
+['Better type inference','Column type inference should ignore null-like values. A mostly numeric column with a few ? values should still become numeric, with dirty placeholders inserted as NULL.'],
+['Why this matters','This improves analytics imports, reporting dashboards and enterprise ETL scenarios where source files are rarely clean.']
+],code:`private static bool IsNullLike(object? value)
+{
+    if (value is null || value is DBNull) return true;
+
+    var text = value.ToString()?.Trim();
+
+    return string.IsNullOrWhiteSpace(text)
+        || text == "?"
+        || text == "-"
+        || text == "--"
+        || text.Equals("NA", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("N/A", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("null", StringComparison.OrdinalIgnoreCase)
+        || text.Equals("nan", StringComparison.OrdinalIgnoreCase);
+}`},
+{slug:'article-safe-sql-identifiers',category:'Security',title:'Safe dynamic table names and SQL identifiers in ForgeORM',summary:'Dynamic DataFrame imports need safe table names, escaped columns and parameterized values to avoid SQL injection and invalid SQL.',sections:[
+['The problem','CSV files may contain columns such as 1980 or names with spaces. SQL Server requires identifiers like these to be escaped as [1980].'],
+['The safety rule','Always validate user-provided table names and always escape generated column names. Values must always be parameters, never string-concatenated SQL.'],
+['Where it is used','This matters in ToTableAsync, CSV imports, JSON imports, dynamic table creation and DataFrame persistence.'],
+['Enterprise recommendation','Keep identifier validation inside ForgeORM.Core or ForgeORM.DataFrame so sample applications do not need to reinvent safety logic.']
+],code:`if (!ForgeSqlNameValidator.IsSafeIdentifier(tableName))
+    return Results.BadRequest("Invalid table name.");
+
+// Column names like 1980 become [1980]
+var columnSql = string.Join(", ", frame.Columns.Select(ForgeSqlNameValidator.EscapeIdentifier));`},
+{slug:'article-analytics-window-functions',category:'Analytics',title:'Window functions in ForgeORM: running totals, ranks and analytics queries',summary:'How ForgeORM turns advanced SQL analytics into fluent C# APIs using RowNumber, Rank, Lag, Lead, Sum and Percentile functions.',sections:[
+['Why window functions matter','Reports, dashboards and financial analytics often need ranking, running totals, previous values and grouped aggregates without losing row detail.'],
+['ForgeORM fluent API','Developers can express window functions using typed C# expressions while still generating SQL Server-friendly analytics queries.'],
+['Execution vs preview','Use the SQL preview endpoint to show generated SQL and the execution endpoint to return calculated rows. Both are useful in a playground and documentation portal.'],
+['Best use cases','Use window functions for customer order ranking, running revenue, percentiles, year-over-year calculations and operational dashboards.']
+],code:`var result = await db.Analytics<Order>()
+    .From("Orders")
+    .Select(x => x.Id)
+    .Select(x => x.OrderNo)
+    .RowNumber()
+        .PartitionBy(x => x.CustomerId)
+        .OrderByDescending(x => x.CreatedAt)
+        .As("RowNo")
+    .Sum(x => x.GrandTotal)
+        .PartitionBy(x => x.CustomerId)
+        .OrderBy(x => x.CreatedAt)
+        .RowsBetweenUnboundedPrecedingAndCurrentRow()
+        .As("RunningSales")
+    .ToDynamicListAsync(ct);`},
+{slug:'article-forgeorm-architecture-packages',category:'Architecture',title:'ForgeORM package architecture: Core, QueryAst, Analytics, DataFrame and AspNetCore',summary:'A clean package separation strategy that keeps ForgeORM stable while allowing analytics, web integration and AI features to grow independently.',sections:[
+['Core package','ForgeORM.Core should contain the stable low-level engine: ForgeDbContext, ForgeAdo, materialization, value conversion, CRUD, transactions and safe execution.'],
+['QueryAst package','ForgeORM.QueryAst should contain query builders, SplitGraph, search builders, expression parsing and SQL rendering.'],
+['Analytics and DataFrame packages','Analytics and DataFrame features should remain optional so the core ORM stays lightweight while advanced reporting users can add richer modules.'],
+['AspNetCore integration','ForgeORM.AspNetCore should provide the easiest onboarding path for web applications, including AddForgeOrm, middleware, health checks, Swagger helpers and JSON enum configuration.']
+],code:`// Recommended application setup
+builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableDataFrames();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();`},
+{slug:'article-regression-testing-forgeorm',category:'Testing',title:'Regression testing strategy for ForgeORM releases',summary:'A release-quality test plan for preventing repeated bugs in analytics, DataFrames, enum mapping, SplitGraph and dynamic SQL.',sections:[
+['Why tests are now critical','ForgeORM is published to NuGet, so every update must preserve existing behavior. Tests protect the product from accidental rewrites and breaking changes.'],
+['Core tests','Test record constructor mapping, enum conversions, nullable values, dynamic query results, IN parameter expansion and CancellationToken handling.'],
+['DataFrame tests','Test CSV and JSON imports, stream overloads, dirty-data normalization, numeric headers, schema inference and ToTableAsync inserts.'],
+['Analytics tests','Test SQL rendering and execution for RowNumber, Rank, DenseRank, Lag, Lead, Sum, Avg and running totals.']
+],code:`[Fact]
+public async Task QueryDynamicAsync_Should_Not_Bind_CancellationToken_As_Parameter()
+{
+    var result = await db.Analytics<Order>()
+        .From("Orders")
+        .Select(x => x.Id)
+        .RowNumber()
+            .PartitionBy(x => x.CustomerId)
+            .OrderByDescending(x => x.CreatedAt)
+            .As("RowNo")
+        .ToDynamicListAsync(CancellationToken.None);
+
+    Assert.NotNull(result);
+}`},
+{slug:'article-best-practices-enterprise',category:'Best Practices',title:'Enterprise best practices for using ForgeORM',summary:'Practical guidance for choosing Search APIs, SplitGraph, TVP, DataFrames and Analytics in real systems.',sections:[
+['Use Search APIs for grids','Admin grids and search screens need optional filters and pagination. ForgeORM Search APIs give a repeatable pattern for these endpoints.'],
+['Use SplitGraph for large object graphs','SplitGraph avoids cartesian explosion when loading parents and children, making it better for enterprise screens and reports.'],
+['Use TVP for large inserts','When inserting parent-child data or bulk rows, SQL Server TVPs provide scalable performance and clean transaction handling.'],
+['Use DataFrames for imports','CSV and JSON imports should land in DataFrames first, then be validated, cleaned, transformed and persisted into database tables.']
+],code:`// Decision guide
+// Search API      -> optional filters and paging
+// SplitGraph      -> parent/child loading
+// TVP             -> large inserts
+// Analytics       -> reporting and window functions
+// DataFrame       -> CSV/JSON import and transformation
+// Raw SQL         -> advanced hand-tuned queries`}
+,
+{slug:'article-queryast-splitgraph-architecture',category:'Architecture',title:'Why SplitGraph belongs in ForgeORM.QueryAst',summary:'SplitGraph is query-composition infrastructure, so it belongs in QueryAst rather than Core or sample projects.',sections:[
+['Clean module boundaries','ForgeORM.Core should stay focused on ADO.NET execution, materialization, transactions and stable CRUD behavior. SplitGraph depends on query composition and relationship loading, so QueryAst is the correct home.'],
+['User experience','Applications should still call db.SplitGraph<T>() through a simple extension. The complexity stays inside the library and the user only installs the integration package.'],
+['Package strategy','ForgeORM.AspNetCore should reference Core and QueryAst so web projects get SplitGraph, Search APIs and query builders with one setup call.'],
+['Best practice','Never push relationship-loading internals into samples. Samples should demonstrate usage, not ask users to build the ORM.']
+],code:`var customers = await db.SplitGraph<Customer>()
+    .IncludeOne<CustomerProfile, int>(
+        ids => "SELECT * FROM CustomerProfiles WHERE CustomerId IN @Ids",
+        c => c.Id,
+        p => p.CustomerId,
+        (c, p) => c.Profile = p)
+    .ToListAsync("SELECT * FROM Customers", cancellationToken: ct);`},
+{slug:'article-aspnetcore-package-onboarding',category:'ASP.NET Core',title:'ForgeORM.AspNetCore: one package for web application onboarding',summary:'Why ASP.NET applications should reference ForgeORM.AspNetCore for DI, middleware, JSON enums, health checks and Swagger helpers.',sections:[
+['Why this package matters','Developers do not want to manually wire every ForgeORM service. ForgeORM.AspNetCore should provide AddForgeOrm and UseForgeOrm as the main onboarding path.'],
+['What it should register','The package should register ForgeDbContext, providers, QueryAst, Search, Analytics, DataFrames, health checks, telemetry, JSON enum options and middleware.'],
+['Better samples','ForgeCommerce and future demos should depend on ForgeORM.AspNetCore so users see the easiest possible setup.'],
+['Enterprise polish','A clean integration package makes ForgeORM feel mature and production-ready.']
+],code:`builder.Services.AddForgeOrm(options =>
+{
+    options.UseSqlServer(connectionString);
+    options.EnableAnalytics();
+    options.EnableDataFrames();
+    options.EnableTelemetry();
+});
+
+app.UseForgeOrm();`},
+{slug:'article-dataframe-to-sql-table-imports',category:'DataFrames',title:'Turning CSV and JSON files into SQL tables with ForgeORM DataFrames',summary:'A practical guide for uploading files, choosing table names, cleaning data and querying imported tables.',sections:[
+['Import workflow','The user uploads a CSV or JSON file, provides a safe table name, ForgeORM reads the stream, normalizes dirty values and persists the frame into SQL.'],
+['Safe identifiers','User-provided table names must be validated and column names must be escaped. This is essential for files with numeric headers like 1980 or names containing spaces.'],
+['Null-like values','Values such as ?, N/A, null, nan and blank strings should become database NULL values instead of breaking numeric inserts.'],
+['Query after import','After persistence, users can query imported tables with Frame APIs or QueryDynamicAsync for analytics and dashboards.']
+],code:`app.MapPost("/dataframes/import/csv-to-table", async (
+    IFormFile file,
+    string tableName,
+    ForgeDbContext db,
+    CancellationToken ct) =>
+{
+    await using var stream = file.OpenReadStream();
+    var frame = await ForgeDataFrame.FromCsvAsync(stream, ct);
+    await frame.ToTableAsync(db, tableName, cancellationToken: ct);
+    return Results.Ok(new { tableName, rows = frame.RowCount, columns = frame.Columns });
+});`},
+{slug:'article-forgecommerce-demo-walkthrough',category:'Demo',title:'ForgeCommerce demo walkthrough: proving ForgeORM in a real app',summary:'How the ForgeCommerce demo demonstrates search, records, enums, SplitGraph, analytics and DataFrames in one application.',sections:[
+['Why ForgeCommerce exists','A polished demo is the fastest way to build trust. It shows developers what ForgeORM looks like in real Minimal APIs and enterprise architecture.'],
+['Feature coverage','The demo includes products, orders, customers, analytics, DataFrame import endpoints, SQL preview, record mapping and enum mapping.'],
+['What to improve next','Add dashboards, charts, file upload UI, benchmark pages and guided playground examples.'],
+['Adoption value','A real demo makes the documentation believable and helps users clone, run and learn quickly.']
+],code:`GET /products
+GET /products/search
+GET /orders/customer/{customerId}
+GET /customers/split
+GET /analytics/window-functions
+POST /dataframes/import/csv-to-table`},
+{slug:'article-forgeorm-release-stability',category:'Release Strategy',title:'ForgeORM release stability: additive features and safe bug fixes',summary:'A NuGet product must avoid changing core behavior every release. New versions should be stable, additive and well-tested.',sections:[
+['Stable baseline','ForgeORM 1.x should keep public behavior stable. Patch versions should fix bugs only, while minor versions should add backward-compatible features.'],
+['Avoid rewrites','Core execution logic should not be rewritten casually after NuGet publication. Refactor internally only when tests prove compatibility.'],
+['Testing gate','Every release should pass regression tests for QueryAsync, dynamic mapping, DataFrames, analytics, SplitGraph, enum mapping and record mapping.'],
+['Product trust','Predictable releases build developer trust faster than endless new features.']
+],code:`1.3.0  Stable release
+1.3.1  Bug fixes only
+1.4.0  Additive features
+2.0.0  Breaking changes only when unavoidable`}
+
 ];
 
 function ArticlePage({slug}){const article=articles.find(a=>a.slug===slug)||articles[0];return <><PageHero title={article.title} desc={article.summary}/><article className="articlePage"><div className="articleMeta"><span>{article.category}</span><span>Fervidex Systems Knowledge Base</span><span>SEO Article</span></div>{article.sections.map(([h,b])=><section key={h}><h2>{h}</h2><p>{b}</p></section>)}<div className="codeHead"><span>Implementation example</span><Copy size={16}/></div><pre className="syntax"><code>{article.code}</code></pre><div className="articleLinks"><a href="#blog">Back to blog</a><a href="#wiki">Open Wiki</a><a href="#playground">Try Playground</a></div></article></>}
