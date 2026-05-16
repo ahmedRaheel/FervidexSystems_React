@@ -1,12 +1,12 @@
 import React, {useMemo, useState} from 'react';
 import { createRoot } from 'react-dom/client';
-import { ArrowRight, BadgeCheck, BarChart3, BookOpen, Boxes, BrainCircuit, CheckCircle2, Code2, Copy, Database, FileText, Layers3, Menu, Moon, Play, Search, ShieldCheck, Sparkles, Star, Sun, TerminalSquare, Workflow, X, Zap } from 'lucide-react';
+import { ArrowRight, BadgeCheck, BarChart3, BookOpen, Boxes, BrainCircuit, CalendarDays, CheckCircle2, Code2, Copy, Database, FileText, Layers3, Mail, Menu, Moon, PhoneCall, Play, Search, Send, ShieldCheck, Sparkles, Star, Sun, TerminalSquare, Users, Workflow, X, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import './styles.css';
 import ForgeOrmWikiPage from './pages/ForgeOrmWikiPage.jsx';
 
 const logo='/assets/images/fervidex-logo.png';
-const nav=[['home','Home'],['products','Products'],['wiki','Wiki'],['forgeorm-full-wiki','ForgeORM Docs'],['playground','Playground'],['api','API Docs'],['blog','Blog'],['about','About']];
+const nav=[['home','Home'],['products','Products'],['wiki','Wiki'],['forgeorm-full-wiki','ForgeORM Docs'],['playground','Playground'],['api','API Docs'],['blog','Blog'],['book-demo','Book a Demo'],['contact','Contact Us'],['about','About']];
 
 const ormV1=['Fast QueryAsync / ExecuteAsync APIs','Raw SQL mapping','Stored procedure execution','Multiple result set mapping','Expression-based filtering','Fluent query builder','Optional filters','Pagination','DTO projection','Safe interpolated SQL'];
 const ormV2=['Bulk insert/update/delete','Provider packages for SQL Server, PostgreSQL, MySQL, Oracle','Unit of Work helpers','Transactions','Multi-tenancy filters','Auditing fields','Soft delete','Change history','Redis/in-memory cache adapters','OpenTelemetry spans'];
@@ -26,13 +26,13 @@ function App(){
     return ()=>window.removeEventListener('hashchange', onHash);
   },[]);
   const go=p=>{setPage(p);location.hash=p;setOpen(false);scrollTo(0,0)};
-  return <><Header page={page} go={go} open={open} setOpen={setOpen} theme={theme} setTheme={setTheme}/><main>{page==='home'&&<Home go={go}/>} {page==='products'&&<Products go={go}/>} {page==='wiki'&&<Wiki/>} {page==='forgeorm-full-wiki'&&<ForgeOrmWikiPage/>} {page==='playground'&&<Playground/>} {page==='api'&&<ApiDocs/>} {page==='blog'&&<Blog setPage={setPage}/>} {page.startsWith('article-')&&<ArticlePage slug={page}/>} {page==='about'&&<About/>}</main><Footer go={go}/></>;
+  return <><Header page={page} go={go} open={open} setOpen={setOpen} theme={theme} setTheme={setTheme}/><main>{page==='home'&&<Home go={go}/>} {page==='products'&&<Products go={go}/>} {page==='wiki'&&<Wiki/>} {page==='forgeorm-full-wiki'&&<ForgeOrmWikiPage/>} {page==='playground'&&<Playground/>} {page==='api'&&<ApiDocs/>} {page==='blog'&&<Blog setPage={setPage}/>} {page==='book-demo'&&<BookDemo/>} {page==='contact'&&<ContactUs/>} {page.startsWith('article-')&&<ArticlePage slug={page}/>} {page==='about'&&<About/>}</main><Footer go={go}/></>;
 }
 
 function Header({page,go,open,setOpen,theme,setTheme}){return <header className="nav"><div className="brand" onClick={()=>go('home')}><img src={logo}/><span>Fervidex Systems</span></div><button className="hamb" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={open?'show':''}>{nav.map(([k,v])=><button className={page===k?'active':''} onClick={()=>go(k)} key={k}>{v}</button>)}<button className="theme" onClick={()=>setTheme(theme==='dark'?'light':'dark')}>{theme==='dark'?<Sun/>:<Moon/>}</button></nav></header>}
 
 function Home({go}){return <><Hero go={go}/><Badges/><Section title="Enterprise-grade product features" sub="The site now includes dark/light theme, AI animated hero, searchable docs, playgrounds, PDF demo, Wiki sidebar, syntax-highlighted examples, SEO metadata, blog, API docs, charts, NuGet badges and GitHub stars UI."><div className="grid three"><Card title="ForgeORM" icon={<Database/>} desc="Micro ORM with SQL intelligence, bulk operations, multi-tenancy, outbox, caching, telemetry, AI and vector-ready extension points."/><Card title="ForgePDF" icon={<FileText/>} desc="HTML/CSS to PDF engine for reports, invoices and enterprise documents with CLI and API usage examples."/><Card title="Developer Studio" icon={<BrainCircuit/>} desc="Roadmap for React Studio, ERD designer, query visualizer, API testing, SaaS dashboards and AI optimization."/></div></Section><Benchmarks/><CTA go={go}/></>}
-function Hero({go}){return <section className="hero"><div className="orb o1"/><div className="orb o2"/><div className="gridlines"/><motion.div initial={{opacity:0,y:22}} animate={{opacity:1,y:0}} className="heroText"><span className="eyebrow"><Sparkles size={16}/> AI-powered developer platform</span><h1>High-graphics React website for ForgeORM, ForgePDF and Fervidex Systems.</h1><p>Comprehensive product pages, searchable Wiki, interactive examples, API help, benchmarks and marketplace-ready content for your .NET and AI engineering tools.</p><div className="actions"><button onClick={()=>go('wiki')}>Open Wiki <BookOpen size={18}/></button><button className="ghost" onClick={()=>go('playground')}>Try Playground <Play size={18}/></button></div></motion.div><motion.div initial={{opacity:0,scale:.92}} animate={{opacity:1,scale:1}} transition={{delay:.15}} className="aiPanel"><div className="glassTop"><TerminalSquare/><span>AI Architecture Console</span></div><pre><code>{`dotnet add package ForgeORM
+function Hero({go}){return <section className="hero"><div className="orb o1"/><div className="orb o2"/><div className="gridlines"/><motion.div initial={{opacity:0,y:22}} animate={{opacity:1,y:0}} className="heroText"><span className="eyebrow"><Sparkles size={16}/> AI-powered developer platform</span><h1>High-graphics React website for ForgeORM, ForgePDF and Fervidex Systems.</h1><p>Comprehensive product pages, searchable Wiki, interactive examples, API help, benchmarks and marketplace-ready content for your .NET and AI engineering tools.</p><div className="actions"><button onClick={()=>go('book-demo')}>Book a Demo <CalendarDays size={18}/></button><button className="ghost" onClick={()=>go('wiki')}>Open Wiki <BookOpen size={18}/></button><button className="ghost" onClick={()=>go('playground')}>Try Playground <Play size={18}/></button></div></motion.div><motion.div initial={{opacity:0,scale:.92}} animate={{opacity:1,scale:1}} transition={{delay:.15}} className="aiPanel"><div className="glassTop"><TerminalSquare/><span>AI Architecture Console</span></div><pre><code>{`dotnet add package ForgeORM
 await db.QueryAsync<ProductDto>(query);
 await db.BulkInsertAsync(products);
 await renderer.RenderHtmlAsync(html);
@@ -417,11 +417,74 @@ POST /dataframes/import/csv-to-table`},
 ];
 
 function ArticlePage({slug}){const article=articles.find(a=>a.slug===slug)||articles[0];return <><PageHero title={article.title} desc={article.summary}/><article className="articlePage"><div className="articleMeta"><span>{article.category}</span><span>Fervidex Systems Knowledge Base</span><span>SEO Article</span></div>{article.sections.map(([h,b])=><section key={h}><h2>{h}</h2><p>{b}</p></section>)}<div className="codeHead"><span>Implementation example</span><Copy size={16}/></div><pre className="syntax"><code>{article.code}</code></pre><div className="articleLinks"><a href="#blog">Back to blog</a><a href="#wiki">Open Wiki</a><a href="#playground">Try Playground</a></div></article></>}
+
+const CONTACT_ENDPOINT = '/api/contact';
+
+async function sendSiteEmail(subject, fields){
+  const response = await fetch(CONTACT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subject, fields })
+  });
+
+  let result = {};
+  try{
+    result = await response.json();
+  }catch{
+    result = {};
+  }
+
+  if(!response.ok || result.success === false){
+    throw new Error(result.message || 'Unable to send message');
+  }
+
+  return result;
+}
+function BookDemo(){
+  const [status,setStatus]=useState({type:'idle',message:''});
+  const submit=async e=>{
+    e.preventDefault();
+    setStatus({type:'loading',message:'Sending your demo request...'});
+    const form=e.currentTarget;
+    const data=Object.fromEntries(new FormData(form).entries());
+    try{
+      await sendSiteEmail('Book a Demo - Fervidex Systems', data);
+      form.reset();
+      setStatus({type:'success',message:'Thank you. Your demo request has been sent successfully.'});
+    }catch(error){
+      setStatus({type:'error',message:error.message || 'Message could not be sent right now. Please try again later.'});
+    }
+  };
+  return <><PageHero title="Book a Demo" desc="Schedule a product walkthrough for ForgeORM, ForgePDF, OnionForge, SliceForge or a custom .NET / Python enterprise solution."/><div className="contactGrid"><section className="contactCard demoIntro"><span className="eyebrow"><CalendarDays size={16}/> Demo Request</span><h2>See the platform in action</h2><p>Use this form to request a private product walkthrough. Your message is sent securely through the website backend without opening Outlook or exposing the inbox address on the page.</p><div className="demoPoints"><span><Database/> ForgeORM data access demos</span><span><FileText/> ForgePDF rendering demos</span><span><Layers3/> OnionForge / SliceForge scaffolding</span><span><Users/> Enterprise consulting discussion</span></div></section><ContactForm mode="demo" onSubmit={submit} status={status}/></div></>;
+}
+function ContactUs(){
+  const [status,setStatus]=useState({type:'idle',message:''});
+  const submit=async e=>{
+    e.preventDefault();
+    setStatus({type:'loading',message:'Sending your message...'});
+    const form=e.currentTarget;
+    const data=Object.fromEntries(new FormData(form).entries());
+    try{
+      await sendSiteEmail('Contact Us - Fervidex Systems', data);
+      form.reset();
+      setStatus({type:'success',message:'Thank you. Your message has been sent successfully.'});
+    }catch(error){
+      setStatus({type:'error',message:error.message || 'Message could not be sent right now. Please try again later.'});
+    }
+  };
+  return <><PageHero title="Contact Us" desc="Contact Fervidex Systems for product support, demos, enterprise development, integrations and consulting."/><div className="contactGrid"><section className="contactCard"><span className="eyebrow"><Mail size={16}/> Contact Form</span><h2>Let’s build something serious</h2><p>Send project requirements, demo requests, technical questions or partnership ideas. The inbox address is hidden from visitors and handled only by the backend.</p><div className="contactMini"><span><PhoneCall/> Remote meetings available</span><span><ShieldCheck/> Enterprise architecture guidance</span><span><Code2/> .NET, Python and modern web stacks</span></div></section><ContactForm mode="contact" onSubmit={submit} status={status}/></div></>;
+}
+function ContactForm({mode,onSubmit,status}){
+  const isDemo=mode==='demo';
+  const isSending=status?.type==='loading';
+  return <form className="contactForm" onSubmit={onSubmit}><h2>{isDemo?'Request Demo':'Send Message'}</h2><label>Name<input name="Name" required placeholder="Your name"/></label><label>Email<input name="Email" type="email" required placeholder="you@company.com"/></label><label>Company<input name="Company" placeholder="Company / organization"/></label>{isDemo&&<label>Preferred Date / Time<input name="Preferred Demo Time" placeholder="Example: Monday 4 PM PKT"/></label>}<label>{isDemo?'Product Interest':'Subject'}<select name={isDemo?'Product Interest':'Subject'} defaultValue={isDemo?'ForgeORM Demo':'General Inquiry'}><option>ForgeORM Demo</option><option>ForgePDF Demo</option><option>OnionForge / SliceForge Demo</option><option>Enterprise .NET Consulting</option><option>Python / AI Solution</option><option>General Inquiry</option></select></label><label>Message<textarea name="Message" required placeholder={isDemo?'Tell us what you want to see in the demo...':'Write your message...'} /></label><button type="submit" disabled={isSending}>{isSending?'Sending...':isDemo?'Send Demo Request':'Send Message'} <Send size={17}/></button>{status?.message&&<p className={`formNotice ${status.type}`}>{status.message}</p>}</form>;
+}
+
 function Benchmarks(){const rows=[['Raw query',95],['Bulk insert',88],['Cached query',98],['PDF render',82]];return <section className="section"><h2>Benchmark Charts</h2><p className="sub">Visual benchmark section for marketing. Replace placeholder values with real BenchmarkDotNet results later.</p><div className="chart">{rows.map(([name,val])=><div className="bar" key={name}><span>{name}</span><i style={{width:`${val}%`}}/><b>{val}%</b></div>)}</div></section>}
 function About(){return <><PageHero title="About Fervidex Systems" desc="A brand built around passion, dedication, love for programming, motivation and struggle."/><Section title="Mission" sub="Build practical developer tools that reduce repetitive work and turn enterprise patterns into reusable products."><div className="aboutPanel"><img src={logo}/><p>Fervidex Systems provides solutions in .NET, Python and other modern stacks, with product focus on ForgeORM, ForgePDF, OnionForge and SliceForge.</p></div></Section></>}
 function Section({title,sub,children}){return <section className="section"><h2>{title}</h2>{sub&&<p className="sub">{sub}</p>}{children}</section>}
 function PageHero({title,desc}){return <section className="pageHero"><span className="eyebrow"><Zap size={16}/> Fervidex Systems</span><h1>{title}</h1><p>{desc}</p></section>}
 function Card({title,icon,desc}){return <motion.div whileHover={{y:-5}} className="card"><div className="icon">{icon}</div><h3>{title}</h3><p>{desc}</p></motion.div>}
-function CTA({go}){return <section className="cta"><h2>Comprehensive docs make the products easier to sell.</h2><p>Use the Wiki, Playground, Blog and API pages as the base for Azure Static Web Apps deployment.</p><button onClick={()=>go('wiki')}>View Documentation</button></section>}
+function CTA({go}){return <section className="cta"><h2>Comprehensive docs make the products easier to sell.</h2><p>Use the Wiki, Playground, Blog and API pages as the base for Azure Static Web Apps deployment.</p><button onClick={()=>go('book-demo')}>Book a Demo</button></section>}
 function Footer({go}){return <footer><div><b>Fervidex Systems</b><p>AI-ready engineering products for enterprise software teams.</p></div><div>{nav.map(([k,v])=><button onClick={()=>go(k)} key={k}>{v}</button>)}</div></footer>}
 createRoot(document.getElementById('root')).render(<App/>);
