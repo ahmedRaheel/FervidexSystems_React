@@ -4,9 +4,10 @@ import { ArrowRight, BadgeCheck, BarChart3, BookOpen, Boxes, BrainCircuit, Calen
 import { motion } from 'framer-motion';
 import './styles.css';
 import ForgeOrmWikiPage from './pages/ForgeOrmWikiPage.jsx';
+import ForgeOrmDocsPage from './pages/ForgeOrmDocsPage.jsx';
 
 const logo='/assets/images/fervidex-logo.png';
-const nav=[['home','Home'],['products','Products'],['wiki','Wiki'],['forgeorm-full-wiki','ForgeORM Docs'],['playground','Playground'],['api','API Docs'],['blog','Blog'],['book-demo','Book a Demo'],['contact','Contact Us'],['about','About']];
+const nav=[['home','Home'],['products','Products'],['wiki','Wiki'],['forgeorm-learn','ForgeORM Docs'],['playground','Playground'],['api','API Docs'],['blog','Blog'],['book-demo','Book a Demo'],['contact','Contact Us'],['about','About']];
 
 const ormV1=['Fast QueryAsync / ExecuteAsync APIs','Raw SQL mapping','Stored procedure execution','Multiple result set mapping','Expression-based filtering','Fluent query builder','Optional filters','Pagination','DTO projection','Safe interpolated SQL'];
 const ormV2=['Bulk insert/update/delete','Provider packages for SQL Server, PostgreSQL, MySQL, Oracle','Unit of Work helpers','Transactions','Multi-tenancy filters','Auditing fields','Soft delete','Change history','Redis/in-memory cache adapters','OpenTelemetry spans'];
@@ -26,7 +27,7 @@ function App(){
     return ()=>window.removeEventListener('hashchange', onHash);
   },[]);
   const go=p=>{setPage(p);location.hash=p;setOpen(false);scrollTo(0,0)};
-  return <><Header page={page} go={go} open={open} setOpen={setOpen} theme={theme} setTheme={setTheme}/><main>{page==='home'&&<Home go={go}/>} {page==='products'&&<Products go={go}/>} {page==='wiki'&&<Wiki/>} {page==='forgeorm-full-wiki'&&<ForgeOrmWikiPage/>} {page==='playground'&&<Playground/>} {page==='api'&&<ApiDocs/>} {page==='blog'&&<Blog setPage={setPage}/>} {page==='book-demo'&&<BookDemo/>} {page==='contact'&&<ContactUs/>} {page.startsWith('article-')&&<ArticlePage slug={page}/>} {page==='about'&&<About/>}</main><Footer go={go}/></>;
+  return <><Header page={page} go={go} open={open} setOpen={setOpen} theme={theme} setTheme={setTheme}/><main>{page==='home'&&<Home go={go}/>} {page==='products'&&<Products go={go}/>} {page==='wiki'&&<Wiki/>} {(page==='forgeorm-learn'||page==='forgeorm-full-wiki'||page.startsWith('forgeorm-topic-'))&&<ForgeOrmDocsPage/>} {page==='playground'&&<Playground/>} {page==='api'&&<ApiDocs/>} {page==='blog'&&<Blog setPage={setPage}/>} {page==='book-demo'&&<BookDemo/>} {page==='contact'&&<ContactUs/>} {page.startsWith('article-')&&<ArticlePage slug={page}/>} {page==='about'&&<About/>}</main><Footer go={go}/></>;
 }
 
 function Header({page,go,open,setOpen,theme,setTheme}){return <header className="nav"><div className="brand" onClick={()=>go('home')}><img src={logo}/><span>Fervidex Systems</span></div><button className="hamb" onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button><nav className={open?'show':''}>{nav.map(([k,v])=><button className={page===k?'active':''} onClick={()=>go(k)} key={k}>{v}</button>)}<button className="theme" onClick={()=>setTheme(theme==='dark'?'light':'dark')}>{theme==='dark'?<Sun/>:<Moon/>}</button></nav></header>}
@@ -39,14 +40,14 @@ await renderer.RenderHtmlAsync(html);
 forgepdf render invoice.html invoice.pdf`}</code></pre><div className="pulseRows"><span/><span/><span/></div><div className="metrics"><b>V1–V4</b><span>Roadmap</span><b>20+</b><span>ORM features</span><b>PDF</b><span>Engine</span></div></motion.div></section>}
 function Badges(){return <div className="badges"><span><BadgeCheck/> NuGet: ForgeORM</span><span><BadgeCheck/> NuGet: ForgePDF</span><span><Star/> GitHub Stars: 1.2k+</span><span><Star/> Production-ready docs</span></div>}
 function Products({go}){return <><PageHero title="Products" desc="A complete ecosystem for data access, document rendering, architecture scaffolding and enterprise delivery."/><div className="productGrid"><Product name="ForgeORM" tag="V1–V4 data platform roadmap" icon={<Database/>} bullets={[...ormV1.slice(0,4),...ormV2.slice(0,4),...ormV3.slice(0,2),...ormV4.slice(0,2)]} go={go}/><Product name="ForgePDF" tag="HTML/CSS to PDF engine" icon={<FileText/>} bullets={pdfFeatures} go={go}/><Product name="OnionForge" tag="Onion Architecture + DDD + CQRS" icon={<Layers3/>} bullets={['Clean Architecture scaffolding','Commands and queries','Handlers and endpoints','AI code suggestions','VS / VS Code / CLI packaging']} go={go}/><Product name="SliceForge" tag="Vertical Slice generator" icon={<Boxes/>} bullets={['Feature-first modules','CRUD endpoints','Minimal APIs','Dependency wiring','Marketplace-ready developer experience']} go={go}/></div></>}
-function Product({name,tag,icon,bullets,go}){return <motion.article whileHover={{y:-6}} className="product"><div className="phead">{icon}<div><h3>{name}</h3><span>{tag}</span></div></div><ul>{bullets.map(x=><li key={x}><CheckCircle2/> {x}</li>)}</ul><button onClick={()=>name==='ForgeORM'?go('forgeorm-full-wiki'):go('wiki')}>Read Wiki <ArrowRight size={16}/></button></motion.article>}
+function Product({name,tag,icon,bullets,go}){return <motion.article whileHover={{y:-6}} className="product"><div className="phead">{icon}<div><h3>{name}</h3><span>{tag}</span></div></div><ul>{bullets.map(x=><li key={x}><CheckCircle2/> {x}</li>)}</ul><button onClick={()=>name==='ForgeORM'?go('forgeorm-learn'):go('wiki')}>Read Wiki <ArrowRight size={16}/></button></motion.article>}
 
 function Wiki(){
   const [q,setQ]=useState('');
   const docs=useMemo(()=>wikiDocs.filter(d=>(d.title+d.body+d.items.join(' ')+d.code).toLowerCase().includes(q.toLowerCase())),[q]);
   const scrollDoc=(id)=>{const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});};
   const links=[['orm-v1','ForgeORM V1'],['orm-v2','ForgeORM V2'],['orm-v3','ForgeORM V3'],['orm-v4','ForgeORM V4'],['pdf','ForgePDF'],['ai','AI & Redis'],['help','Help / FAQ']];
-  return <><PageHero title="ForgeORM + ForgePDF Wiki" desc="Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors."/><div className="searchBox"><Search/><input placeholder="Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer..." value={q} onChange={e=>setQ(e.target.value)}/></div><div className="wikiLayout"><aside>{links.map(([id,label])=><button className="wikiSideLink" type="button" key={id} onClick={()=>scrollDoc(id)}>{label}</button>)}<button className="sideCta" onClick={()=>{location.hash='forgeorm-full-wiki'; scrollTo(0,0)}}>Open Complete ForgeORM Wiki</button></aside><section>{docs.map(d=><Doc key={d.id} {...d}/>)}</section></div></>}
+  return <><PageHero title="ForgeORM + ForgePDF Wiki" desc="Comprehensive feature documentation, examples and help pages for product users, clients and marketplace visitors."/><div className="searchBox"><Search/><input placeholder="Search docs: V1, V2, bulk, Redis, outbox, vector, AI, PDF, header, footer..." value={q} onChange={e=>setQ(e.target.value)}/></div><div className="wikiLayout"><aside>{links.map(([id,label])=><button className="wikiSideLink" type="button" key={id} onClick={()=>scrollDoc(id)}>{label}</button>)}<button className="sideCta" onClick={()=>{location.hash='forgeorm-learn'; scrollTo(0,0)}}>Open Complete ForgeORM Wiki</button></aside><section>{docs.map(d=><Doc key={d.id} {...d}/>)}</section></div></>}
 const wikiDocs=[
 {id:'orm-v1',title:'ForgeORM V1 — Core Micro ORM Foundation',body:'V1 should establish the stable core: simple APIs, high performance, safe SQL, stored procedures, query builder, DTO projection and optional filters. This makes ForgeORM immediately useful for real projects before advanced features are added.',items:ormV1,code:`// V1: raw SQL + DTO projection
 var customers = await db.QueryAsync<CustomerListDto>(
@@ -415,6 +416,253 @@ POST /dataframes/import/csv-to-table`},
 2.0.0  Breaking changes only when unavoidable`}
 
 ];
+
+
+
+const forgeOrmLearnTopics = [
+  {
+    slug: 'forgeorm-topic-getting-started',
+    group: 'Getting Started',
+    title: 'Getting Started with ForgeORM',
+    desc: 'Install ForgeORM, register the context, configure providers, and run your first query without losing the existing Fervidex website pages.',
+    bullets: ['Install package', 'Register ForgeDbContext', 'Configure SQL Server/PostgreSQL/MySQL/Oracle providers', 'Run QueryAsync', 'Return DTOs from Minimal API endpoints'],
+    code: `builder.Services.AddForgeOrm(options =>
+{
+    options.ConnectionString = builder.Configuration.GetConnectionString("Default");
+    options.Provider = ForgeDbProvider.SqlServer;
+    options.EnableQueryAnalytics = true;
+});
+
+app.MapGet("/products", async (ForgeDbContext db, CancellationToken ct) =>
+{
+    var rows = await db.QueryAsync<ProductDto>(
+        "SELECT Id, Name, Price FROM Products WHERE IsDeleted = 0 ORDER BY Id DESC",
+        cancellationToken: ct);
+
+    return Results.Ok(rows);
+});`
+  },
+  {
+    slug: 'forgeorm-topic-querying',
+    group: 'Querying',
+    title: 'Querying, Paging and Optional Filters',
+    desc: 'LearnDapper-style examples for QueryAsync, First, Single, Scalar, dynamic search, paging and DTO projection.',
+    bullets: ['QueryAsync<T>', 'FirstOrDefaultAsync<T>', 'SingleOrDefaultAsync<T>', 'ScalarAsync<T>', 'PageAsync', 'Optional filters'],
+    code: `var page = await db.PageAsync<OrderListDto>(new ForgePageRequest
+{
+    Sql = """
+          SELECT o.Id, o.OrderNo, o.Status, o.GrandTotal, c.Name AS CustomerName
+          FROM Orders o
+          INNER JOIN Customers c ON c.Id = o.CustomerId
+          WHERE (@CustomerId IS NULL OR o.CustomerId = @CustomerId)
+            AND (@Status IS NULL OR o.Status = @Status)
+          ORDER BY o.Id DESC
+          """,
+    Parameters = new { CustomerId = customerId, Status = status },
+    Page = request.Page,
+    PageSize = request.PageSize
+});`
+  },
+  {
+    slug: 'forgeorm-topic-query-builder',
+    group: 'Query Builder',
+    title: 'Fluent Query Builder',
+    desc: 'Expression and SQL-style query construction for joins, filters, ordering, grouping, paging and safe rendering.',
+    bullets: ['Select / From', 'InnerJoin / LeftJoin', 'Where / WhereIf', 'OrderBy', 'Skip / Take', 'Render SQL'],
+    code: `var query = ForgeSql.Select<Product>()
+    .From("Products p")
+    .LeftJoin<Category>("Categories c", "c.Id = p.CategoryId")
+    .Columns("p.Id", "p.Name", "p.Price", "c.Name AS CategoryName")
+    .WhereIf(minPrice.HasValue, "p.Price >= @MinPrice", new { MinPrice = minPrice })
+    .OrderByDescending("p.Id")
+    .Skip((page - 1) * size)
+    .Take(size);
+
+var rows = await db.QueryAsync<ProductListDto>(query);`
+  },
+  {
+    slug: 'forgeorm-topic-advanced-sql',
+    group: 'Advanced SQL',
+    title: 'CTE, Pivot, Union, GroupBy, Having and Aggregates',
+    desc: 'Enterprise reporting pages covering the advanced SQL features missing from simple Dapper documentation sites.',
+    bullets: ['CTE', 'Recursive CTE', 'Pivot', 'Dynamic Pivot', 'Union / UnionAll', 'GroupBy / Having', 'Window functions'],
+    code: `var report = await db.QueryAsync<SalesPivotRow>("""
+WITH MonthlySales AS
+(
+    SELECT YEAR(OrderDate) AS SalesYear,
+           DATENAME(MONTH, OrderDate) AS SalesMonth,
+           GrandTotal
+    FROM Orders
+    WHERE OrderDate >= @From AND OrderDate < @To
+)
+SELECT *
+FROM MonthlySales
+PIVOT (SUM(GrandTotal) FOR SalesMonth IN ([January],[February],[March])) p
+ORDER BY SalesYear DESC;
+""", new { From = from, To = to });`
+  },
+  {
+    slug: 'forgeorm-topic-graph',
+    group: 'Graph Persistence',
+    title: 'Graph Insert, Graph Update and Graph Delete',
+    desc: 'Save parent and child collections together with transactions, identity propagation and cascade options.',
+    bullets: ['Insert parent with children', 'Deep graph insert', 'Update modified children', 'Delete parent + children', 'Delete child only', 'Transaction safety'],
+    code: `var order = new Order
+{
+    CustomerId = customerId,
+    OrderNo = "ORD-1001",
+    Status = OrderStatus.Processing,
+    Items =
+    [
+        new OrderItem { ProductId = 10, Quantity = 2, UnitPrice = 150 },
+        new OrderItem { ProductId = 12, Quantity = 1, UnitPrice = 90 }
+    ]
+};
+
+await db.GraphInsertAsync(order, options =>
+{
+    options.IncludeChildren = true;
+    options.UseTransaction = true;
+    options.PropagateIdentityKeys = true;
+});`
+  },
+  {
+    slug: 'forgeorm-topic-bulk',
+    group: 'Bulk Operations',
+    title: 'Bulk Insert, Bulk Update, Bulk Delete and Bulk Merge',
+    desc: 'High-throughput database writes using table-valued parameters, provider-specific fast paths and batching.',
+    bullets: ['BulkInsertAsync', 'BulkUpdateAsync', 'BulkDeleteAsync', 'BulkMergeAsync', 'TVP support', 'Batch options'],
+    code: `await db.BulkInsertAsync(products, new ForgeBulkOptions
+{
+    TableName = "Products",
+    BatchSize = 5000,
+    UseTransaction = true,
+    KeepIdentity = false
+});
+
+await db.BulkUpdateAsync(products, x => x.Id, options =>
+{
+    options.UpdateColumns = ["Name", "Price", "UpdatedAt"];
+});`
+  },
+  {
+    slug: 'forgeorm-topic-analytics',
+    group: 'Query Analytics',
+    title: 'Query Analytics and Performance Profiling',
+    desc: 'Slow query detection, timings, allocations, OpenTelemetry integration, execution diagnostics and performance dashboard ideas.',
+    bullets: ['Query timing', 'Slow query logging', 'ProfileAsync', 'AnalyzeAsync', 'OpenTelemetry spans', 'Dashboard metrics'],
+    code: `var profile = await db.ProfileAsync(async ctx =>
+{
+    return await ctx.QueryAsync<OrderListDto>(sql, args);
+});
+
+logger.LogInformation("SQL executed in {ElapsedMs} ms, rows {Rows}",
+    profile.ElapsedMilliseconds,
+    profile.RowCount);`
+  },
+  {
+    slug: 'forgeorm-topic-ai',
+    group: 'AI & Intelligence',
+    title: 'AI SQL Assistant and Optimization',
+    desc: 'Natural language SQL, AI query explanation, index suggestions, performance review and schema-aware help.',
+    bullets: ['Natural language to SQL', 'SQL review', 'Index recommendations', 'Query explanation', 'N+1 detection', 'Provider-agnostic AI endpoints'],
+    code: `var suggestion = await db.Ai.ExplainQueryAsync(sql, new ForgeAiExplainOptions
+{
+    IncludeIndexSuggestions = true,
+    IncludeSecurityReview = true,
+    IncludePerformanceHints = true
+});
+
+return Results.Ok(new
+{
+    suggestion.Summary,
+    suggestion.RecommendedIndexes,
+    suggestion.Risks
+});`
+  },
+  {
+    slug: 'forgeorm-topic-vector-search',
+    group: 'Vector Search',
+    title: 'Vector Search and RAG Queries',
+    desc: 'Embedding storage, cosine similarity, Top-K results and hybrid SQL + vector search for AI applications.',
+    bullets: ['Embedding storage', 'Cosine similarity', 'Top-K search', 'Hybrid filters', 'RAG retrieval', 'Vector provider extensions'],
+    code: `var results = await db.VectorSearchAsync(new ForgeVectorSearchRequest
+{
+    Table = "KnowledgeDocuments",
+    VectorColumn = "Embedding",
+    QueryVector = embedding,
+    TopK = 5,
+    FilterSql = "TenantId = @TenantId AND IsDeleted = 0",
+    Parameters = new { TenantId = tenantId }
+});`
+  },
+  {
+    slug: 'forgeorm-topic-dataframe',
+    group: 'DataFrame & Reporting',
+    title: 'DataFrame, CSV/JSON Imports and Reporting',
+    desc: 'Pandas-style analytics for .NET: load data, clean dirty values, aggregate, pivot and export reports.',
+    bullets: ['CSV import', 'JSON import', 'Dirty data handling', 'DataFrame grouping', 'Pivot reports', 'Export to JSON/CSV'],
+    code: `var frame = await ForgeDataFrame.ReadCsvAsync(stream, new CsvImportOptions
+{
+    HasHeader = true,
+    TrimValues = true,
+    ConvertEmptyToNull = true,
+    ContinueOnBadRows = true
+});
+
+var summary = frame
+    .GroupBy("Category")
+    .Aggregate("Amount", ForgeAggregate.Sum)
+    .OrderByDescending("Amount");`
+  }
+];
+
+function LearnForgeOrmHome(){
+  const [search,setSearch]=useState('');
+  const go=(slug)=>{ location.hash=slug; scrollTo(0,0); };
+  const groups=[...new Set(forgeOrmLearnTopics.map(x=>x.group))];
+  const filtered=forgeOrmLearnTopics.filter(x=>(x.title+x.group+x.desc+x.bullets.join(' ')).toLowerCase().includes(search.toLowerCase()));
+  return <><PageHero title="Learn ForgeORM" desc="A LearnDapper-style documentation portal added on top of your existing Fervidex website. Existing Home, Products, Wiki, Playground, API, Blog, Demo, Contact and About pages are preserved."/>
+    <section className="learnDocShell">
+      <aside className="learnDocSide">
+        <h3>Documentation</h3>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search ForgeORM docs..." />
+        {groups.map(group=><div className="learnDocGroup" key={group}><b>{group}</b>{forgeOrmLearnTopics.filter(x=>x.group===group).map(x=><button key={x.slug} type="button" onClick={()=>go(x.slug)}>{x.title}</button>)}</div>)}
+      </aside>
+      <main className="learnDocMain">
+        <div className="learnIntroCard">
+          <span>ForgeORM Documentation Portal</span>
+          <h2>Fast like Dapper. More complete for enterprise systems.</h2>
+          <p>This page adds a complete learning layer without replacing your previous site. It includes Querying, Query Builder, CTE, Pivot, Graph Insert, Bulk, Analytics, AI, Vector Search and DataFrame documentation.</p>
+          <div className="actions"><button onClick={()=>go('forgeorm-topic-getting-started')}>Start Learning <ArrowRight size={18}/></button><button className="ghost" onClick={()=>go('forgeorm-full-wiki')}>Open Full Wiki <BookOpen size={18}/></button></div>
+        </div>
+        <div className="learnCards">{filtered.map(topic=><article className="learnCard" key={topic.slug}><span>{topic.group}</span><h3>{topic.title}</h3><p>{topic.desc}</p><div className="miniChips">{topic.bullets.slice(0,4).map(b=><em key={b}>{b}</em>)}</div><button onClick={()=>go(topic.slug)}>Read Page <ArrowRight size={16}/></button></article>)}</div>
+      </main>
+    </section>
+  </>;
+}
+
+function ForgeOrmTopicPage({slug}){
+  const topic=forgeOrmLearnTopics.find(x=>x.slug===slug) || forgeOrmLearnTopics[0];
+  const index=forgeOrmLearnTopics.findIndex(x=>x.slug===topic.slug);
+  const prev=forgeOrmLearnTopics[index-1];
+  const next=forgeOrmLearnTopics[index+1];
+  const go=(target)=>{ location.hash=target; scrollTo(0,0); };
+  return <><PageHero title={topic.title} desc={topic.desc}/>
+    <section className="topicLayout">
+      <aside className="topicToc"><h3>ForgeORM Docs</h3>{forgeOrmLearnTopics.map(x=><button type="button" key={x.slug} className={x.slug===topic.slug?'active':''} onClick={()=>go(x.slug)}>{x.title}</button>)}</aside>
+      <article className="topicArticle">
+        <div className="articleMeta"><span>{topic.group}</span><span>Learn ForgeORM</span><span>Working route: #{topic.slug}</span></div>
+        <h2>Overview</h2><p>{topic.desc}</p>
+        <h2>What this page covers</h2><div className="chips">{topic.bullets.map(x=><span key={x}>{x}</span>)}</div>
+        <h2>Example</h2><div className="codeHead"><span>{topic.title}</span><Copy size={16}/></div><pre className="syntax"><code>{topic.code}</code></pre>
+        <h2>Recommended API documentation style</h2><p>Each ForgeORM method page should explain purpose, parameters, return value, cancellation token behavior, transaction behavior, provider notes, common mistakes and a complete Minimal API endpoint example.</p>
+        <div className="articleLinks"><button disabled={!prev} onClick={()=>prev&&go(prev.slug)}>Previous</button><button onClick={()=>go('forgeorm-learn')}>Docs Index</button><button disabled={!next} onClick={()=>next&&go(next.slug)}>Next</button></div>
+      </article>
+      <aside className="rightToc"><h3>On this page</h3><a href="#overview">Overview</a><a href="#example">Example</a><a href="#parameters">Docs style</a></aside>
+    </section>
+  </>;
+}
 
 function ArticlePage({slug}){const article=articles.find(a=>a.slug===slug)||articles[0];return <><PageHero title={article.title} desc={article.summary}/><article className="articlePage"><div className="articleMeta"><span>{article.category}</span><span>Fervidex Systems Knowledge Base</span><span>SEO Article</span></div>{article.sections.map(([h,b])=><section key={h}><h2>{h}</h2><p>{b}</p></section>)}<div className="codeHead"><span>Implementation example</span><Copy size={16}/></div><pre className="syntax"><code>{article.code}</code></pre><div className="articleLinks"><a href="#blog">Back to blog</a><a href="#wiki">Open Wiki</a><a href="#playground">Try Playground</a></div></article></>}
 
