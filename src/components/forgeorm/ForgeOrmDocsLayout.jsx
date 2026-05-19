@@ -1,17 +1,52 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Braces, BrainCircuit, CheckCircle2, Copy, Database, LineChart, Search, ShieldCheck, Table2, Workflow, Zap } from 'lucide-react';
-import { forgeOrmDocGroups, forgeOrmDocSections } from '../../data/forgeOrmDocs.js';
+import {
+  Activity,
+  ArrowRight,
+  BookOpen,
+  Boxes,
+  Braces,
+  BrainCircuit,
+  CheckCircle2,
+  Copy,
+  Database,
+  FileJson,
+  GitBranch,
+  History,
+  Layers3,
+  LineChart,
+  Network,
+  Search,
+  ShieldCheck,
+  Table2,
+  TerminalSquare,
+  Workflow,
+  Zap
+} from 'lucide-react';
+import { forgeOrmDocGroups, forgeOrmDocSections, forgeOrmStats } from '../../data/forgeorm/index.ts';
 
 const iconMap = {
-  overview: <Database />,
+  'platform-overview': <Database />,
+  installation: <Boxes />,
   dbcontext: <Braces />,
+  'query-methods': <TerminalSquare />,
+  'forge-sql': <Database />,
   'query-ast': <Workflow />,
-  analytics: <LineChart />,
-  dataframe: <Table2 />,
-  ai: <BrainCircuit />,
-  'vector-search': <Zap />,
+  'crud-commands': <Zap />,
+  'graph-persistence': <GitBranch />,
+  'include-split-query': <Network />,
+  'bulk-operations': <Layers3 />,
+  'stored-procedures': <Database />,
   'table-valued-parameters': <Table2 />,
-  'temporal-tables': <ShieldCheck />,
+  'temporal-tables': <History />,
+  'execution-options': <ShieldCheck />,
+  'csv-json-import-export': <FileJson />,
+  dataframe: <Table2 />,
+  'analytics-olap': <LineChart />,
+  'search-vector-graph': <Zap />,
+  'ai-features': <BrainCircuit />,
+  'workflow-jobs-rules': <Workflow />,
+  'performance-engine': <Activity />,
+  benchmarks: <LineChart />
 };
 
 function byId(id) {
@@ -49,6 +84,7 @@ function SectionCard({ section }) {
           <span>{section.eyebrow}</span>
           <h2>{section.title}</h2>
         </div>
+        <em className="realDocStatus">{section.status}</em>
       </div>
       <p className="realDocSummary">{section.summary}</p>
       <div className="realDocBullets">
@@ -64,6 +100,19 @@ function SectionCard({ section }) {
   );
 }
 
+function HeroStats() {
+  return (
+    <div className="realDocsStats">
+      {forgeOrmStats.map(([value, label]) => (
+        <div key={label}>
+          <strong>{value}</strong>
+          <span>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function ForgeOrmDocsLayout() {
   const [query, setQuery] = useState('');
   const q = query.trim().toLowerCase();
@@ -71,7 +120,7 @@ export default function ForgeOrmDocsLayout() {
   const filteredSections = useMemo(() => {
     if (!q) return forgeOrmDocSections;
     return forgeOrmDocSections.filter((section) =>
-      [section.title, section.eyebrow, section.summary, section.bullets.join(' '), section.code]
+      [section.title, section.eyebrow, section.status, section.summary, section.bullets.join(' '), section.code]
         .join(' ')
         .toLowerCase()
         .includes(q)
@@ -79,38 +128,41 @@ export default function ForgeOrmDocsLayout() {
   }, [q]);
 
   return (
-    <div className="realDocsPage">
-      <section className="realDocsHero">
+    <div className="realDocsPage corporateDocsPage">
+      <section className="realDocsHero corporateDocsHero">
         <div>
-          <span className="realDocsKicker">ForgeORM Documentation</span>
-          <h1>One comprehensive Learn + Docs page for ForgeORM.</h1>
+          <span className="realDocsKicker">ForgeORM Corporate Documentation</span>
+          <h1>A complete Dapper-style documentation experience for ForgeORM.</h1>
           <p>
-            A realistic product documentation page with enterprise examples for QueryAst, Db.Set&lt;&gt;,
-            stored procedures, table-valued parameters, temporal tables, graph persistence, analytics,
-            DataFrame workflows, AI and vector search.
+            A professional, human-written documentation hub covering implemented APIs, enterprise roadmap,
+            graph persistence, temporal tables, CSV/JSON imports, QueryAst, ForgeSQL, DataFrames, AI, vector search,
+            workflow engines, performance, security and operational features.
           </p>
           <div className="realDocsHeroActions">
-            <button type="button" onClick={() => scrollToId('dbcontext')}>Start with Db.Set&lt;&gt; <ArrowRight size={16} /></button>
-            <button type="button" className="ghost" onClick={() => scrollToId('table-valued-parameters')}>TVP Example</button>
-            <button type="button" className="ghost" onClick={() => scrollToId('dataframe')}>DataFrame</button>
+            <button type="button" onClick={() => scrollToId('query-methods')}>Core query APIs <ArrowRight size={16} /></button>
+            <button type="button" className="ghost" onClick={() => scrollToId('graph-persistence')}>Graph persistence</button>
+            <button type="button" className="ghost" onClick={() => scrollToId('csv-json-import-export')}>CSV / JSON import</button>
+            <button type="button" className="ghost" onClick={() => scrollToId('temporal-tables')}>Temporal tables</button>
           </div>
+          <HeroStats />
         </div>
-        <div className="realDocsConsole">
+        <div className="realDocsConsole corporateDocsConsole">
           <div><span /> <span /> <span /></div>
-          <pre>{`ForgeORM Docs
-├─ Core APIs
-├─ QueryAst
-├─ Stored Procedures + TVPs
-├─ Temporal Tables
+          <pre>{`ForgeORM Enterprise Docs
+├─ Query APIs + MSIL Materialization
+├─ ForgeSQL + QueryAst
 ├─ Graph Insert / Update / Delete
-├─ DataFrame like pandas
-└─ AI + Vector Search`}</pre>
+├─ Temporal Tables + Audit History
+├─ CSV / JSON Import + Export
+├─ DataFrame + OLAP + Search
+├─ AI + Vector + Workflow Roadmap
+└─ Observability + Security + Benchmarks`}</pre>
         </div>
       </section>
 
-      <section className="realDocsLayout">
-        <aside className="realDocsSidebar">
-          <label className="realDocsSearch"><Search size={16} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search docs..." /></label>
+      <section className="realDocsLayout corporateDocsLayout">
+        <aside className="realDocsSidebar corporateDocsSidebar">
+          <label className="realDocsSearch"><Search size={16} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search features, APIs, examples..." /></label>
           {forgeOrmDocGroups.map(([group, ids]) => (
             <div className="realDocsNavGroup" key={group}>
               <h3>{group}</h3>
@@ -124,8 +176,10 @@ export default function ForgeOrmDocsLayout() {
         </aside>
 
         <main className="realDocsContent">
-          <div className="realDocsNote">
-            <b>Documentation direction:</b> each section includes explanation, API purpose, and a working-style C# or SQL example. The site keeps the original pages and adds this as the single ForgeORM documentation page instead of splitting LearnForgeORM and DocsForgeORM.
+          <div className="realDocsNote corporateDocsNote">
+            <b>Documentation policy:</b> implemented features, active work and enterprise roadmap are kept in one place.
+            Nothing is removed from the original ForgeORM vision; features that are not production-ready are labeled clearly
+            and shown with practical API examples for future implementation.
           </div>
           {filteredSections.map((section) => <SectionCard key={section.id} section={section} />)}
         </main>
