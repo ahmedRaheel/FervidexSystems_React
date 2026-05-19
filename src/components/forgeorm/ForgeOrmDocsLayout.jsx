@@ -132,9 +132,9 @@ export default function ForgeOrmDocsLayout() {
       <section className="realDocsHero corporateDocsHero">
         <div>
           <span className="realDocsKicker">ForgeORM Corporate Documentation</span>
-          <h1>A complete Dapper-style documentation experience for ForgeORM.</h1>
+          <h1>A complete documentation experience for ForgeORM.</h1>
           <p>
-            A professional, human-written documentation hub covering implemented APIs, enterprise roadmap,
+            covering implemented APIs, enterprise roadmap,
             graph persistence, temporal tables, CSV/JSON imports, QueryAst, ForgeSQL, DataFrames, AI, vector search,
             workflow engines, performance, security and operational features.
           </p>
@@ -178,7 +178,7 @@ export default function ForgeOrmDocsLayout() {
         <main className="realDocsContent">
           <div className="realDocsNote corporateDocsNote">
             <b>Documentation policy:</b> implemented features, active work and enterprise roadmap are kept in one place.
-            Nothing is removed from the original ForgeORM vision; features that are not production-ready are labeled clearly
+             features that are not production-ready are labeled clearly
             and shown with practical API examples for future implementation.
           </div>
           {filteredSections.map((section) => <SectionCard key={section.id} section={section} />)}
